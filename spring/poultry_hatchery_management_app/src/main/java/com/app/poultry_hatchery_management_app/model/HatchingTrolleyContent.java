@@ -1,7 +1,9 @@
 package com.app.poultry_hatchery_management_app.model;
 
-
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +17,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class NestingTrolleyContent {
+public class HatchingTrolleyContent {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -23,12 +25,6 @@ public class NestingTrolleyContent {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @ManyToOne
-    private NestingTrolley nestingCart;
 
-    @ManyToOne
-    private NestingLoadedDeliveries nestingLoadedDeliveries;
-
-    private Integer quantity;
 
 }

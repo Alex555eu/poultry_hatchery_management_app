@@ -15,7 +15,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class NestingTrolleyContent {
+public class HatchingResult {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -23,12 +23,8 @@ public class NestingTrolleyContent {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @ManyToOne
-    private NestingTrolley nestingCart;
-
-    @ManyToOne
-    private NestingLoadedDeliveries nestingLoadedDeliveries;
+    @OneToOne
+    private HatchingLoadedDeliveries hatchingLoadedDeliveries;
 
     private Integer quantity;
-
 }

@@ -14,7 +14,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoadedDeliveries {
+public class HatchingIncubatorSpace {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -23,11 +23,10 @@ public class LoadedDeliveries {
     private UUID id;
 
     @ManyToOne
-    private Delivery delivery;
+    private HatchingIncubator hatchingIncubator;
 
-    @ManyToOne
-    private EggLoad eggLoad;
+    private String name;
 
-    private Integer quantity;
+    private boolean isCurrentlyOccupied;
 
 }

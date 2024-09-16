@@ -1,7 +1,7 @@
 package com.app.poultry_hatchery_management_app.model;
 
-
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +15,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class NestingTrolleyContent {
+public class Reject3 {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -24,11 +24,9 @@ public class NestingTrolleyContent {
     private UUID id;
 
     @ManyToOne
-    private NestingTrolley nestingCart;
-
-    @ManyToOne
-    private NestingLoadedDeliveries nestingLoadedDeliveries;
+    private HatchingLoadedDeliveries hatchingLoadedDeliveries;
 
     private Integer quantity;
 
+    private String cause;
 }

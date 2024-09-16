@@ -1,16 +1,12 @@
 package com.app.poultry_hatchery_management_app.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -18,7 +14,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class EggLoad {
+public class Reject4 {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -26,10 +22,10 @@ public class EggLoad {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    private String title;
+    @ManyToOne
+    private HatchingResult hatchingResult;
 
-    private String description;
+    private Integer quantity;
 
-    private LocalDateTime dateTime;
-
+    private String cause;
 }

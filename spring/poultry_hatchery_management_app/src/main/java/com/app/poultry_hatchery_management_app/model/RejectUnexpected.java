@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -15,7 +16,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class NestingTrolleyContent {
+public class RejectUnexpected {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -24,11 +25,12 @@ public class NestingTrolleyContent {
     private UUID id;
 
     @ManyToOne
-    private NestingTrolley nestingCart;
-
-    @ManyToOne
-    private NestingLoadedDeliveries nestingLoadedDeliveries;
+    private HatchingEggLoad hatchingEggLoad;
 
     private Integer quantity;
+
+    private String cause;
+
+    private LocalDateTime timeStamp;
 
 }

@@ -1,6 +1,5 @@
 package com.app.poultry_hatchery_management_app.model;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -15,7 +15,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class NestingTrolleyContent {
+public class Candling {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -24,11 +24,10 @@ public class NestingTrolleyContent {
     private UUID id;
 
     @ManyToOne
-    private NestingTrolley nestingCart;
+    private NestingEggLoad nestingEggLoad;
 
-    @ManyToOne
-    private NestingLoadedDeliveries nestingLoadedDeliveries;
+    private LocalDateTime timeStamp;
 
-    private Integer quantity;
+    private Integer candlingNumber;
 
 }
