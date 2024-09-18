@@ -31,7 +31,7 @@ public class AuthenticationController {
     }
 
 
-    @PostMapping("/validate")
+    @PostMapping("/validate") //todo: fix naming
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody AuthenticationRequest request
     ) {

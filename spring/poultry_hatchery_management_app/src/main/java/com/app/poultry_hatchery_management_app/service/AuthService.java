@@ -3,9 +3,11 @@ package com.app.poultry_hatchery_management_app.service;
 import com.app.poultry_hatchery_management_app.dto.AuthenticationRequest;
 import com.app.poultry_hatchery_management_app.dto.AuthenticationResponse;
 import com.app.poultry_hatchery_management_app.dto.RegisterRequest;
+import com.app.poultry_hatchery_management_app.model.Organisation;
 import com.app.poultry_hatchery_management_app.model.Role;
 import com.app.poultry_hatchery_management_app.model.Token;
 import com.app.poultry_hatchery_management_app.model.User;
+import com.app.poultry_hatchery_management_app.repository.OrganisationRepository;
 import com.app.poultry_hatchery_management_app.repository.TokenRepository;
 import com.app.poultry_hatchery_management_app.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,6 +32,7 @@ import java.util.Optional;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final OrganisationRepository organisationRepository;
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -56,12 +59,21 @@ public class AuthService {
     }
 
     public AuthenticationResponse register(RegisterRequest request) {
+        Organisation organisation = Organisation.builder()
+                .name(request.orgName())
+                .city(request.orgCity())
+                .postalCode(request.orgPostalCode())
+                .address(request.orgAddress())
+                .regon(request.orgRegon())
+                .build();
+        organisationRepository.save(organisation);
         User user = User.builder()
                 .firstName(request.firstName())
                 .lastName(request.lastName())
                 .emailAddress(request.emailAddress())
                 .password(passwordEncoder.encode(request.password()))
                 .role(Role.USER)
+                .organisation(organisation)
                 .build();
         userRepository.save(user);
         String jwtToken = "Bearer " + jwtService.generateToken(new HashMap<>(), user);
