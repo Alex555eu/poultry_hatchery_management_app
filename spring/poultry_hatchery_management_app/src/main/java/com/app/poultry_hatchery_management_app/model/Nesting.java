@@ -15,7 +15,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class NestingEggLoad {
+public class Nesting {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -24,7 +24,7 @@ public class NestingEggLoad {
     private UUID id;
 
     @OneToOne
-    private NestingEggLoad nestingEggLoad;
+    private Nesting nesting;
 
     private LocalDateTime dateTime;
 

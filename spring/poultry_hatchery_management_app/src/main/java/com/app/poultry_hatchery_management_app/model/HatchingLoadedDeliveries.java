@@ -24,7 +24,7 @@ public class HatchingLoadedDeliveries {
     private UUID id;
 
     @ManyToOne
-    private HatchingEggLoad hatchingEggLoad;
+    private Hatching hatching;
 
     @OneToOne
     private Delivery delivery;

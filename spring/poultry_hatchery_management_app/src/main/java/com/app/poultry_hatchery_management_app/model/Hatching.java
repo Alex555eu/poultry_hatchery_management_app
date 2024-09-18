@@ -19,7 +19,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class HatchingEggLoad {
+public class Hatching {
 
     @Id
     @GeneratedValue(generator = "uuid")

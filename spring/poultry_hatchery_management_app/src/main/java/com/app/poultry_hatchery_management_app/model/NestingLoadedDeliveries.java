@@ -23,7 +23,7 @@ public class NestingLoadedDeliveries {
     private UUID id;
 
     @ManyToOne
-    private NestingEggLoad nestingEggLoad;
+    private Nesting nesting;
 
     @OneToOne
     private Delivery delivery;

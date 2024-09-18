@@ -25,7 +25,7 @@ public class RejectUnexpected {
     private UUID id;
 
     @ManyToOne
-    private HatchingEggLoad hatchingEggLoad;
+    private Hatching hatching;
 
     private Integer quantity;
 

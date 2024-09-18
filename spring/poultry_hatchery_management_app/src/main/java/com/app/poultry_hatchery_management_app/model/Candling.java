@@ -24,7 +24,7 @@ public class Candling {
     private UUID id;
 
     @ManyToOne
-    private NestingEggLoad nestingEggLoad;
+    private Nesting nesting;
 
     private LocalDateTime timeStamp;
 
