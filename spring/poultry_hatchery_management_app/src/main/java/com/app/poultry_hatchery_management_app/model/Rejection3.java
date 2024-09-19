@@ -1,6 +1,5 @@
 package com.app.poultry_hatchery_management_app.model;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -16,7 +14,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RejectUnexpected {
+public class Rejection3 {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -25,12 +23,9 @@ public class RejectUnexpected {
     private UUID id;
 
     @ManyToOne
-    private Hatching hatching;
+    private HatchingLoadedDeliveries hatchingLoadedDeliveries;
 
     private Integer quantity;
 
     private String cause;
-
-    private LocalDateTime timeStamp;
-
 }

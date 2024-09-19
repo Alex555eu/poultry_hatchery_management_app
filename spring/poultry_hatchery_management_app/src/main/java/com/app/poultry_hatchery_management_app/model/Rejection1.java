@@ -1,5 +1,6 @@
 package com.app.poultry_hatchery_management_app.model;
 
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +15,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Reject4 {
+public class Rejection1 {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -23,9 +24,11 @@ public class Reject4 {
     private UUID id;
 
     @ManyToOne
-    private HatchingResult hatchingResult;
+    private NestingLoadedDeliveries nestingLoadedDeliveries;
 
     private Integer quantity;
 
-    private String cause;
+    @Enumerated(EnumType.STRING)
+    private RejectionCause cause;
+
 }

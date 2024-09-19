@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -15,7 +16,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Reject2 {
+public class RejectionUnexpected {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -24,10 +25,12 @@ public class Reject2 {
     private UUID id;
 
     @ManyToOne
-    private CandlingNestingTrolleyAssignment candlingNestingTrolleyAssignment;
+    private Hatching hatching;
 
     private Integer quantity;
 
     private String cause;
+
+    private LocalDateTime timeStamp;
 
 }

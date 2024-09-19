@@ -18,15 +18,15 @@ public enum RejectionCause {
 
     public static List<RejectionCause> getAvailableCauses(RejectionGroup group) {
         return switch (group) {
-            case REJECT_1 ->
+            case REJECTION_1 ->
                     List.of(BRAK, STLUCZKA);
-            case REJECT_2 ->
+            case REJECTION_2 ->
                     List.of(BRAK);
-            case REJECT_3 ->
+            case REJECTION_3 ->
                     List.of(STLUCZKA);
-            case REJECT_4 ->
+            case REJECTION_4 ->
                     null;
-            case REJECT_UNEXPECTED ->
+            case REJECTION_UNEXPECTED ->
                     null;
         };
     }
