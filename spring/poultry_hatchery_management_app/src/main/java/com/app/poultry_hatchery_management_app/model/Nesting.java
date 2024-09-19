@@ -23,9 +23,13 @@ public class Nesting {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @OneToOne
-    private Nesting nesting;
+    @ManyToOne
+    private Organisation organisation;
 
     private LocalDateTime dateTime;
+
+    private String title;
+
+    private String description;
 
 }

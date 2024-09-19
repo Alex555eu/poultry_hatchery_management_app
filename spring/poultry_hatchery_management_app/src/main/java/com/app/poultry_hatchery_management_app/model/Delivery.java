@@ -23,6 +23,9 @@ public class Delivery {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
+    @ManyToOne
+    private Organisation organisation;
+
     @OneToOne
     private Supplier supplier;
 
