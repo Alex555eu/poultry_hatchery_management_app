@@ -28,6 +28,7 @@ public class Reject1 {
 
     private Integer quantity;
 
-    private String cause;
+    @Enumerated(EnumType.STRING)
+    private RejectionCause cause;
 
 }
