@@ -1,14 +1,12 @@
 package com.app.poultry_hatchery_management_app;
 
 import com.app.poultry_hatchery_management_app.model.*;
-import com.app.poultry_hatchery_management_app.repository.DeliveryRepository;
-import com.app.poultry_hatchery_management_app.repository.OrganisationRepository;
-import com.app.poultry_hatchery_management_app.repository.Rejection1Repository;
-import com.app.poultry_hatchery_management_app.repository.SupplierRepository;
+import com.app.poultry_hatchery_management_app.repository.*;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -21,6 +19,8 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
     private final OrganisationRepository organisationRepository;
     private final SupplierRepository supplierRepository;
     private final DeliveryRepository deliveryRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void onApplicationEvent(@NonNull ApplicationReadyEvent event) {
@@ -46,18 +46,33 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
                 .surname("string")
                 .name("string")
                 .address("string")
+                .organisation(organisation)
                 .build();
         supplierRepository.save(supplier);
 
         Delivery delivery = Delivery.builder()
                 .quantity(100)
-                .organisation(organisation)
                 .supplier(supplier)
                 .dateTime(LocalDateTime.now())
                 .build();
         deliveryRepository.save(delivery);
 
+        Delivery delivery2 = Delivery.builder()
+                .quantity(102)
+                .supplier(null)
+                .dateTime(LocalDateTime.now())
+                .build();
+        deliveryRepository.save(delivery2);
 
+        User user = User.builder()
+                .organisation(organisation)
+                .emailAddress("user@email.com")
+                .firstName("user")
+                .lastName("user")
+                .password(passwordEncoder.encode("password"))
+                .role(Role.USER)
+                .build();
+        userRepository.save(user);
 
 
     }
