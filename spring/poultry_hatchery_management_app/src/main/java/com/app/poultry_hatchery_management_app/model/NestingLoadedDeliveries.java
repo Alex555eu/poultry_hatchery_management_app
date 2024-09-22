@@ -25,7 +25,7 @@ public class NestingLoadedDeliveries {
     @ManyToOne
     private Nesting nesting;
 
-    @OneToOne
+    @ManyToOne
     private Delivery delivery;
 
 }
