@@ -45,7 +45,7 @@ public class DeliveryService {
             User user = (User) authentication.getPrincipal();
             List<Delivery> result = deliveryRepository.findByUserId(user.getId());
 
-            if (result != null && !result.isEmpty()) {
+            if (!result.isEmpty()) {
                 String responseBody = objectMapper.writeValueAsString(result);
                 return ResponseEntity.ok(responseBody);
             }
@@ -56,7 +56,7 @@ public class DeliveryService {
 
     public ResponseEntity<String> getDeliveriesBySupplierId(UUID supplierId) throws JsonProcessingException {
         List<Delivery> result = deliveryRepository.findBySupplierId(supplierId);
-        if (result != null && !result.isEmpty()) {
+        if (!result.isEmpty()) {
             String responseBody = objectMapper.writeValueAsString(result);
             return ResponseEntity.ok(responseBody);
         }

@@ -20,53 +20,32 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
     private final SupplierRepository supplierRepository;
     private final DeliveryRepository deliveryRepository;
     private final UserRepository userRepository;
+    private final NestingRepository nestingRepository;
+
     private final PasswordEncoder passwordEncoder;
 
     @Override
     public void onApplicationEvent(@NonNull ApplicationReadyEvent event) {
-        Rejection1 rejection1 = Rejection1.builder()
+/*        Rejection1 rejection1 = Rejection1.builder()
                 .nestingLoadedDeliveries(null)
                 .quantity(10)
                 .cause(RejectionCause.BRAK.verify(RejectionGroup.REJECTION_1))
                 .build();
-        rejection1Repository.save(rejection1);
+        rejection1Repository.save(rejection1);*/
 
         //System.out.println(RejectionCause.getAvailableCauses(RejectionGroup.REJECTION_1).toString());
         Organisation organisation = Organisation.builder()
-                .address("string")
-                .regon("string")
-                .city("string")
-                .name("string")
-                .postalCode("string")
+                .address("ul.Warszawska 99")
+                .regon("123456789")
+                .city("Kraków")
+                .name("A.Adamczyk sp.z.o.o.")
+                .postalCode("11-111")
                 .build();
         organisationRepository.save(organisation);
 
-        Supplier supplier = Supplier.builder()
-                .WNI("string")
-                .surname("string")
-                .name("string")
-                .address("string")
-                .organisation(organisation)
-                .build();
-        supplierRepository.save(supplier);
-
-        Delivery delivery = Delivery.builder()
-                .quantity(100)
-                .supplier(supplier)
-                .dateTime(LocalDateTime.now())
-                .build();
-        deliveryRepository.save(delivery);
-
-        Delivery delivery2 = Delivery.builder()
-                .quantity(102)
-                .supplier(null)
-                .dateTime(LocalDateTime.now())
-                .build();
-        deliveryRepository.save(delivery2);
-
         User user = User.builder()
                 .organisation(organisation)
-                .emailAddress("user@email.com")
+                .emailAddress("user")
                 .firstName("user")
                 .lastName("user")
                 .password(passwordEncoder.encode("password"))
@@ -74,6 +53,54 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
                 .build();
         userRepository.save(user);
 
+        Supplier supplier = Supplier.builder()
+                .WNI("wni-example")
+                .surname("surname-example")
+                .name("name-example")
+                .address("address-example")
+                .organisation(organisation)
+                .build();
+        supplierRepository.save(supplier);
+
+        Supplier supplier2 = Supplier.builder()
+                .WNI("wni-example")
+                .surname("surname-example")
+                .name("name-example")
+                .address("address-example")
+                .organisation(organisation)
+                .build();
+        supplierRepository.save(supplier2);
+
+        Supplier supplier3 = Supplier.builder()
+                .WNI("wni-example")
+                .surname("surname-example")
+                .name("name-example")
+                .address("address-example")
+                .organisation(organisation)
+                .build();
+        supplierRepository.save(supplier3);
+
+        Delivery delivery = Delivery.builder()
+                .quantity(111)
+                .supplier(supplier)
+                .dateTime(LocalDateTime.now())
+                .build();
+        deliveryRepository.save(delivery);
+
+        Delivery delivery2 = Delivery.builder()
+                .quantity(222)
+                .supplier(supplier2)
+                .dateTime(LocalDateTime.now())
+                .build();
+        deliveryRepository.save(delivery2);
+
+        Nesting nesting = Nesting.builder()
+                .organisation(organisation)
+                .title("New Nesting")
+                .description("Lots of new eggs to nest")
+                .dateTime(LocalDateTime.now())
+                .build();
+        nestingRepository.save(nesting);
 
     }
 }
