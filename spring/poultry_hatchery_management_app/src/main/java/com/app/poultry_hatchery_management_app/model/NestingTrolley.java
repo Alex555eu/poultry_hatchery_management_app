@@ -24,9 +24,9 @@ public class NestingTrolley {
 
     private String humanReadableId;
 
-    private Integer maxCartCapacity;
+    private Integer maxCapacity;
 
-    private Integer availableCartCapacity;
+    private Integer availableCapacity;
 
     @ManyToOne
     private Organisation organisation;

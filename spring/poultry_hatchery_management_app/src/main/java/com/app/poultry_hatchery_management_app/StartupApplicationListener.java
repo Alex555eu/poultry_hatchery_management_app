@@ -45,10 +45,10 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
 
         User user = User.builder()
                 .organisation(organisation)
-                .emailAddress("user")
+                .emailAddress("string")
                 .firstName("user")
                 .lastName("user")
-                .password(passwordEncoder.encode("password"))
+                .password(passwordEncoder.encode("string"))
                 .role(Role.USER)
                 .build();
         userRepository.save(user);

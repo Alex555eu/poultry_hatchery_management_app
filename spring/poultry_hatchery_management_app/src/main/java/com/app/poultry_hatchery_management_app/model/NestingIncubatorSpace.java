@@ -23,7 +23,7 @@ public class NestingIncubatorSpace {
     private UUID id;
 
     @ManyToOne
-    private NestingIncubator hatchingIncubator;
+    private NestingIncubator nestingIncubator;
 
     private String name;
 
