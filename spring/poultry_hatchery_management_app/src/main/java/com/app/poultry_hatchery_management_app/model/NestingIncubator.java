@@ -1,9 +1,6 @@
 package com.app.poultry_hatchery_management_app.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,5 +23,8 @@ public class NestingIncubator {
     private UUID id;
 
     private Integer maxCapacity;
+
+    @ManyToOne
+    private Organisation organisation;
 
 }

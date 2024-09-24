@@ -1,9 +1,6 @@
 package com.app.poultry_hatchery_management_app.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,4 +22,6 @@ public class HatchingTrolley {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
+    @ManyToOne
+    private Organisation organisation;
 }
