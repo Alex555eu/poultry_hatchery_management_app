@@ -22,10 +22,11 @@ public class NestingIncubatorSpace {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
+    private String humanReadableId;
+
+    private boolean isCurrentlyOccupied;
+
     @ManyToOne
     private NestingIncubator nestingIncubator;
 
-    private String name;
-
-    private boolean isCurrentlyOccupied;
 }
