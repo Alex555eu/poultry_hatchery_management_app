@@ -26,28 +26,26 @@ import java.util.UUID;
 @Service
 public class NestingLoadedDeliveriesService {
 
-    private final ObjectMapper objectMapper;
     private final DeliveryRepository deliveryRepository;
     private final NestingRepository nestingRepository;
     private final NestingLoadedDeliveriesRepository nestingLoadedDeliveriesRepository;
 
-    public ResponseEntity<String> postNestingLoadedDelivery(UUID nestingId, UUID deliveryId) {
+    public Optional<NestingLoadedDeliveries> postNestingLoadedDelivery(UUID nestingId, UUID deliveryId) {
         Optional<Nesting> nesting = nestingRepository.findById(nestingId);
         Optional<Delivery> delivery = deliveryRepository.findById(deliveryId);
         if (delivery.isPresent() && nesting.isPresent()) {
-            NestingLoadedDeliveries object = NestingLoadedDeliveries.builder()
+            NestingLoadedDeliveries nld = NestingLoadedDeliveries.builder()
                     .nesting(nesting.get())
                     .delivery(delivery.get())
                     .build();
-            nestingLoadedDeliveriesRepository.save(object);
-            return ResponseEntity.ok().build();
+            nestingLoadedDeliveriesRepository.save(nld);
+            return Optional.of(nld);
         }
-        return ResponseEntity.notFound().build();
+        return Optional.empty();
     }
 
-    public ResponseEntity<String> deleteNestingLoadedDelivery(UUID nestingLoadedDeliveryId) {
+    public void deleteNestingLoadedDelivery(UUID nestingLoadedDeliveryId) {
         nestingLoadedDeliveriesRepository.deleteById(nestingLoadedDeliveryId);
-        return ResponseEntity.ok().build();
     }
 
 

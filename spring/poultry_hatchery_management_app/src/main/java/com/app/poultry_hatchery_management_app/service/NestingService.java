@@ -24,25 +24,19 @@ import java.util.UUID;
 @Service
 public class NestingService {
 
-    private final ObjectMapper objectMapper;
     private final NestingRepository nestingRepository;
 
-    public ResponseEntity<String> getAllNestings() throws JsonProcessingException {
+    public List<Nesting> getAllNestings() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if ((authentication != null && authentication.getPrincipal() instanceof UserDetails)) {
             User user = (User) authentication.getPrincipal();
 
-            List<Nesting> result = nestingRepository.findAllByOrganisationId(user.getOrganisation().getId());
-            if (!result.isEmpty()) {
-                String response = objectMapper.writeValueAsString(result);
-
-                return ResponseEntity.ok(response);
-            }
+            return nestingRepository.findAllByOrganisationId(user.getOrganisation().getId());
         }
-        return ResponseEntity.notFound().build();
+        return null;
     }
 
-    public ResponseEntity<String> postNesting(PostNestingRequest request) {
+    public Optional<Nesting> postNesting(PostNestingRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if ((authentication != null && authentication.getPrincipal() instanceof UserDetails)) {
             User user = (User) authentication.getPrincipal();
@@ -55,26 +49,25 @@ public class NestingService {
                     .build();
             nestingRepository.save(nesting);
 
-            return ResponseEntity.ok().build();
+            return Optional.of(nesting);
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return Optional.empty();
     }
 
-    public ResponseEntity<String> putNesting(PutNestingRequest request) {
+    public Optional<Nesting> putNesting(PutNestingRequest request) {
         Optional<Nesting> nesting = nestingRepository.findById(request.id());
         if (nesting.isPresent()) {
             nesting.get().setTitle(request.title());
             nesting.get().setDescription(request.description());
             nestingRepository.save(nesting.get());
 
-            return ResponseEntity.ok().build();
+            return nesting;
         }
-        return ResponseEntity.notFound().build();
+        return Optional.empty();
     }
 
-    public ResponseEntity<String> deleteNesting(UUID id) {
+    public void deleteNesting(UUID id) {
         nestingRepository.deleteById(id);
-        return ResponseEntity.ok().build();
     }
 
 }

@@ -2,13 +2,19 @@ package com.app.poultry_hatchery_management_app.controller;
 
 import com.app.poultry_hatchery_management_app.dto.PostDeliveryRequest;
 import com.app.poultry_hatchery_management_app.dto.PutDeliveryRequest;
+import com.app.poultry_hatchery_management_app.model.Delivery;
+import com.app.poultry_hatchery_management_app.model.Supplier;
 import com.app.poultry_hatchery_management_app.service.DeliveryService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -17,38 +23,69 @@ import java.util.UUID;
 public class DeliveryController {
 
     private final DeliveryService deliveryService;
+    private final ObjectMapper objectMapper;
 
     @GetMapping("/")
     public ResponseEntity<String> getAllDeliveries() throws JsonProcessingException {
-        return deliveryService.getAllDeliveries();
+        List<Delivery> deliveries = deliveryService.getAllDeliveries();
+        if (deliveries == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        } else if (deliveries.isEmpty()) {
+            return ResponseEntity.notFound().build();
+
+        } else {
+            String response = objectMapper.writeValueAsString(deliveries);
+            return ResponseEntity.ok(response);
+        }
     }
 
 
     @GetMapping("/by-id")
     public ResponseEntity<String> getDeliveryById(@RequestParam("id") UUID deliveryId) throws JsonProcessingException {
-        return deliveryService.getDeliveryById(deliveryId);
+        Optional<Delivery> delivery = deliveryService.getDeliveryById(deliveryId);
+
+        if (delivery.isPresent()) {
+            String response = objectMapper.writeValueAsString(delivery.get());
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.notFound().build();
     }
 
 
     @GetMapping("/by-supplier")
     public ResponseEntity<String> getDeliveriesBySupplierId(@RequestParam("id") UUID supplierId) throws JsonProcessingException {
-        return deliveryService.getDeliveriesBySupplierId(supplierId);
+        List<Delivery> deliveries = deliveryService.getDeliveriesBySupplierId(supplierId);
+        if (deliveries.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        String response = objectMapper.writeValueAsString(deliveries);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
     public ResponseEntity<String> postDelivery(@RequestBody PostDeliveryRequest request) {
-        return deliveryService.postDelivery(request);
+        Optional<Delivery> delivery = deliveryService.postDelivery(request);
+        if (delivery.isPresent()) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
 
     @PutMapping
     public ResponseEntity<String> putDelivery(@RequestBody PutDeliveryRequest request) {
-        return deliveryService.putDelivery(request);
+        Optional<Delivery> delivery = deliveryService.putDelivery(request);
+        if (delivery.isPresent()) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping
     public ResponseEntity<String> deleteDelivery(@RequestParam("id") UUID deliveryID) {
-        return deliveryService.deleteDelivery(deliveryID);
+        deliveryService.deleteDelivery(deliveryID);
+        return ResponseEntity.ok().build();
     }
 
 

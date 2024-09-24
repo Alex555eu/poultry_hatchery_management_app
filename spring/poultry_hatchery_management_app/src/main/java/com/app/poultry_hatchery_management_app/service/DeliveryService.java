@@ -8,10 +8,7 @@ import com.app.poultry_hatchery_management_app.model.User;
 import com.app.poultry_hatchery_management_app.repository.DeliveryRepository;
 import com.app.poultry_hatchery_management_app.repository.SupplierRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,42 +25,26 @@ public class DeliveryService {
 
     private final DeliveryRepository deliveryRepository;
     private final SupplierRepository supplierRepository;
-    private final ObjectMapper objectMapper;
 
-    public ResponseEntity<String> getDeliveryById(UUID id) throws JsonProcessingException {
-        Optional<Delivery> delivery = deliveryRepository.findById(id);
-        if (delivery.isPresent()) {
-            String body = objectMapper.writeValueAsString(delivery.get());
-            return ResponseEntity.ok(body);
-        }
-        return ResponseEntity.notFound().build();
-    }
-
-    public ResponseEntity<String> getAllDeliveries() throws JsonProcessingException {
+    public List<Delivery> getAllDeliveries() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if ((authentication != null && authentication.getPrincipal() instanceof UserDetails)) {
             User user = (User) authentication.getPrincipal();
-            List<Delivery> result = deliveryRepository.findByUserId(user.getId());
 
-            if (!result.isEmpty()) {
-                String responseBody = objectMapper.writeValueAsString(result);
-                return ResponseEntity.ok(responseBody);
-            }
-            return ResponseEntity.notFound().build();
+            return deliveryRepository.findByUserId(user.getId());
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return null;
     }
 
-    public ResponseEntity<String> getDeliveriesBySupplierId(UUID supplierId) throws JsonProcessingException {
-        List<Delivery> result = deliveryRepository.findBySupplierId(supplierId);
-        if (!result.isEmpty()) {
-            String responseBody = objectMapper.writeValueAsString(result);
-            return ResponseEntity.ok(responseBody);
-        }
-        return ResponseEntity.notFound().build();
+    public Optional<Delivery> getDeliveryById(UUID id) {
+        return deliveryRepository.findById(id);
     }
 
-    public ResponseEntity<String> postDelivery(PostDeliveryRequest request) {
+    public List<Delivery> getDeliveriesBySupplierId(UUID supplierId) {
+        return deliveryRepository.findBySupplierId(supplierId);
+    }
+
+    public Optional<Delivery> postDelivery(PostDeliveryRequest request) {
         Optional<Supplier> supplier = supplierRepository.findById(request.supplierId());
         if (supplier.isPresent()) {
             Delivery newDelivery = Delivery.builder()
@@ -73,25 +54,24 @@ public class DeliveryService {
                     .build();
             deliveryRepository.save(newDelivery);
 
-            return ResponseEntity.ok().build();
+            return Optional.of(newDelivery);
         }
-        return ResponseEntity.notFound().build();
+        return Optional.empty();
     }
 
-    public ResponseEntity<String> putDelivery(PutDeliveryRequest request) {
+    public Optional<Delivery> putDelivery(PutDeliveryRequest request) {
         Optional<Delivery> delivery = deliveryRepository.findById(request.deliveryId());
         if (delivery.isPresent()) {
             delivery.get().setQuantity(request.quantity());
             deliveryRepository.save(delivery.get());
 
-            return ResponseEntity.ok().build();
+            return delivery;
         }
-        return ResponseEntity.notFound().build();
+        return Optional.empty();
     }
 
-    public ResponseEntity<String> deleteDelivery(UUID id) {
+    public void deleteDelivery(UUID id) {
         deliveryRepository.deleteById(id);
-        return ResponseEntity.ok().build();
     }
 
 

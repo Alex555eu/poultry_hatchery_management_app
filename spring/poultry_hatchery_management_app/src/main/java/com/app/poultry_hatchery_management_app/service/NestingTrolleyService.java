@@ -25,25 +25,21 @@ import java.util.UUID;
 @Service
 public class NestingTrolleyService {
 
-    private final ObjectMapper objectMapper;
     private final NestingTrolleyRepository nestingTrolleyRepository;
 
-    public ResponseEntity<String> getAllTrolleys() throws JsonProcessingException {
+    public List<NestingTrolley> getAllTrolleys() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if ((authentication != null && authentication.getPrincipal() instanceof UserDetails)) {
             User user = (User) authentication.getPrincipal();
             Organisation organisation = user.getOrganisation();
 
-            List<NestingTrolley> result = nestingTrolleyRepository.findAllByOrganisationId(organisation.getId());
-            String response = objectMapper.writeValueAsString(result);
-
-            return ResponseEntity.ok(response);
+            return nestingTrolleyRepository.findAllByOrganisationId(organisation.getId());
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return null;
     }
 
 
-    public ResponseEntity<String> postTrolley(PostNestingTrolleyRequest request) {
+    public Optional<NestingTrolley> postTrolley(PostNestingTrolleyRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if ((authentication != null && authentication.getPrincipal() instanceof UserDetails)) {
             User user = (User) authentication.getPrincipal();
@@ -57,12 +53,12 @@ public class NestingTrolleyService {
                     .build();
             nestingTrolleyRepository.save(nestingTrolley);
 
-            return ResponseEntity.ok().build();
+            return Optional.of(nestingTrolley);
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return Optional.empty();
     }
 
-    public ResponseEntity<String> putTrolley(PutNestingTrolleyRequest request) {
+    public Optional<NestingTrolley> putTrolley(PutNestingTrolleyRequest request) {
         Optional<NestingTrolley> trolley = nestingTrolleyRepository.findById(request.trolleyId());
 
         if (trolley.isPresent()) {
@@ -72,18 +68,13 @@ public class NestingTrolleyService {
 
             nestingTrolleyRepository.save(trolley.get());
 
-            return ResponseEntity.ok().build();
+            return trolley;
         }
-        return ResponseEntity.notFound().build();
+        return Optional.empty();
     }
 
-    public ResponseEntity<String> deleteTrolley(UUID trolleyId) {
-        Optional<NestingTrolley> trolley = nestingTrolleyRepository.findById(trolleyId);
-        if (trolley.isPresent()) {
-            nestingTrolleyRepository.delete(trolley.get());
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.notFound().build();
+    public void deleteTrolley(UUID trolleyId) {
+        nestingTrolleyRepository.deleteById(trolleyId);
     }
 
 
