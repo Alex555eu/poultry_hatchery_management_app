@@ -1,11 +1,9 @@
 package com.app.poultry_hatchery_management_app.controller;
 
-import com.app.poultry_hatchery_management_app.dto.PostNestingIncubatorRequest;
-import com.app.poultry_hatchery_management_app.dto.PostNestingIncubatorSpaceRequest;
-import com.app.poultry_hatchery_management_app.dto.PutNestingIncubatorRequest;
-import com.app.poultry_hatchery_management_app.dto.PutNestingIncubatorSpaceRequest;
+import com.app.poultry_hatchery_management_app.dto.*;
 import com.app.poultry_hatchery_management_app.model.NestingIncubator;
 import com.app.poultry_hatchery_management_app.model.NestingIncubatorSpace;
+import com.app.poultry_hatchery_management_app.model.NestingTrolleyIncubatorSpaceAssignment;
 import com.app.poultry_hatchery_management_app.service.NestingIncubatorService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -106,6 +104,40 @@ public class NestingIncubatorController {
     @DeleteMapping("/space")
     public ResponseEntity<String> deleteNestingIncubatorSpace(@RequestParam UUID incubatorSpaceId) {
         nestingIncubatorService.deleteNestingIncubatorSpace(incubatorSpaceId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/traffic")
+    public ResponseEntity<String> getNestingTrolleyCurrentlyInIncubator(@RequestParam UUID incubatorId) throws JsonProcessingException {
+        List<NestingTrolleyIncubatorSpaceAssignment> result = nestingIncubatorService.getNestingTrolleyCurrentlyInIncubator(incubatorId);
+        if (!result.isEmpty()) {
+            String response = objectMapper.writeValueAsString(result);
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/traffic")
+    public ResponseEntity<String> postNestingTrolleyToIncubatorSpace(@RequestBody PostNestingTrolleyToIncubatorRequest request) {
+        Optional<NestingTrolleyIncubatorSpaceAssignment> assignment = nestingIncubatorService.postNestingTrolleyToIncubatorSpace(request);
+        if (assignment.isPresent()) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/traffic")
+    public ResponseEntity<String> putNestingTrolleyToIncubatorSpace(@RequestBody PutNestingTrolleyToIncubatorRequest request) {
+        Optional<NestingTrolleyIncubatorSpaceAssignment> assignment = nestingIncubatorService.putNestingTrolleyToIncubatorSpace(request);
+        if (assignment.isPresent()) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/traffic")
+    public ResponseEntity<String> deleteNestingTrolleyFromIncubatorSpace(@RequestParam UUID assignmentId) {
+        nestingIncubatorService.deleteNestingTrolleyFromIncubatorSpace(assignmentId);
         return ResponseEntity.ok().build();
     }
 

@@ -22,7 +22,6 @@ public class NestingTrolleyIncubatorSpaceAssignment {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-
     @OneToOne
     private NestingIncubatorSpace nestingIncubatorSpace;
 

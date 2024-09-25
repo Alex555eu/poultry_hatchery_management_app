@@ -21,6 +21,11 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
     private final DeliveryRepository deliveryRepository;
     private final UserRepository userRepository;
     private final NestingRepository nestingRepository;
+    private final NestingLoadedDeliveriesRepository nestingLoadedDeliveriesRepository;
+    private final NestingIncubatorRepository nestingIncubatorRepository;
+    private final NestingIncubatorSpaceRepository nestingIncubatorSpaceRepository;
+    private final NestingTrolleyRepository nestingTrolleyRepository;
+    private final NestingTrolleyIncubatorSpaceAssignmentRepository nestingTrolleyIncubatorSpaceAssignmentRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -101,6 +106,43 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
                 .dateTime(LocalDateTime.now())
                 .build();
         nestingRepository.save(nesting);
+
+        NestingLoadedDeliveries nestingLoadedDeliveries = NestingLoadedDeliveries.builder()
+                .nesting(nesting)
+                .delivery(delivery)
+                .build();
+        nestingLoadedDeliveriesRepository.save(nestingLoadedDeliveries);
+
+        NestingIncubator nestingIncubator = NestingIncubator.builder()
+                .maxCapacity(16)
+                .organisation(organisation)
+                .build();
+        nestingIncubatorRepository.save(nestingIncubator);
+
+        NestingIncubatorSpace nestingIncubatorSpace = NestingIncubatorSpace.builder()
+                .nestingIncubator(nestingIncubator)
+                .isCurrentlyOccupied(true)
+                .humanReadableId("InA1")
+                .build();
+        nestingIncubatorSpaceRepository.save(nestingIncubatorSpace);
+
+        NestingTrolley nestingTrolley = NestingTrolley.builder()
+                .humanReadableId("A1")
+                .maxCapacity(128)
+                .organisation(organisation)
+                .availableCapacity(128)
+                .build();
+        nestingTrolleyRepository.save(nestingTrolley);
+
+        NestingTrolleyIncubatorSpaceAssignment nestingTrolleyIncubatorSpaceAssignment =
+                NestingTrolleyIncubatorSpaceAssignment.builder()
+                        .nestingTrolley(nestingTrolley)
+                        .nestingIncubatorSpace(nestingIncubatorSpace)
+                        .trolleyEntryStamp(LocalDateTime.now())
+                        .trolleyExitStamp(null)
+                        .build();
+        nestingTrolleyIncubatorSpaceAssignmentRepository
+                .save(nestingTrolleyIncubatorSpaceAssignment);
 
     }
 }
