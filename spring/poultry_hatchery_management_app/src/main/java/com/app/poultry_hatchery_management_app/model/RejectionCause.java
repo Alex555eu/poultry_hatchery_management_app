@@ -13,7 +13,7 @@ public enum RejectionCause {
         if(getAvailableCauses(group).contains(this))
             return this;
         else
-            throw new IllegalArgumentException("Provided RejectionCause does not belong to the provided RejectionGroup");
+            throw new IllegalArgumentException("RejectionCause does not belong to the provided RejectionGroup");
     }
 
     public static List<RejectionCause> getAvailableCauses(RejectionGroup group) {

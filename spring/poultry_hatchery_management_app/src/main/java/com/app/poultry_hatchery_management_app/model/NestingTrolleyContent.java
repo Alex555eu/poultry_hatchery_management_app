@@ -23,12 +23,13 @@ public class NestingTrolleyContent {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
+    private Integer quantity;
+
     @ManyToOne
-    private NestingTrolley nestingCart;
+    private NestingTrolley nestingTrolley;
 
     @ManyToOne
     private NestingLoadedDeliveries nestingLoadedDeliveries;
 
-    private Integer quantity;
 
 }
