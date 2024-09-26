@@ -15,6 +15,9 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"candling_id", "nesting_trolley_id"})
+})
 public class CandlingNestingTrolleyAssignment {
 
     @Id
@@ -24,11 +27,11 @@ public class CandlingNestingTrolleyAssignment {
     private UUID id;
 
     @ManyToOne
+    @JoinColumn(name = "candling_id")
     private Candling candling;
 
     @ManyToOne
+    @JoinColumn(name = "nesting_trolley_id")
     private NestingTrolley nestingTrolley;
-
-    private String candlingState;
 
 }

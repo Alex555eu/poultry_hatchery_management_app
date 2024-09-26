@@ -23,11 +23,11 @@ public class Candling {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @ManyToOne
-    private Nesting nesting;
-
     private LocalDateTime timeStamp;
 
     private Integer candlingNumber;
+
+    @ManyToOne
+    private Nesting nesting;
 
 }
