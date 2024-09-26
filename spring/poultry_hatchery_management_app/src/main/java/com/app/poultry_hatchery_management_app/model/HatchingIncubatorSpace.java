@@ -22,11 +22,11 @@ public class HatchingIncubatorSpace {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @ManyToOne
-    private HatchingIncubator hatchingIncubator;
-
-    private String name;
+    private String humanReadableId;
 
     private boolean isCurrentlyOccupied;
+
+    @ManyToOne
+    private HatchingIncubator hatchingIncubator;
 
 }

@@ -22,6 +22,8 @@ public class HatchingIncubator {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
+    private Integer maxCapacity;
+
     @ManyToOne
     private Organisation organisation;
 
