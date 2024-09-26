@@ -38,6 +38,10 @@ public class NestingTrolleyService {
         return null;
     }
 
+    public Optional<NestingTrolley> getTrolleyById(UUID nestingTrolleyId) {
+        return nestingTrolleyRepository.findById(nestingTrolleyId);
+    }
+
 
     public Optional<NestingTrolley> postTrolley(PostNestingTrolleyRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

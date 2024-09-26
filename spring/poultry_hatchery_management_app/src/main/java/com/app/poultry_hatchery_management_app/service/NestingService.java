@@ -36,6 +36,19 @@ public class NestingService {
         return null;
     }
 
+    public Optional<Nesting> getNesting(UUID nestingId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if ((authentication != null && authentication.getPrincipal() instanceof UserDetails)) {
+            User user = (User) authentication.getPrincipal();
+
+            Optional<Nesting> nesting = nestingRepository.findById(nestingId);
+            if (nesting.isPresent() && nesting.get().getOrganisation().equals(user.getOrganisation())) {
+                return nesting;
+            }
+        }
+        return Optional.empty();
+    }
+
     public Optional<Nesting> postNesting(PostNestingRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if ((authentication != null && authentication.getPrincipal() instanceof UserDetails)) {

@@ -154,7 +154,6 @@ public class NestingIncubatorService {
             } else {
                 ntisa.get().getNestingIncubatorSpace().setCurrentlyOccupied(true);
                 ntisa.get().setTrolleyEntryStamp(LocalDateTime.now());
-                ntisa.get().setTrolleyExitStamp(null);
             }
             nestingTrolleyIncubatorSpaceAssignmentRepository.save(ntisa.get());
 
