@@ -65,7 +65,7 @@ public class HatchingIncubatorController {
     }
 
 
-    @GetMapping("/")
+    @GetMapping("/space")
     public ResponseEntity<String> getAllHatchingIncubatorsSpace(@RequestParam UUID hatchingIncubatorId) throws JsonProcessingException {
         List<HatchingIncubatorSpace> incubatorList = hatchingIncubatorService.getAllHatchingIncubatorsSpace(hatchingIncubatorId);
         if(incubatorList.isEmpty()) {
@@ -75,7 +75,7 @@ public class HatchingIncubatorController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/")
+    @PostMapping("/space")
     public ResponseEntity<String> postHatchingIncubatorSpace(@RequestBody PostHatchingIncubatorSpaceRequest request) {
         Optional<HatchingIncubatorSpace> incubator = hatchingIncubatorService.postHatchingIncubatorSpace(request);
         if (incubator.isPresent()) {
@@ -84,7 +84,7 @@ public class HatchingIncubatorController {
         return ResponseEntity.notFound().build();
     }
 
-    @PutMapping("/")
+    @PutMapping("/space")
     public ResponseEntity<String> putHatchingIncubatorSpace(@RequestBody PutHatchingIncubatorSpaceRequest request) {
         Optional<HatchingIncubatorSpace> incubator = hatchingIncubatorService.putHatchingIncubatorSpace(request);
         if (incubator.isPresent()) {
@@ -93,7 +93,7 @@ public class HatchingIncubatorController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping("/space")
     public ResponseEntity<String> deleteHatchingIncubatorSpace(@RequestParam UUID hatchingIncubatorSpaceId) {
         hatchingIncubatorService.deleteHatchingIncubatorSpace(hatchingIncubatorSpaceId);
         return ResponseEntity.ok().build();
