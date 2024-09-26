@@ -57,6 +57,10 @@ public class HatchingService {
         return List.of();
     }
 
+    public Optional<HatchingLoadedDeliveries> getHatchingLoadedDelivery(UUID hatchingLoadedDeliveryId) {
+        return hatchingLoadedDeliveriesRepository.findById(hatchingLoadedDeliveryId);
+    }
+
     public Optional<HatchingLoadedDeliveries> postHatchingLoadedDeliveries(PostHatchingLoadedDeliveryRequest request) {
         Optional<Hatching> hatching = hatchingRepository.findById(request.hatchingId());
         Optional<Delivery> delivery = deliveryService.getDeliveryById(request.deliveryId());

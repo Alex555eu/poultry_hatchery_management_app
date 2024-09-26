@@ -107,7 +107,7 @@ public class NestingIncubatorController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/traffic")
+    @GetMapping("/occupation")
     public ResponseEntity<String> getNestingTrolleyCurrentlyInIncubator(@RequestParam UUID incubatorId) throws JsonProcessingException {
         List<NestingTrolleyIncubatorSpaceAssignment> result = nestingIncubatorService.getNestingTrolleyCurrentlyInIncubator(incubatorId);
         if (!result.isEmpty()) {
@@ -117,7 +117,7 @@ public class NestingIncubatorController {
         return ResponseEntity.notFound().build();
     }
 
-    @PostMapping("/traffic")
+    @PostMapping("/occupation")
     public ResponseEntity<String> postNestingTrolleyToIncubatorSpace(@RequestBody PostNestingTrolleyToIncubatorRequest request) {
         Optional<NestingTrolleyIncubatorSpaceAssignment> assignment = nestingIncubatorService.postNestingTrolleyToIncubatorSpace(request);
         if (assignment.isPresent()) {
@@ -126,7 +126,7 @@ public class NestingIncubatorController {
         return ResponseEntity.notFound().build();
     }
 
-    @PutMapping("/traffic")
+    @PutMapping("/occupation")
     public ResponseEntity<String> putNestingTrolleyToIncubatorSpace(@RequestBody PutNestingTrolleyToIncubatorRequest request) {
         Optional<NestingTrolleyIncubatorSpaceAssignment> assignment = nestingIncubatorService.putNestingTrolleyToIncubatorSpace(request);
         if (assignment.isPresent()) {
@@ -135,7 +135,7 @@ public class NestingIncubatorController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/traffic")
+    @DeleteMapping("/occupation")
     public ResponseEntity<String> deleteNestingTrolleyFromIncubatorSpace(@RequestParam UUID assignmentId) {
         nestingIncubatorService.deleteNestingTrolleyFromIncubatorSpace(assignmentId);
         return ResponseEntity.ok().build();

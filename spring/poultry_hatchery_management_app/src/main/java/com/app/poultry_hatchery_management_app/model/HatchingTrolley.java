@@ -22,6 +22,10 @@ public class HatchingTrolley {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
+    private String humanReadableId;
+
     @ManyToOne
     private Organisation organisation;
+
+
 }
