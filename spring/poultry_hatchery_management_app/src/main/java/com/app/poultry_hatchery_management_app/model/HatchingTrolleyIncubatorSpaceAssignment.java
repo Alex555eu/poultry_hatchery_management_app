@@ -23,14 +23,14 @@ public class HatchingTrolleyIncubatorSpaceAssignment {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
+    private LocalDateTime trolleyExitStamp;
+
+    private LocalDateTime trolleyEntryStamp;
+
     @OneToOne
     private HatchingIncubatorSpace hatchingIncubatorSpace;
 
     @OneToOne
     private HatchingTrolley hatchingTrolley;
-
-    private LocalDateTime trolleyExitStamp;
-
-    private LocalDateTime trolleyEntryStamp;
 
 }

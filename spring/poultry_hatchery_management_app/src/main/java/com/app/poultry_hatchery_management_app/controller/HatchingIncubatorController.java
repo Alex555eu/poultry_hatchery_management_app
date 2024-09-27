@@ -1,11 +1,9 @@
 package com.app.poultry_hatchery_management_app.controller;
 
-import com.app.poultry_hatchery_management_app.dto.PostHatchingIncubatorRequest;
-import com.app.poultry_hatchery_management_app.dto.PostHatchingIncubatorSpaceRequest;
-import com.app.poultry_hatchery_management_app.dto.PutHatchingIncubatorRequest;
-import com.app.poultry_hatchery_management_app.dto.PutHatchingIncubatorSpaceRequest;
+import com.app.poultry_hatchery_management_app.dto.*;
 import com.app.poultry_hatchery_management_app.model.HatchingIncubator;
 import com.app.poultry_hatchery_management_app.model.HatchingIncubatorSpace;
+import com.app.poultry_hatchery_management_app.model.HatchingTrolleyIncubatorSpaceAssignment;
 import com.app.poultry_hatchery_management_app.service.HatchingIncubatorService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -99,5 +97,39 @@ public class HatchingIncubatorController {
         return ResponseEntity.ok().build();
     }
 
+
+    @GetMapping("/occupation")
+    public ResponseEntity<String> getAllTrolleysFromHatchingIncubator(@RequestParam UUID hatchingIncubatorId) throws JsonProcessingException {
+        List<HatchingTrolleyIncubatorSpaceAssignment> assignment = hatchingIncubatorService.getAllTrolleysFromHatchingIncubator(hatchingIncubatorId);
+        if(assignment.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        String response = objectMapper.writeValueAsString(assignment);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/occupation")
+    public ResponseEntity<String> postHatchingTrolleyToIncubatorSpace(@RequestBody PostHatchingTrolleyIncubatorSpaceAssignmentRequest request) {
+        Optional<HatchingTrolleyIncubatorSpaceAssignment> assignment = hatchingIncubatorService.postHatchingTrolleyToIncubatorSpace(request);
+        if (assignment.isPresent()) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/occupation")
+    public ResponseEntity<String> putHatchingTrolleyToIncubatorSpace(@RequestBody PutHatchingTrolleyIncubatorSpaceAssignmentRequest request) {
+        Optional<HatchingTrolleyIncubatorSpaceAssignment> assignment = hatchingIncubatorService.putHatchingTrolleyToIncubatorSpace(request);
+        if (assignment.isPresent()) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/occupation")
+    public ResponseEntity<String> deleteHatchingTrolleyFromIncubatorSpace(@RequestParam UUID hatchingTrolleyIncubatorSpaceAssignmentId) {
+        hatchingIncubatorService.deleteHatchingTrolleyFromIncubatorSpace(hatchingTrolleyIncubatorSpaceAssignmentId);
+        return ResponseEntity.ok().build();
+    }
 
 }

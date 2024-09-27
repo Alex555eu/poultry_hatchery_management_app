@@ -1,15 +1,10 @@
 package com.app.poultry_hatchery_management_app.service;
 
-import com.app.poultry_hatchery_management_app.dto.PostHatchingIncubatorRequest;
-import com.app.poultry_hatchery_management_app.dto.PostHatchingIncubatorSpaceRequest;
-import com.app.poultry_hatchery_management_app.dto.PutHatchingIncubatorRequest;
-import com.app.poultry_hatchery_management_app.dto.PutHatchingIncubatorSpaceRequest;
-import com.app.poultry_hatchery_management_app.model.HatchingIncubator;
-import com.app.poultry_hatchery_management_app.model.HatchingIncubatorSpace;
-import com.app.poultry_hatchery_management_app.model.Organisation;
-import com.app.poultry_hatchery_management_app.model.User;
+import com.app.poultry_hatchery_management_app.dto.*;
+import com.app.poultry_hatchery_management_app.model.*;
 import com.app.poultry_hatchery_management_app.repository.HatchingIncubatorRepository;
 import com.app.poultry_hatchery_management_app.repository.HatchingIncubatorSpaceRepository;
+import com.app.poultry_hatchery_management_app.repository.HatchingTrolleyIncubatorSpaceAssignmentRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -27,6 +23,9 @@ public class HatchingIncubatorService {
 
     private final HatchingIncubatorRepository hatchingIncubatorRepository;
     private final HatchingIncubatorSpaceRepository hatchingIncubatorSpaceRepository;
+    private final HatchingTrolleyIncubatorSpaceAssignmentRepository hatchingTrolleyIncubatorSpaceAssignmentRepository;
+
+    private final HatchingTrolleyService hatchingTrolleyService;
 
     public List<HatchingIncubator> getAllHatchingIncubators() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -103,5 +102,49 @@ public class HatchingIncubatorService {
         hatchingIncubatorSpaceRepository.deleteById(hatchingIncubatorSpaceId);
     }
 
+    public List<HatchingTrolleyIncubatorSpaceAssignment> getAllTrolleysFromHatchingIncubator(UUID hatchingIncubatorId) {
+        Optional<HatchingIncubator> incubator = hatchingIncubatorRepository.findById(hatchingIncubatorId);
+        if (incubator.isPresent()) {
+            return hatchingTrolleyIncubatorSpaceAssignmentRepository.findAllByHatchingIncubatorId(hatchingIncubatorId);
+        }
+        return List.of();
+    }
 
+    public Optional<HatchingTrolleyIncubatorSpaceAssignment> postHatchingTrolleyToIncubatorSpace(PostHatchingTrolleyIncubatorSpaceAssignmentRequest request) {
+        Optional<HatchingTrolley> trolley = hatchingTrolleyService.getHatchingTrolleyById(request.hatchingTrolleyId());
+        Optional<HatchingIncubatorSpace> space = hatchingIncubatorSpaceRepository.findById(request.hatchingIncubatorSpaceId());
+
+        if (trolley.isPresent() && space.isPresent()) {
+            HatchingTrolleyIncubatorSpaceAssignment htisa = HatchingTrolleyIncubatorSpaceAssignment.builder()
+                    .hatchingTrolley(trolley.get())
+                    .hatchingIncubatorSpace(space.get())
+                    .trolleyExitStamp(null)
+                    .trolleyEntryStamp(LocalDateTime.now())
+                    .build();
+            hatchingTrolleyIncubatorSpaceAssignmentRepository.save(htisa);
+
+            return Optional.of(htisa);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<HatchingTrolleyIncubatorSpaceAssignment> putHatchingTrolleyToIncubatorSpace(PutHatchingTrolleyIncubatorSpaceAssignmentRequest request) {
+        Optional<HatchingTrolleyIncubatorSpaceAssignment> assignment =
+                hatchingTrolleyIncubatorSpaceAssignmentRepository.findById(request.assignmentId());
+        if (assignment.isPresent()) {
+            if (assignment.get().getHatchingIncubatorSpace().isCurrentlyOccupied()) {
+                assignment.get().getHatchingIncubatorSpace().setCurrentlyOccupied(false);
+                assignment.get().setTrolleyExitStamp(LocalDateTime.now());
+            } else {
+                assignment.get().getHatchingIncubatorSpace().setCurrentlyOccupied(true);
+                assignment.get().setTrolleyEntryStamp(LocalDateTime.now());
+            }
+            return assignment;
+        }
+        return Optional.empty();
+    }
+
+    public void deleteHatchingTrolleyFromIncubatorSpace(UUID assignmentId) {
+        hatchingTrolleyIncubatorSpaceAssignmentRepository.deleteById(assignmentId);
+    }
 }

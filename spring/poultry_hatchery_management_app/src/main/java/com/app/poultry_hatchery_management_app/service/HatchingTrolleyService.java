@@ -40,6 +40,10 @@ public class HatchingTrolleyService {
         return null;
     }
 
+    public Optional<HatchingTrolley> getHatchingTrolleyById(UUID hatchingTrolleyId) {
+        return hatchingTrolleyRepository.findById(hatchingTrolleyId);
+    }
+
     public Optional<HatchingTrolley> postHatchingTrolley(PostHatchingTrolleyRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
