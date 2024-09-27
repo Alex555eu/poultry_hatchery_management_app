@@ -24,13 +24,14 @@ public class RejectionUnexpected {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @ManyToOne
-    private Nesting nesting;
-
     private Integer quantity;
 
-    private String cause;
-
     private LocalDateTime timeStamp;
+
+    @Enumerated(EnumType.STRING)
+    private RejectionCause cause;
+
+    @ManyToOne
+    private Nesting nesting;
 
 }
