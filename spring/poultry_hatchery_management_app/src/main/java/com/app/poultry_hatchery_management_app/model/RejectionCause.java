@@ -9,7 +9,7 @@ public enum RejectionCause {
     BRAK,
     STLUCZKA;
 
-    public RejectionCause verify(RejectionGroup group) {
+    public RejectionCause verify(RejectionGroup group) throws IllegalArgumentException {
         if(getAvailableCauses(group).contains(this))
             return this;
         else

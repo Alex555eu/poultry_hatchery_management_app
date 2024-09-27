@@ -62,7 +62,7 @@ public class CandlingController {
 
     @GetMapping("/trolley")
     public ResponseEntity<String> getCandledTrolleyAssignments(@RequestParam UUID candlingId) throws JsonProcessingException {
-        List<CandlingNestingTrolleyAssignment> cnta = candlingService.getCandledTrolleyAssignments(candlingId);
+        List<CandlingNestingTrolleyAssignment> cnta = candlingService.getAllCandledTrolleyAssignments(candlingId);
         if (cnta.isEmpty()) {
             return ResponseEntity.notFound().build();
         }

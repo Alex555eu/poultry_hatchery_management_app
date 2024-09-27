@@ -55,7 +55,7 @@ public class HatchingController {
 
     @GetMapping("/loaded-deliveries")
     public ResponseEntity<String> getHatchingLoadedDeliveriesByHatchingId(@RequestParam UUID hatchingId) throws JsonProcessingException {
-        List<HatchingLoadedDeliveries> hatching = hatchingService.getHatchingLoadedDeliveriesByHatchingId(hatchingId);
+        List<HatchingLoadedDeliveries> hatching = hatchingService.getAllHatchingLoadedDeliveriesByHatchingId(hatchingId);
         if(hatching.isEmpty()) {
            return ResponseEntity.notFound().build();
         }

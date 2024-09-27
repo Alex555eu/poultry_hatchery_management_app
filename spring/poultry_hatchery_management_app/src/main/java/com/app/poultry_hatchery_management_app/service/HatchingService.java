@@ -50,7 +50,7 @@ public class HatchingService {
         hatchingRepository.deleteById(hatchingId);
     }
 
-    public List<HatchingLoadedDeliveries> getHatchingLoadedDeliveriesByHatchingId(UUID hatchingId) {
+    public List<HatchingLoadedDeliveries> getAllHatchingLoadedDeliveriesByHatchingId(UUID hatchingId) {
         Optional<Hatching> hatching = hatchingRepository.findById(hatchingId);
         if (hatching.isPresent()) {
             return hatchingLoadedDeliveriesRepository.findAllByHatchingId(hatchingId);
@@ -58,7 +58,7 @@ public class HatchingService {
         return List.of();
     }
 
-    public Optional<HatchingLoadedDeliveries> getHatchingLoadedDelivery(UUID hatchingLoadedDeliveryId) {
+    public Optional<HatchingLoadedDeliveries> getHatchingLoadedDeliveryById(UUID hatchingLoadedDeliveryId) {
         return hatchingLoadedDeliveriesRepository.findById(hatchingLoadedDeliveryId);
     }
 
@@ -85,8 +85,12 @@ public class HatchingService {
         return hatchingResultRepository.findAllByHatchingId(hatchingId);
     }
 
+    public Optional<HatchingResult> getHatchingResultsById(UUID hatchingResultId) {
+        return hatchingResultRepository.findById(hatchingResultId);
+    }
+
     public Optional<HatchingResult> postHatchingResult(PostHatchingResultRequest request) {
-        Optional<HatchingLoadedDeliveries> hld = getHatchingLoadedDelivery(request.hatchingLoadedDeliveryId());
+        Optional<HatchingLoadedDeliveries> hld = getHatchingLoadedDeliveryById(request.hatchingLoadedDeliveryId());
         if (hld.isPresent()) {
             HatchingResult result = HatchingResult.builder()
                     .hatchingLoadedDeliveries(hld.get())

@@ -30,6 +30,10 @@ public class NestingLoadedDeliveriesService {
     private final NestingRepository nestingRepository;
     private final NestingLoadedDeliveriesRepository nestingLoadedDeliveriesRepository;
 
+    public Optional<NestingLoadedDeliveries> getNestingLoadedDeliveryById(UUID nestingLoadedDeliveryId) {
+        return nestingLoadedDeliveriesRepository.findById(nestingLoadedDeliveryId);
+    }
+
     public Optional<NestingLoadedDeliveries> postNestingLoadedDelivery(UUID nestingId, UUID deliveryId) {
         Optional<Nesting> nesting = nestingRepository.findById(nestingId);
         Optional<Delivery> delivery = deliveryRepository.findById(deliveryId);

@@ -11,12 +11,10 @@ import com.app.poultry_hatchery_management_app.model.User;
 import com.app.poultry_hatchery_management_app.repository.HatchingTrolleyContentRepository;
 import com.app.poultry_hatchery_management_app.repository.HatchingTrolleyRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -80,7 +78,7 @@ public class HatchingTrolleyService {
 
     public Optional<HatchingTrolleyContent> postHatchingTrolleyContent(PostHatchingTrolleyContentRequest request) {
         Optional<HatchingTrolley> trolley = hatchingTrolleyRepository.findById(request.hatchingTrolleyId());
-        Optional<HatchingLoadedDeliveries> hld = hatchingService.getHatchingLoadedDelivery(request.hatchingLoadedDeliveriesId());
+        Optional<HatchingLoadedDeliveries> hld = hatchingService.getHatchingLoadedDeliveryById(request.hatchingLoadedDeliveriesId());
 
         if (trolley.isPresent() && hld.isPresent()) {
             HatchingTrolleyContent content = HatchingTrolleyContent.builder()
@@ -97,7 +95,7 @@ public class HatchingTrolleyService {
 
     public Optional<HatchingTrolleyContent> putHatchingTrolleyContent(PutHatchingTrolleyContentRequest request) {
         Optional<HatchingTrolleyContent> content = hatchingTrolleyContentRepository.findById(request.hatchingTrolleyContentId());
-        Optional<HatchingLoadedDeliveries> hld = hatchingService.getHatchingLoadedDelivery(request.hatchingLoadedDeliveriesId());
+        Optional<HatchingLoadedDeliveries> hld = hatchingService.getHatchingLoadedDeliveryById(request.hatchingLoadedDeliveriesId());
         if (content.isPresent() && hld.isPresent()) {
             content.get().setQuantity(request.quantity());
             content.get().setHatchingLoadedDeliveries(hld.get());

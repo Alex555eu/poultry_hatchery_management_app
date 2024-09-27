@@ -65,8 +65,12 @@ public class CandlingService {
         candlingRepository.deleteById(candlingId);
     }
 
-    public List<CandlingNestingTrolleyAssignment> getCandledTrolleyAssignments(UUID candlingId) {
+    public List<CandlingNestingTrolleyAssignment> getAllCandledTrolleyAssignments(UUID candlingId) {
         return candlingNestingTrolleyAssignmentRepository.findAllByCandlingId(candlingId);
+    }
+
+    public Optional<CandlingNestingTrolleyAssignment> getCandledTrolleyAssignment(UUID assignmentId) {
+        return candlingNestingTrolleyAssignmentRepository.findById(assignmentId);
     }
 
     public Optional<CandlingNestingTrolleyAssignment> postCandledTrolleyAssignment(PostCandlingNestingTrolleyAssignmentRequest request) {
