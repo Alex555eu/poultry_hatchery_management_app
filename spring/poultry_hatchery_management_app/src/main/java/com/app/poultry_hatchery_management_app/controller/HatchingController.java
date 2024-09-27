@@ -3,8 +3,11 @@ package com.app.poultry_hatchery_management_app.controller;
 
 import com.app.poultry_hatchery_management_app.dto.PostHatchingLoadedDeliveryRequest;
 import com.app.poultry_hatchery_management_app.dto.PostHatchingRequest;
+import com.app.poultry_hatchery_management_app.dto.PostHatchingResultRequest;
+import com.app.poultry_hatchery_management_app.dto.PutHatchingResultRequest;
 import com.app.poultry_hatchery_management_app.model.Hatching;
 import com.app.poultry_hatchery_management_app.model.HatchingLoadedDeliveries;
+import com.app.poultry_hatchery_management_app.model.HatchingResult;
 import com.app.poultry_hatchery_management_app.service.HatchingService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -73,6 +76,41 @@ public class HatchingController {
     @DeleteMapping("/loaded-deliveries")
     public ResponseEntity<String> deleteHatchingLoadedDeliveries(@RequestParam UUID hatchingLoadedDeliveryId) {
         hatchingService.deleteHatchingLoadedDeliveries(hatchingLoadedDeliveryId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/results")
+    public ResponseEntity<String> getAllHatchingResultsByHatchingId(@RequestParam UUID hatchingId) throws JsonProcessingException {
+        List<HatchingResult> hatching = hatchingService.getAllHatchingResultsByHatchingId(hatchingId);
+        if(hatching.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        String response = objectMapper.writeValueAsString(hatching);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/results")
+    public ResponseEntity<String> postHatchingResult(@RequestBody PostHatchingResultRequest request) {
+        Optional<HatchingResult> result = hatchingService.postHatchingResult(request);
+        if(result.isPresent()) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/results")
+    public ResponseEntity<String> putHatchingResult(@RequestBody PutHatchingResultRequest request) {
+        Optional<HatchingResult> result = hatchingService.putHatchingResult(request);
+        if(result.isPresent()) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+
+    @DeleteMapping("/results")
+    public ResponseEntity<String> deleteHatchingResult(@RequestParam UUID hatchingResultId) {
+        hatchingService.deleteHatchingResult(hatchingResultId);
         return ResponseEntity.ok().build();
     }
 

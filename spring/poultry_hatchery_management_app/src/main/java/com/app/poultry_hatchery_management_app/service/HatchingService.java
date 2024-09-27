@@ -3,12 +3,12 @@ package com.app.poultry_hatchery_management_app.service;
 
 import com.app.poultry_hatchery_management_app.dto.PostHatchingLoadedDeliveryRequest;
 import com.app.poultry_hatchery_management_app.dto.PostHatchingRequest;
-import com.app.poultry_hatchery_management_app.model.Delivery;
-import com.app.poultry_hatchery_management_app.model.Hatching;
-import com.app.poultry_hatchery_management_app.model.HatchingLoadedDeliveries;
-import com.app.poultry_hatchery_management_app.model.Nesting;
+import com.app.poultry_hatchery_management_app.dto.PostHatchingResultRequest;
+import com.app.poultry_hatchery_management_app.dto.PutHatchingResultRequest;
+import com.app.poultry_hatchery_management_app.model.*;
 import com.app.poultry_hatchery_management_app.repository.HatchingLoadedDeliveriesRepository;
 import com.app.poultry_hatchery_management_app.repository.HatchingRepository;
+import com.app.poultry_hatchery_management_app.repository.HatchingResultRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +23,7 @@ public class HatchingService {
 
     private final HatchingRepository hatchingRepository;
     private final HatchingLoadedDeliveriesRepository hatchingLoadedDeliveriesRepository;
+    private final HatchingResultRepository hatchingResultRepository;
 
     private final NestingService nestingService;
     private final DeliveryService deliveryService;
@@ -78,6 +79,39 @@ public class HatchingService {
 
     public void deleteHatchingLoadedDeliveries(UUID hatchingLoadedDeliveryId) {
         hatchingLoadedDeliveriesRepository.deleteById(hatchingLoadedDeliveryId);
+    }
+
+    public List<HatchingResult> getAllHatchingResultsByHatchingId(UUID hatchingId) {
+        return hatchingResultRepository.findAllByHatchingId(hatchingId);
+    }
+
+    public Optional<HatchingResult> postHatchingResult(PostHatchingResultRequest request) {
+        Optional<HatchingLoadedDeliveries> hld = getHatchingLoadedDelivery(request.hatchingLoadedDeliveryId());
+        if (hld.isPresent()) {
+            HatchingResult result = HatchingResult.builder()
+                    .hatchingLoadedDeliveries(hld.get())
+                    .quantity(request.quantity())
+                    .build();
+            hatchingResultRepository.save(result);
+
+            return Optional.of(result);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<HatchingResult> putHatchingResult(PutHatchingResultRequest request) {
+        Optional<HatchingResult> result = hatchingResultRepository.findById(request.hatchingResultId());
+        if (result.isPresent()) {
+            result.get().setQuantity(request.quantity());
+            hatchingResultRepository.save(result.get());
+
+            return result;
+        }
+        return Optional.empty();
+    }
+
+    public void deleteHatchingResult(UUID hatchingResultId) {
+        hatchingResultRepository.deleteById(hatchingResultId);
     }
 
 }
