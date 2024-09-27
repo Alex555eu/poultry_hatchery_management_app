@@ -23,11 +23,12 @@ public class Rejection2 {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @ManyToOne
-    private CandlingNestingTrolleyAssignment candlingNestingTrolleyAssignment;
-
     private Integer quantity;
 
-    private String cause;
+    @Enumerated(EnumType.STRING)
+    private RejectionCause cause;
+
+    @ManyToOne
+    private CandlingNestingTrolleyAssignment candlingNestingTrolleyAssignment;
 
 }
