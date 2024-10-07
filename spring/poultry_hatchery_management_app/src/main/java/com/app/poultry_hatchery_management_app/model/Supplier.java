@@ -26,9 +26,10 @@ public class Supplier {
 
     private String surname;
 
-    private String address;
-
     private String WNI; // weterynaryjny numer identyfikacyjny (transl. veterinary identification number)
+
+    @ManyToOne
+    private Address address;
 
     @ManyToOne
     private Organisation organisation;

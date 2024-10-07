@@ -9,7 +9,8 @@ public record RegisterRequest(
         String orgName,
         String orgCity,
         String orgPostalCode,
-        String orgAddress,
+        String orgStreet,
+        String orgNumber,
         String orgRegon
 ) {
 }

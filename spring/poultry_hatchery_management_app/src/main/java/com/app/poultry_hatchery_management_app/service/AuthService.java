@@ -3,10 +3,8 @@ package com.app.poultry_hatchery_management_app.service;
 import com.app.poultry_hatchery_management_app.dto.AuthenticationRequest;
 import com.app.poultry_hatchery_management_app.dto.AuthenticationResponse;
 import com.app.poultry_hatchery_management_app.dto.RegisterRequest;
-import com.app.poultry_hatchery_management_app.model.Organisation;
-import com.app.poultry_hatchery_management_app.model.Role;
-import com.app.poultry_hatchery_management_app.model.Token;
-import com.app.poultry_hatchery_management_app.model.User;
+import com.app.poultry_hatchery_management_app.model.*;
+import com.app.poultry_hatchery_management_app.repository.AddressRepository;
 import com.app.poultry_hatchery_management_app.repository.OrganisationRepository;
 import com.app.poultry_hatchery_management_app.repository.TokenRepository;
 import com.app.poultry_hatchery_management_app.repository.UserRepository;
@@ -32,6 +30,7 @@ import java.util.Optional;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final AddressRepository addressRepository;
     private final OrganisationRepository organisationRepository;
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
@@ -59,23 +58,31 @@ public class AuthService {
     }
 
     public AuthenticationResponse register(RegisterRequest request) {
+        Address address = Address.builder()
+                .postalCode(request.orgPostalCode())
+                .street(request.orgStreet())
+                .number(request.orgNumber())
+                .city(request.orgCity())
+                .build();
+        addressRepository.save(address);
+
         Organisation organisation = Organisation.builder()
                 .name(request.orgName())
-                .city(request.orgCity())
-                .postalCode(request.orgPostalCode())
-                .address(request.orgAddress())
+                .address(address)
                 .regon(request.orgRegon())
                 .build();
         organisationRepository.save(organisation);
+
         User user = User.builder()
                 .firstName(request.firstName())
                 .lastName(request.lastName())
                 .emailAddress(request.emailAddress())
                 .password(passwordEncoder.encode(request.password()))
-                .role(Role.USER)
+                .role(Role.ADMIN)
                 .organisation(organisation)
                 .build();
         userRepository.save(user);
+
         String jwtToken = "Bearer " + jwtService.generateToken(new HashMap<>(), user);
         String refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
