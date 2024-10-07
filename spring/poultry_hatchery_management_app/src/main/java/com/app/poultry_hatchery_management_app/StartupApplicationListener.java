@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @Component
 public class StartupApplicationListener implements ApplicationListener<ApplicationReadyEvent> {
 
+    private final AddressRepository addressRepository;
     private final Rejection1Repository rejection1Repository;
     private final OrganisationRepository organisationRepository;
     private final SupplierRepository supplierRepository;
@@ -39,12 +40,35 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
         rejection1Repository.save(rejection1);*/
 
         //System.out.println(RejectionCause.getAvailableCauses(RejectionGroup.REJECTION_1).toString());
+
+        Address address = Address.builder()
+                .city("Krakow")
+                .number("99")
+                .street("Warszawska")
+                .postalCode("30-300")
+                .build();
+        addressRepository.save(address);
+
+        Address address2 = Address.builder()
+                .city("Gdynia")
+                .number("11")
+                .street("Morska")
+                .postalCode("12-345")
+                .build();
+        addressRepository.save(address2);
+
+        Address address3 = Address.builder()
+                .city("Wroclaw")
+                .number("33")
+                .street("Sloneczna")
+                .postalCode("67-890")
+                .build();
+        addressRepository.save(address3);
+
         Organisation organisation = Organisation.builder()
-                .address("ul.Warszawska 99")
+                .address(address)
                 .regon("123456789")
-                .city("Kraków")
                 .name("A.Adamczyk sp.z.o.o.")
-                .postalCode("11-111")
                 .build();
         organisationRepository.save(organisation);
 
@@ -54,7 +78,7 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
                 .firstName("user")
                 .lastName("user")
                 .password(passwordEncoder.encode("string"))
-                .role(Role.USER)
+                .role(Role.ADMIN)
                 .build();
         userRepository.save(user);
 
@@ -62,7 +86,7 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
                 .WNI("wni-example")
                 .surname("surname-example")
                 .name("name-example")
-                .address("address-example")
+                .address(address2)
                 .organisation(organisation)
                 .build();
         supplierRepository.save(supplier);
@@ -71,19 +95,10 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
                 .WNI("wni-example")
                 .surname("surname-example")
                 .name("name-example")
-                .address("address-example")
+                .address(address3)
                 .organisation(organisation)
                 .build();
         supplierRepository.save(supplier2);
-
-        Supplier supplier3 = Supplier.builder()
-                .WNI("wni-example")
-                .surname("surname-example")
-                .name("name-example")
-                .address("address-example")
-                .organisation(organisation)
-                .build();
-        supplierRepository.save(supplier3);
 
         Delivery delivery = Delivery.builder()
                 .quantity(111)

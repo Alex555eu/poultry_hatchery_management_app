@@ -1,8 +1,7 @@
 package com.app.poultry_hatchery_management_app.dto;
 
-public record UpdateUserRequest(
+public record PutAdminRequest(
         String firstName,
-        String lastName,
-        String emailAddress
+        String lastName
 ) {
 }

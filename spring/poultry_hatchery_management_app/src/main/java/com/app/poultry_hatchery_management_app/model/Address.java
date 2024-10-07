@@ -5,29 +5,27 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.util.UUID;
 
+@Entity
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@Entity
-public class Organisation {
+@NoArgsConstructor
+public class Address {
 
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "org.hibernate.id.UUIDGenerator")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    private String name;
+    private String city;
 
-    @Column(unique = true)
-    private String regon;
+    private String postalCode;
 
-    @ManyToOne
-    private Address address;
+    private String street;
+
+    private String number;
 
 }
