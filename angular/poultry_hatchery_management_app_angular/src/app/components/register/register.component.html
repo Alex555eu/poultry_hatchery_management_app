@@ -16,31 +16,41 @@
 
         <mat-form-field appearance="fill">
             <mat-label>Miasto</mat-label>
-            <input matInput id="city" formControlName="city" type="text" placeholder="Wprowadź miasto prowadzonej organizacji">
+            <input matInput id="orgCity" formControlName="orgCity" type="text" placeholder="Wprowadź miasto prowadzonej organizacji">
         </mat-form-field>
 
         <mat-form-field appearance="fill">
             <mat-label>Nr. Pocztowy</mat-label>
-            <input matInput id="postalCode" formControlName="postalCode" type="text" placeholder="Wprowadź kod pocztowy prowadzonej organizacji">
-            @if (registerForm.get('postalCode')?.invalid && registerForm.get('postalCode')?.touched) {
+            <input matInput id="orgPostalCode" formControlName="orgPostalCode" type="text" placeholder="Wprowadź kod pocztowy prowadzonej organizacji">
+            @if (registerForm.get('orgPostalCode')?.invalid && registerForm.get('orgPostalCode')?.touched) {
                 <mat-error>Proszę wprowadzić poprawny kod pocztowy.</mat-error>
               }
         </mat-form-field>
 
         <mat-form-field appearance="fill">
             <mat-label>Ulica</mat-label>
-            <input matInput id="street" formControlName="street" type="text" placeholder="Wprowadź ulicę prowadzonej organizacji">
+            <input matInput id="orgStreet" formControlName="orgStreet" type="text" placeholder="Wprowadź ulicę prowadzonej organizacji">
         </mat-form-field>
 
         <mat-form-field appearance="fill">
             <mat-label>Numer</mat-label>
-            <input matInput id="number" formControlName="number" type="text" placeholder="Wprowadź numer budynku prowadzonej organizacji">
+            <input matInput id="orgNumber" formControlName="orgNumber" type="text" placeholder="Wprowadź numer budynku prowadzonej organizacji">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Nazwa organizacji</mat-label>
+          <input matInput id="orgName" formControlName="orgName" type="text" placeholder="Wprowadź nazwę prowadzonej organizacji">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Nr. Regon</mat-label>
+          <input matInput id="orgRegon" formControlName="orgRegon" type="text" placeholder="Wprowadź nr. regon prowadzonej organizacji">
         </mat-form-field>
 
         <mat-form-field appearance="fill">
           <mat-label>Email</mat-label>
-          <input matInput id="email" formControlName="email" type="email" placeholder="Wprowadź email">
-          @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+          <input matInput id="emailAddress" formControlName="emailAddress" type="email" placeholder="Wprowadź email">
+          @if (registerForm.get('emailAddress')?.invalid && registerForm.get('emailAddress')?.touched) {
             <mat-error>Proszę wprowadzić poprawny adres email.</mat-error>
           }
         </mat-form-field>

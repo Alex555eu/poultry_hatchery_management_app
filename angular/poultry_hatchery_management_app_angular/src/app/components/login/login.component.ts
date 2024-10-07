@@ -49,7 +49,7 @@ export class LoginComponent {
       const { email, password } = this.loginForm.value;
       this.loginService.login(email, password).subscribe({
         next: (data: AuthResponse) => {
-          this.cookieService.set(data.authToken, data.refreshToken);
+          this.cookieService.set(data.token, data.refreshToken);
           this.router.navigate(['/']);
         },
         error: (error: any) => {
@@ -65,8 +65,7 @@ export class LoginComponent {
   };
 
   onRegister() {
-    console.log('clicked');
-    //this.router.navigate(['/register']);
+    this.router.navigate(['/register']);
   };
 
 }

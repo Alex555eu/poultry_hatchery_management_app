@@ -21,6 +21,7 @@ import java.util.Optional;
 public class UserController {
 
     private final UserRepository userRepository;
+    private final ObjectMapper objectMapper;
 
     @PutMapping(value = "/")
     public ResponseEntity<String> updateUser(@RequestBody PutUserRequest request) {
@@ -55,8 +56,7 @@ public class UserController {
 
         if ((authentication != null && authentication.getPrincipal() instanceof UserDetails)) {
             User user = (User) authentication.getPrincipal();
-            ObjectMapper mapper = new ObjectMapper();
-            String body = mapper.writeValueAsString(user);
+            String body = objectMapper.writeValueAsString(user);
             return ResponseEntity.ok().body(body);
         }
         return ResponseEntity.notFound().build();
