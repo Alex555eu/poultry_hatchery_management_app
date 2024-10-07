@@ -1,0 +1,71 @@
+<div class="bg-container">
+    <div class="register-container">
+      <h2>Rejestracja</h2>
+  
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+        <mat-form-field appearance="fill">
+            <mat-label>Imię</mat-label>
+            <input matInput id="firstName" formControlName="firstName" type="text" placeholder="Wprowadź swoje imię">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Nazwisko</mat-label>
+            <input matInput id="lastName" formControlName="lastName" type="text" placeholder="Wprowadź swoje nazwisko">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Miasto</mat-label>
+            <input matInput id="city" formControlName="city" type="text" placeholder="Wprowadź miasto prowadzonej organizacji">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Nr. Pocztowy</mat-label>
+            <input matInput id="postalCode" formControlName="postalCode" type="text" placeholder="Wprowadź kod pocztowy prowadzonej organizacji">
+            @if (registerForm.get('postalCode')?.invalid && registerForm.get('postalCode')?.touched) {
+                <mat-error>Proszę wprowadzić poprawny kod pocztowy.</mat-error>
+              }
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Ulica</mat-label>
+            <input matInput id="street" formControlName="street" type="text" placeholder="Wprowadź ulicę prowadzonej organizacji">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Numer</mat-label>
+            <input matInput id="number" formControlName="number" type="text" placeholder="Wprowadź numer budynku prowadzonej organizacji">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Email</mat-label>
+          <input matInput id="email" formControlName="email" type="email" placeholder="Wprowadź email">
+          @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+            <mat-error>Proszę wprowadzić poprawny adres email.</mat-error>
+          }
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Hasło</mat-label>
+          <input matInput id="password" formControlName="password" type="password" placeholder="Wprowadź hasło">
+          @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+            <mat-error>Proszę wprowadzić hasło (min. 6 znaków).</mat-error>
+          }
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Powtórz hasło</mat-label>
+          <input matInput id="repeatPassword" formControlName="repeatPassword" type="password" placeholder="Wprowadź hasło">
+          @if (registerForm.get('repeatPassword')?.invalid && registerForm.get('repeatPassword')?.touched) {
+            <mat-error>Hasła są niezgodne.</mat-error>
+          }
+        </mat-form-field>
+  
+        <button mat-raised-button color="primary" type="submit" [disabled]="registerForm.invalid">
+          Zarejestruj organizację
+        </button>
+      </form>
+    </div>
+  </div>
+  
+  
