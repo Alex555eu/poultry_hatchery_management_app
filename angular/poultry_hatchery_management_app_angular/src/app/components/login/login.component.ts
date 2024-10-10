@@ -11,6 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { LoginService } from '../../services/login.service';
 import { AuthResponse } from '../../models/auth-response.model';
+import { NavbarComponent } from '../navbar/navbar.component';
 
 
 
@@ -23,7 +24,8 @@ import { AuthResponse } from '../../models/auth-response.model';
     MatInputModule,
     MatFormFieldModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    NavbarComponent
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
