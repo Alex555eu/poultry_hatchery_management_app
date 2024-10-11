@@ -7,6 +7,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card'
 
 import { RouterOutlet } from '@angular/router';
+import { UserDetails } from '../../models/user-details.model';
+import { UserDetailsService } from '../../services/users/user-details.service';
 
 @Component({
   selector: 'app-navbar',
@@ -24,8 +26,26 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
+  public userFirstName: string = 'Imie';
+  public userLastName: string = 'Nazwisko';
+  public userRole: string = 'Rola';
 
+  private userDetailsService: UserDetailsService;
 
+  public constructor(userDetailsService: UserDetailsService) 
+  {
+    this.userDetailsService = userDetailsService;
+  }
+
+  ngOnInit() {
+    this.userDetailsService.fetchUserDetails().subscribe(userDetails => {
+      if (userDetails) {
+        this.userFirstName = userDetails.firstName;
+        this.userLastName = userDetails.lastName;
+        this.userRole = userDetails.role;
+      }
+    });
+  }
 
 
 }

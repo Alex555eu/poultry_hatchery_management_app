@@ -1,4 +1,4 @@
-import { CookieService } from '../../services/cookie.service';
+import { TokenService } from '../../services/token/token.service';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -9,11 +9,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { LoginService } from '../../services/login.service';
-import { AuthResponse } from '../../models/auth-response.model';
-import { NavbarComponent } from '../navbar/navbar.component';
-
-
+import { LoginService } from '../../services/login/login.service';
+import { AuthResponse } from '../../dto/auth-response.model';
 
 
 @Component({
@@ -24,8 +21,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
     MatInputModule,
     MatFormFieldModule,
     MatIconModule,
-    MatButtonModule,
-    NavbarComponent
+    MatButtonModule
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
@@ -36,7 +32,7 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder, 
     private loginService: LoginService, 
-    private cookieService: CookieService,
+    private tokenService: TokenService,
     private snackBar: MatSnackBar,
     private router: Router
   ) {
@@ -51,8 +47,8 @@ export class LoginComponent {
       const { email, password } = this.loginForm.value;
       this.loginService.login(email, password).subscribe({
         next: (data: AuthResponse) => {
-          this.cookieService.set(data.token, data.refreshToken);
-          this.router.navigate(['/']);
+          this.tokenService.set(data.token, data.refreshToken);
+          this.router.navigate(['manager']);
         },
         error: (error: any) => {
           this.snackBar.open('Nieprawidłowe dane logowania', 'Zamknij', {

@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CookieService } from '../../services/cookie.service';
+import { TokenService } from '../../services/token/token.service';
 import { MatError, MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { RegisterService } from '../../services/register.service';
-import { AuthResponse } from '../../models/auth-response.model';
+import { RegisterService } from '../../services/register/register.service';
+import { AuthResponse } from '../../dto/auth-response.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { RegisterRequest } from '../../models/register-request';
+import { RegisterRequest } from '../../dto/register-request';
 
 @Component({
   selector: 'app-register',
@@ -32,7 +32,7 @@ export class RegisterComponent {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private cookieService: CookieService,
+    private tokenService: TokenService,
     private registerService: RegisterService,
     private snackBar: MatSnackBar
   ) {
@@ -57,7 +57,7 @@ export class RegisterComponent {
     if (this.registerForm.valid) {
       this.registerService.register(this.makeRegisterRequestBody(this.registerForm)).subscribe({
         next: (data: AuthResponse) => {
-          this.cookieService.set(data.token, data.refreshToken);
+          this.tokenService.set(data.token, data.refreshToken);
           this.router.navigate(['/']);
         },
         error: (error: any) => {
