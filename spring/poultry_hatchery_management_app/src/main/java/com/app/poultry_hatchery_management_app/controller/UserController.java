@@ -16,14 +16,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @AllArgsConstructor
-@RequestMapping("/api/v1/admin/data/user")
+@RequestMapping("/api/v1/data/user")
 @RestController
 public class UserController {
 
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
 
-    @PutMapping(value = "/")
+    @PutMapping(value = "/admin")
     public ResponseEntity<String> updateUser(@RequestBody PutUserRequest request) {
         Optional<User> user = userRepository.findById(request.userId());
 
@@ -36,7 +36,7 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
-    @PutMapping(value = "/self")
+    @PutMapping(value = "/admin/self")
     public ResponseEntity<String> updateAdmin(@RequestBody PutAdminRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

@@ -74,7 +74,7 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
 
         User user = User.builder()
                 .organisation(organisation)
-                .emailAddress("string")
+                .emailAddress("string@email.com")
                 .firstName("user")
                 .lastName("user")
                 .password(passwordEncoder.encode("string"))
