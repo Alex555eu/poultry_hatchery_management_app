@@ -1,22 +1,23 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { apiUrl } from '../app.config';
-import { AuthResponse } from '../models/auth-response.model';
+import { Injectable } from '@angular/core';
+import { apiUrl } from '../../app.config';
 import { catchError, Observable, throwError } from 'rxjs';
-
+import { AuthResponse } from '../../dto/auth-response.model';
+import { RegisterRequest } from '../../dto/register-request';
 
 @Injectable({
   providedIn: 'root'
 })
-export class LoginService {
+export class RegisterService {
 
   constructor(
     private http: HttpClient
   ) { }
 
-  login(email: string, password: string): Observable<AuthResponse> {
-    const body = { email: email, password: password };
-    return this.http.post<AuthResponse>(`${apiUrl}/api/v1/auth/validate`, body).pipe(
+  register(request: RegisterRequest): Observable<AuthResponse> {
+    const body = JSON.stringify(request);
+    const headers = { 'Content-Type': 'application/json' };
+    return this.http.post<AuthResponse>(`${apiUrl}/api/v1/auth/register`, body, { headers }).pipe(
       catchError(this.handleError)
     );
   };
