@@ -5,7 +5,7 @@ import { TokenService } from '../token/token.service';
 import { apiUrl } from '../../app.config';
 import { AddressDetails } from '../../models/address-details.model';
 import { OrganisationDetails } from '../../models/organisation-details.model';
-import { catchError, map, Observable, of } from 'rxjs';
+import { catchError, map, Observable, of, shareReplay } from 'rxjs';
 
 
 @Injectable({
@@ -13,20 +13,26 @@ import { catchError, map, Observable, of } from 'rxjs';
 })
 export class UserDetailsService {
 
+  private userDetails$: Observable<UserDetails> | null = null;
+
   constructor(
     private http: HttpClient,
     private tokenService: TokenService
   ) { }
 
-  public fetchUserDetails(): Observable<UserDetails | null> {
-    const token = this.tokenService.getAuthToken();
-    const header = token ? new HttpHeaders({ 'Authorization' : token }) : new HttpHeaders();
-    return this.http.get<any>(`${apiUrl}/api/v1/data/user/self`, { headers : header }).pipe(
-      map(res => this.parseResponse(res)),
-      catchError(error => {
-        return of(null);
-      })
-    );
+  public getUserDetails(): Observable<UserDetails>{
+    if (!this.userDetails$){
+      const token = this.tokenService.getAuthToken();
+      const header = token ? new HttpHeaders({ 'Authorization' : token }) : new HttpHeaders();
+      this.userDetails$ = this.http.get<any>(`${apiUrl}/api/v1/data/user/self`, { headers : header }).pipe(
+        map(res => this.parseResponse(res)),
+        shareReplay(1),
+        catchError(error => {
+          return of();
+        })
+      );
+    }
+    return this.userDetails$;
   }
 
   private parseResponse(json: any): UserDetails {

@@ -9,6 +9,7 @@ import { MatCardModule } from '@angular/material/card'
 import { RouterOutlet } from '@angular/router';
 import { UserDetails } from '../../models/user-details.model';
 import { UserDetailsService } from '../../services/users/user-details.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -38,7 +39,8 @@ export class NavbarComponent {
   }
 
   ngOnInit() {
-    this.userDetailsService.fetchUserDetails().subscribe(userDetails => {
+    let userDetails$: Observable<UserDetails> = this.userDetailsService.getUserDetails(); 
+    userDetails$.subscribe(userDetails => {
       if (userDetails) {
         this.userFirstName = userDetails.firstName;
         this.userLastName = userDetails.lastName;
