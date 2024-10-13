@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { apiUrl } from '../../app.config';
 import { AuthResponse } from '../../dto/auth-response.model';
 import { catchError, Observable, throwError } from 'rxjs';
-
+import { AuthenticatePaths } from '../../api/api.paths';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class LoginService {
 
   login(email: string, password: string): Observable<AuthResponse> {
     const body = { email: email, password: password };
-    return this.http.post<AuthResponse>(`${apiUrl}/api/v1/auth/validate`, body).pipe(
+    return this.http.post<AuthResponse>(`${apiUrl}${AuthenticatePaths.POST_VALIDATE}`, body).pipe(
       catchError(this.handleError)
     );
   };

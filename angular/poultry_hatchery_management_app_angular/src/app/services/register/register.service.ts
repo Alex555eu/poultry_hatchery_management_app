@@ -4,6 +4,7 @@ import { apiUrl } from '../../app.config';
 import { catchError, Observable, throwError } from 'rxjs';
 import { AuthResponse } from '../../dto/auth-response.model';
 import { RegisterRequest } from '../../dto/register-request';
+import { AuthenticatePaths } from '../../api/api.paths';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,7 @@ export class RegisterService {
   register(request: RegisterRequest): Observable<AuthResponse> {
     const body = JSON.stringify(request);
     const headers = { 'Content-Type': 'application/json' };
-    return this.http.post<AuthResponse>(`${apiUrl}/api/v1/auth/register`, body, { headers }).pipe(
+    return this.http.post<AuthResponse>(`${apiUrl}${AuthenticatePaths.POST_REGISTER}`, body, { headers }).pipe(
       catchError(this.handleError)
     );
   };
