@@ -8,6 +8,7 @@ import com.app.poultry_hatchery_management_app.repository.AddressRepository;
 import com.app.poultry_hatchery_management_app.repository.OrganisationRepository;
 import com.app.poultry_hatchery_management_app.repository.TokenRepository;
 import com.app.poultry_hatchery_management_app.repository.UserRepository;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -97,11 +98,15 @@ public class AuthService {
             HttpServletRequest request
     ) {
         final String refreshToken = request.getHeader("Authorization");
-        final String userEmail;
+        String userEmail = null;
         if(refreshToken == null) {
             return  ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        userEmail = jwtService.extractUsername(refreshToken); // todo: catch exception (invalid token)
+        try {
+            userEmail = jwtService.extractUsername(refreshToken);
+        } catch (ExpiredJwtException e) {
+            log.info("Expired jwt exception");
+        }
 
         if (userEmail != null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
