@@ -6,7 +6,7 @@ import { apiUrl } from '../../app.config';
 import { AddressDetails } from '../../models/address-details.model';
 import { OrganisationDetails } from '../../models/organisation-details.model';
 import { catchError, map, Observable, of, shareReplay } from 'rxjs';
-import { UserDataPaths } from '../../api/api.paths';
+import { ApiPaths } from '../../api/api.paths';
 
 
 @Injectable({
@@ -23,9 +23,7 @@ export class UserDetailsService {
 
   public getUserDetails(): Observable<UserDetails>{
     if (!this.userDetails$){
-      const token = this.tokenService.getAuthToken();
-      const header = token ? new HttpHeaders({ 'Authorization' : token }) : new HttpHeaders();
-      this.userDetails$ = this.http.get<any>(`${apiUrl}${UserDataPaths.GET_USER_SELF}`, { headers : header }).pipe(
+      this.userDetails$ = this.http.get<any>(`${apiUrl}${ApiPaths.UserDataPaths.GET_USER_SELF}`).pipe(
         map(res => this.parseResponse(res)),
         shareReplay(1),
         catchError(error => {
