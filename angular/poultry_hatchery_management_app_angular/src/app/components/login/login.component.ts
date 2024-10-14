@@ -9,8 +9,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { LoginService } from '../../services/login/login.service';
 import { AuthResponse } from '../../dto/auth-response.model';
+import { AuthService } from '../../services/authorization/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -30,7 +30,7 @@ export class LoginComponent {
 
   constructor(
     private fb: FormBuilder, 
-    private loginService: LoginService, 
+    private authService: AuthService,
     private tokenService: TokenService,
     private snackBar: MatSnackBar,
     private router: Router
@@ -44,7 +44,7 @@ export class LoginComponent {
   onLogin() {
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
-      this.loginService.login(email, password).subscribe({
+      this.authService.login(email, password).subscribe({
         next: (data: AuthResponse) => {
           this.tokenService.set(data.token, data.refreshToken);
           this.router.navigate(['manager']);
