@@ -2,6 +2,7 @@ package com.app.poultry_hatchery_management_app.service;
 
 import com.app.poultry_hatchery_management_app.dto.AuthenticationRequest;
 import com.app.poultry_hatchery_management_app.dto.AuthenticationResponse;
+import com.app.poultry_hatchery_management_app.dto.PostRefreshTokenRequest;
 import com.app.poultry_hatchery_management_app.dto.RegisterRequest;
 import com.app.poultry_hatchery_management_app.model.*;
 import com.app.poultry_hatchery_management_app.repository.AddressRepository;
@@ -95,17 +96,18 @@ public class AuthService {
     }
 
     public ResponseEntity<AuthenticationResponse> refreshToken(
-            HttpServletRequest request
+            PostRefreshTokenRequest request
     ) {
-        final String refreshToken = request.getHeader("Authorization");
+        final String refreshToken = request.refreshToken();
         String userEmail = null;
-        if(refreshToken == null) {
-            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        if (refreshToken == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+
         try {
             userEmail = jwtService.extractUsername(refreshToken);
         } catch (ExpiredJwtException e) {
-            log.info("Expired jwt exception");
+            log.error("Expired jwt exception");
         }
 
         if (userEmail != null) {
@@ -120,7 +122,6 @@ public class AuthService {
                         .token(jwtToken)
                         .refreshToken(newRefreshToken)
                         .build();
-
                 return ResponseEntity.ok(authenticationResponse);
             }
         }

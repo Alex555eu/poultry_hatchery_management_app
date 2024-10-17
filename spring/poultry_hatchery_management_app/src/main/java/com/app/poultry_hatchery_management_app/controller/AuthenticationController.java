@@ -3,6 +3,7 @@ package com.app.poultry_hatchery_management_app.controller;
 
 import com.app.poultry_hatchery_management_app.dto.AuthenticationRequest;
 import com.app.poultry_hatchery_management_app.dto.AuthenticationResponse;
+import com.app.poultry_hatchery_management_app.dto.PostRefreshTokenRequest;
 import com.app.poultry_hatchery_management_app.dto.RegisterRequest;
 import com.app.poultry_hatchery_management_app.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,7 +32,7 @@ public class AuthenticationController {
     }
 
 
-    @PostMapping("/validate") //todo: fix naming
+    @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody AuthenticationRequest request
     ) {
@@ -40,8 +41,8 @@ public class AuthenticationController {
 
     @PostMapping("/refresh")
     public ResponseEntity<AuthenticationResponse> refreshToken(
-            HttpServletRequest request
-    ) {
+            @RequestBody PostRefreshTokenRequest request
+            ) {
         return authService.refreshToken(request);
     }
 }
