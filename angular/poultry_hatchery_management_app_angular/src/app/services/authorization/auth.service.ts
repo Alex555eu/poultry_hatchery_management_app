@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpEvent, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { apiUrl } from '../../app.config';
 import { AuthResponse } from '../../dto/auth-response.model';
 import { catchError, Observable, throwError } from 'rxjs';
@@ -24,10 +24,20 @@ export class AuthService {
 
   login(email: string, password: string): Observable<AuthResponse> {
     const body = { email: email, password: password };
-    return this.http.post<AuthResponse>(`${apiUrl}${ApiPaths.AuthenticatePaths.POST_VALIDATE}`, body).pipe(
+    return this.http.post<AuthResponse>(`${apiUrl}${ApiPaths.AuthenticatePaths.POST_AUTHENTICATE}`, body).pipe(
       catchError(this.handleError)
     );
   };
+
+  refreshToken(refreshToken: string | null): Observable<AuthResponse> {
+    const body = {refreshToken: refreshToken};
+    return this.http.post<AuthResponse>(`${apiUrl}${ApiPaths.AuthenticatePaths.POST_REFRESH}`, body);
+  }
+
+  logout(authToken: string | null): Observable<HttpEvent<any>> {
+    const header = new HttpHeaders({Authorization: `${authToken}`});
+    return this.http.post<HttpResponse<HttpEvent<any>>>(`${apiUrl}${ApiPaths.AuthenticatePaths.POST_LOGOUT}`, null, {headers: header});
+  }
 
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'Error occurred!';
