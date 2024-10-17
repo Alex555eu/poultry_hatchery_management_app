@@ -28,6 +28,7 @@ public class LogoutService implements LogoutHandler {
         String authHeader = request.getHeader("Authorization");
         String jwt;
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
         jwt = authHeader.substring(7);
@@ -38,6 +39,9 @@ public class LogoutService implements LogoutHandler {
             token.setValid(false);
             tokenRepository.save(token);
             SecurityContextHolder.clearContext();
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 }
