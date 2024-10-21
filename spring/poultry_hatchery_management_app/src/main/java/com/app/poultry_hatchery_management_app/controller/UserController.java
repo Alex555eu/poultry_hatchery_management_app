@@ -62,7 +62,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @DeleteMapping(value = "/")
+    @DeleteMapping(value = "/admin")
     public ResponseEntity<String> deleteUser(@RequestParam UUID userId) {
         Optional<User> user = userService.deleteUser(userId);
         if (user.isPresent()) {
