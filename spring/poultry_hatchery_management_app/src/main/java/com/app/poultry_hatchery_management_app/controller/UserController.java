@@ -34,8 +34,8 @@ public class UserController {
     }
 
 
-    @GetMapping(value = "/admin/all")
-    public ResponseEntity<String> getAllUsers() throws JsonProcessingException {
+    @GetMapping(value = "/admin/others")
+    public ResponseEntity<String> getAllOtherUsers() throws JsonProcessingException {
         List<User> userList = userService.getAllUsers();
         if (!userList.isEmpty()) {
             String body = objectMapper.writeValueAsString(userList);

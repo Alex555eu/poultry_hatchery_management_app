@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -34,7 +35,9 @@ public class UserService {
     public List<User> getAllUsers() {
         User user = getUserFromSecurityContext();
         if (user != null) {
-            return userRepository.findAllByOrganisationId(user.getOrganisation().getId());
+            List<User> list = userRepository.findAllByOrganisationId(user.getOrganisation().getId());
+            list.removeIf(el -> el.getId() == user.getId());
+            return list;
         }
         return List.of();
     }
