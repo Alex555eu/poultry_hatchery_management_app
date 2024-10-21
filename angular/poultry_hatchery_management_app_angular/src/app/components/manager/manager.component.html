@@ -1,1 +1,62 @@
-<p>manager works!</p>
+
+<!-- <div class="bg-container">
+    <mat-expansion-panel class="user-info">
+        <mat-expansion-panel-header>
+            <mat-panel-title class="user-details">
+                <mat-icon>account_circle</mat-icon>
+                <label>{{ userFirstName }} {{ userLastName }}</label>
+            </mat-panel-title>
+            <mat-panel-description class="user-role">
+                <label>{{ userRole }}</label>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="user-organization">
+            <span>Organizacja:</span>
+            <br>
+            <label>{{ userOrganisationName }}</label> 
+            <br>
+            <span>Regon:</span>
+            <br>
+            <label>{{ userOrganisationRegon }}</label> 
+            <br>
+            <span>Adres:</span>
+            <br>
+            <label [innerHTML]="userOrganisationAddress"></label> 
+
+            <button mat-raised-button color="primary">Edytuj</button>
+        </div>
+    </mat-expansion-panel>
+</div> -->
+
+
+<div class="bg-container">
+
+    <div class="user-info">
+        <div class="user-info-header">
+            <div class="user-details">
+                <mat-icon>account_circle</mat-icon>
+                <label id="user-name">{{ userFirstName }} {{ userLastName }}</label>
+                <label id="user-role">| {{ userRole }}</label>
+            </div>
+        </div>
+        <div class="user-organisation">
+            <span>Email:</span>
+            <label>{{ userEmail }}</label>
+            <span>Organizacja:</span>
+            <label>{{ userOrganisationName }}</label> 
+            <span>Regon:</span>
+            <label>{{ userOrganisationRegon }}</label> 
+            <span>Adres:</span>
+            <label [innerHTML]="userOrganisationAddress"></label> 
+        </div>
+        <button mat-raised-button color="primary">Edytuj</button>
+    </div>
+
+    <div class="side-info">
+        <div class="workers-info">
+            
+        </div>
+    </div>
+
+
+</div>
