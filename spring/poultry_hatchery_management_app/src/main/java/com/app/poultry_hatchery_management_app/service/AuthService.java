@@ -82,6 +82,7 @@ public class AuthService {
                 .password(passwordEncoder.encode(request.password()))
                 .role(Role.ADMIN)
                 .organisation(organisation)
+                .isEnabled(true)
                 .build();
         userRepository.save(user);
 

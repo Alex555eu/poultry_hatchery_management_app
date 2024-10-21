@@ -79,6 +79,7 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
                 .lastName("user")
                 .password(passwordEncoder.encode("string"))
                 .role(Role.ADMIN)
+                .isEnabled(true)
                 .build();
         userRepository.save(user);
 

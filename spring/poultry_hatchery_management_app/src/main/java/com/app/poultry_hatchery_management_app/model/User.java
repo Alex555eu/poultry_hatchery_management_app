@@ -47,6 +47,9 @@ public class User implements UserDetails {
     @ManyToOne
     private Organisation organisation;
 
+    @Column()
+    private Boolean isEnabled;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
@@ -73,6 +76,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.isEnabled;
     }
 }
