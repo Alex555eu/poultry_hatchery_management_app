@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @AllArgsConstructor
-@RequestMapping("/api/v1/admin/user/")
+@RequestMapping("/api/v1/user/")
 @RestController
 public class UserController {
 
@@ -24,7 +24,7 @@ public class UserController {
     private final ObjectMapper objectMapper;
 
     @GetMapping(value = "/")
-    public ResponseEntity<String> getAdmin() throws JsonProcessingException {
+    public ResponseEntity<String> getUserSelf() throws JsonProcessingException {
         User user = userService.getSelf();
         if (user != null) {
             String body = objectMapper.writeValueAsString(user);
@@ -34,7 +34,7 @@ public class UserController {
     }
 
 
-    @GetMapping(value = "/all")
+    @GetMapping(value = "/admin/all")
     public ResponseEntity<String> getAllUsers() throws JsonProcessingException {
         List<User> userList = userService.getAllUsers();
         if (!userList.isEmpty()) {
@@ -44,7 +44,7 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
-    @PostMapping(value = "/")
+    @PostMapping(value = "/admin")
     public ResponseEntity<String> postUser(@RequestBody PostUserRequest request) {
         Optional<User> user = userService.postUser(request);
         if (user.isPresent()) {
@@ -53,7 +53,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @PutMapping(value = "/")
+    @PutMapping(value = "/admin")
     public ResponseEntity<String> putUser(@RequestBody PutUserRequest request) {
         Optional<User> user = userService.putUser(request);
         if (user.isPresent()) {
