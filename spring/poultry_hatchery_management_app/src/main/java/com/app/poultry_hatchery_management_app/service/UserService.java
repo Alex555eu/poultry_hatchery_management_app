@@ -36,7 +36,7 @@ public class UserService {
         User user = getUserFromSecurityContext();
         if (user != null) {
             List<User> list = userRepository.findAllByOrganisationId(user.getOrganisation().getId());
-            list.removeIf(el -> el.getId() == user.getId());
+            list.removeIf(el -> el.getId().equals(user.getId()));
             return list;
         }
         return List.of();
