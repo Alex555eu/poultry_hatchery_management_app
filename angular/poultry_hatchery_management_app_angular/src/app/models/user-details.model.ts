@@ -7,6 +7,7 @@ export class UserDetails {
     private _lastName: string;
     private _emailAddress: string;
     private _role: string;
+    private _isEnabled: boolean;
     private _organisation: OrganisationDetails;
     
     public constructor(
@@ -15,6 +16,7 @@ export class UserDetails {
         lastName: string,
         emailAddress: string,
         role: string,
+        isEnabled: boolean,
         organisation: OrganisationDetails
     ) {
         this._id = id;
@@ -22,6 +24,7 @@ export class UserDetails {
         this._lastName = lastName;
         this._emailAddress = emailAddress;
         this._role = role;
+        this._isEnabled = isEnabled;
         this._organisation = organisation;
     }
 
@@ -58,6 +61,13 @@ export class UserDetails {
     }
     public set role(val: string){
         this._role = val;
+    }
+
+    public get isEnabled(): boolean{
+        return this._isEnabled;
+    }
+    public set isEnabled(val: boolean){
+        this._isEnabled = val;
     }
 
     public get organisation(): OrganisationDetails{

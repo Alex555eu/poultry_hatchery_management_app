@@ -49,7 +49,9 @@
             <span>Adres:</span>
             <label [innerHTML]="adminOrganisationAddress"></label> 
         </div>
-        <button mat-raised-button color="primary">Edytuj</button>
+        <button class="admin-update" mat-mini-fab color="primary">
+            <mat-icon>update</mat-icon>
+        </button>
     </div>
 
     <div class="users-info">
@@ -57,36 +59,84 @@
             <div class="users-info-header">
                 <mat-icon>supervised_user_circle</mat-icon>
                 <span>Użytkownicy</span>
+                <button mat-mini-fab>
+                    <mat-icon>person_add</mat-icon>
+                </button>
             </div>
             <div>
                 <mat-form-field>
                     <mat-label>Wyszukaj</mat-label>
-                    <input matInput ng-model="searchText" (ngModelChange)="filterItems()" />
+                    <input matInput [(ngModel)]="searchText" (ngModelChange)="filterItems()"/>
                 </mat-form-field>
                 <div>
-                <mat-radio-group [(ngModel)]="userCategory">
-                    <mat-radio-button value="">Wszyscy</mat-radio-button>
+                <mat-radio-group [(ngModel)]="selectedCategory" (ngModelChange)="onCategoryChange($event)">
+                    <mat-radio-button value="" [checked]="true">Wszyscy</mat-radio-button>
                     <mat-radio-button value="enabled">Aktywni</mat-radio-button>
                     <mat-radio-button value="disabled">Dezaktywowani</mat-radio-button>
                 </mat-radio-group>
                 </div>
             </div>
             <div class="user-panels">
-                @for (item of userDetailsAll; track item.id){
+                @for (item of filteredUserDetailsAll; track item.id){
                     <mat-expansion-panel>
-                    <mat-expansion-panel-header>
+                        <mat-expansion-panel-header [ngStyle]="{ 'opacity': item.isEnabled ? '1' : '0.5' }">
                         <mat-panel-title>
-                        {{ item.firstName }}
+                        {{ item.firstName }} {{ item.lastName }}
                         </mat-panel-title>
                         <mat-panel-description>
-                            Kategoria:
+                            | {{ item.role }}
                         </mat-panel-description>
                     </mat-expansion-panel-header>
+                    <div class="user-data-container">
+                        <div class="user-data">
+                            @if (item.isEnabled) {
+                                <label class="user-data-is-enabled-label"
+                                    style='color: green;'
+                                > AKTYWNE </label>
+                            } @else {
+                                <label class="user-data-is-enabled-label"
+                                    style='color: red;'
+                                > DEZAKTYWOWANE </label>
+                            }
+                            <span>Id:</span>
+                            <label>{{ item.id }}</label>
+                            <span>Email:</span>
+                            <label>{{ item.emailAddress }}</label> 
+                            <span>tel:</span>
+                            <label>111 222 333</label>              
+                        </div>
+                        <div class="user-options-container">
+                            <button mat-mini-fab color="primary">
+                                <mat-icon>update</mat-icon>
+                            </button>
+                        </div>
+                    </div>
                     </mat-expansion-panel>
                 }
             </div>
           </mat-accordion>
     </div>
 
+
+    <div class="equipment-info">
+        <div class="users-info-header">
+            <mat-icon>memory</mat-icon>
+            <span>Wyposażenie</span>
+        </div>
+        <mat-tab-group>
+            <mat-tab label="Ink. lęgowe">
+                
+            </mat-tab>
+            <mat-tab label="Ink. klujnikowe">
+
+            </mat-tab>
+            <mat-tab label="Wózki lęgowe">
+
+            </mat-tab>
+            <mat-tab label="Wózki klujnikowe">
+
+            </mat-tab>
+        </mat-tab-group>
+    </div>
 
 </div>

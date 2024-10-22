@@ -10,6 +10,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { CommonModule } from '@angular/common';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-manager',
@@ -22,7 +24,9 @@ import { MatInputModule } from '@angular/material/input';
     MatFormFieldModule,
     MatInputModule,
     MatRadioModule,
-    FormsModule
+    FormsModule,
+    CommonModule,
+    MatTabsModule
   ],
   templateUrl: './manager.component.html',
   styleUrl: './manager.component.css'
@@ -38,7 +42,9 @@ export class ManagerComponent {
 
   public userDetailsAll: UserDetails[] | null = null;
   public filteredUserDetailsAll: UserDetails[] | null = null;
-  public userCategory: string = '';
+  public isUsersAccountEnabled: boolean | null = null;
+  public selectedCategory: string = '';
+  public searchText: string = '';
 
   public constructor (
     private userDetailsService: UserDetailsService
@@ -64,17 +70,41 @@ export class ManagerComponent {
     let userDetailsAll$ = this.userDetailsService.getUserDetailsAll();
     userDetailsAll$.subscribe(userDetails => {
       this.userDetailsAll = userDetails;
+      this.filteredUserDetailsAll = userDetails;
     })
   }
 
   filterItems() {
-
+    if (this.userDetailsAll) {
+      this.filteredUserDetailsAll = this.userDetailsAll.filter((userDetails) => {
+      return userDetails.firstName.toLowerCase().match(this.searchText.toLowerCase()) ||
+              userDetails.lastName.toLowerCase().match(this.searchText.toLowerCase()) ||
+              userDetails.emailAddress.toLowerCase().match(this.searchText.toLowerCase());
+      }).filter((userDetails) => {
+        if (this.isUsersAccountEnabled != null) {
+          return userDetails.isEnabled === this.isUsersAccountEnabled;
+        } 
+        return userDetails;
+      });
+    }
   }
 
-  onCategoryChange(event: any) {
-
+  onCategoryChange(category: string) {
+    switch(category) {
+      case "enabled": {
+        this.isUsersAccountEnabled = true;
+        break;
+      }
+      case "disabled": {
+        this.isUsersAccountEnabled = false;
+        break;
+      }
+      default: {
+        this.isUsersAccountEnabled = null;
+      }
+    }
+    this.filterItems();
   }
-
 
 
 }

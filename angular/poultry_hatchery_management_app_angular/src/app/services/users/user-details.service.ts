@@ -72,6 +72,7 @@ export class UserDetailsService {
       json.lastName,
       json.emailAddress,
       json.role,
+      json.isEnabled,
       organisation
     );
   }
