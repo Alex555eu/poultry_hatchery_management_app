@@ -15,6 +15,7 @@ import { ApiPaths } from '../../api/api.paths';
 export class UserDetailsService {
 
   private userDetails$: Observable<UserDetails> | null = null;
+  private userDetailsAll$: Observable<UserDetails[]> | null = null;
 
   constructor(
     private http: HttpClient,
@@ -32,6 +33,23 @@ export class UserDetailsService {
       );
     }
     return this.userDetails$;
+  }
+
+  public getUserDetailsAll(): Observable<UserDetails[]> {
+    if (!this.userDetailsAll$){
+      this.userDetailsAll$ = this.http.get<any>(`${apiUrl}${ApiPaths.UserDataPaths.GET_OTHER_USERS}`).pipe(
+        map(res => this.parseResponseList(res)),
+        shareReplay(1),
+        catchError(error => {
+          return of();
+        })
+      );
+    }
+    return this.userDetailsAll$;
+  }
+
+  private parseResponseList(jsonList: any[]): UserDetails[] {
+    return jsonList.map(listItem => this.parseResponse(listItem));
   }
 
   private parseResponse(json: any): UserDetails {
