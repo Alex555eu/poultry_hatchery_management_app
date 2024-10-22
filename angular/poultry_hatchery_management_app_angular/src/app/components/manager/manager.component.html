@@ -31,31 +31,61 @@
 
 <div class="bg-container">
 
-    <div class="user-info">
-        <div class="user-info-header">
-            <div class="user-details">
+    <div class="admin-info">
+        <div class="admin-info-header">
+            <div class="admin-details">
                 <mat-icon>account_circle</mat-icon>
-                <label id="user-name">{{ userFirstName }} {{ userLastName }}</label>
-                <label id="user-role">| {{ userRole }}</label>
+                <label id="admin-name">{{ adminFirstName }} {{ adminLastName }}</label>
+                <label id="admin-role">| {{ adminRole }}</label>
             </div>
         </div>
-        <div class="user-organisation">
+        <div class="admin-organisation">
             <span>Email:</span>
-            <label>{{ userEmail }}</label>
+            <label>{{ adminEmail }}</label>
             <span>Organizacja:</span>
-            <label>{{ userOrganisationName }}</label> 
+            <label>{{ adminOrganisationName }}</label> 
             <span>Regon:</span>
-            <label>{{ userOrganisationRegon }}</label> 
+            <label>{{ adminOrganisationRegon }}</label> 
             <span>Adres:</span>
-            <label [innerHTML]="userOrganisationAddress"></label> 
+            <label [innerHTML]="adminOrganisationAddress"></label> 
         </div>
         <button mat-raised-button color="primary">Edytuj</button>
     </div>
 
-    <div class="side-info">
-        <div class="workers-info">
-            
-        </div>
+    <div class="users-info">
+        <mat-accordion>
+            <div class="users-info-header">
+                <mat-icon>supervised_user_circle</mat-icon>
+                <span>Użytkownicy</span>
+            </div>
+            <div>
+                <mat-form-field>
+                    <mat-label>Wyszukaj</mat-label>
+                    <input matInput ng-model="searchText" (ngModelChange)="filterItems()" />
+                </mat-form-field>
+                <div>
+                <mat-radio-group [(ngModel)]="userCategory">
+                    <mat-radio-button value="">Wszyscy</mat-radio-button>
+                    <mat-radio-button value="enabled">Aktywni</mat-radio-button>
+                    <mat-radio-button value="disabled">Dezaktywowani</mat-radio-button>
+                </mat-radio-group>
+                </div>
+            </div>
+            <div class="user-panels">
+                @for (item of userDetailsAll; track item.id){
+                    <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                        {{ item.firstName }}
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            Kategoria:
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    </mat-expansion-panel>
+                }
+            </div>
+          </mat-accordion>
     </div>
 
 

@@ -4,10 +4,12 @@
     min-height: 100vh;
     display: flex;
     justify-content: center;
-
+    flex-wrap: wrap;
 }
 
-.user-info {
+/*------ Admin Info ---------*/
+
+.admin-info {
     margin: auto 10px auto 10px;
     padding: 20px;
     width: 400px;
@@ -16,38 +18,38 @@
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.user-info-header {
+.admin-info-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
   
-.user-details {
+.admin-details {
     display: flex;
     align-items: center;
 }
   
-.user-details #user-name {
+.admin-details #admin-name {
     font-weight: bold;
     margin-left: 10px;
 }
   
-.user-details #user-role {
+.admin-details #admin-role {
     font-weight: lighter;
     margin-left: 10px;
 }
   
-.user-role {
+.admin-role {
     margin-right: 20px;
 }
 
-.user-organisation {
+.admin-organisation {
     display: flex;
     flex-direction: column;
     margin-top: 10px;
 }
 
-.user-organisation label {
+.admin-organisation label {
     margin-bottom: 5px;
 }
   
@@ -55,6 +57,42 @@ button {
     float: right;
 }
 
-.user-info span {
+.admin-info span {
     font-weight: bold;
+}
+
+
+
+/*------ User Info ---------*/
+
+.users-info {
+    margin: auto 10px auto 10px;
+    padding: 20px;
+    width: 400px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.users-info-header {
+    display: flex;
+    align-items: center;
+}
+
+.users-info-header span {
+    margin-left: 10px;
+}
+
+.users-info span {
+    font-size: large;
+}
+
+.users-info mat-form-field {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.user-panels {
+    max-height: 200px;
+    overflow-y: auto;
 }
