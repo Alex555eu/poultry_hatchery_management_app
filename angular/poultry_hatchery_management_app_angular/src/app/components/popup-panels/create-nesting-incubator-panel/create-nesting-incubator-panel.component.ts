@@ -1,4 +1,4 @@
-import { PostNestingIncubatorRequest } from './../../../dto/post-nesting-incubator-request';
+import { PostNestingIncubatorRequest } from '../../../dto/post-nesting-incubator-request';
 import { Component, Output, Input, EventEmitter } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -13,7 +13,7 @@ import { NestingIncubatorService } from '../../../services/nesting-incubator/nes
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'app-modify-nesting-incubator-panel',
+  selector: 'app-create-nesting-incubator-panel',
   standalone: true,
   imports: [
     MatIcon,
@@ -28,10 +28,10 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
     ReactiveFormsModule,
     MatSnackBarModule
   ],
-  templateUrl: './modify-nesting-incubator-panel.component.html',
-  styleUrl: './modify-nesting-incubator-panel.component.css'
+  templateUrl: './create-nesting-incubator-panel.component.html',
+  styleUrl: './create-nesting-incubator-panel.component.css'
 })
-export class ModifyNestingIncubatorPanelComponent { 
+export class CreateNestingIncubatorPanelComponent { 
 
   @Output() 
   closePanelEvent = new EventEmitter();

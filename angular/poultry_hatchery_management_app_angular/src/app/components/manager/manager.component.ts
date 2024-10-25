@@ -20,7 +20,7 @@ import { HatchingIncubator } from '../../models/hatching-incubator.model';
 import { HatchingTrolley } from '../../models/hatching-trolley.model';
 import { HatchingTrolleyService } from '../../services/hatching-trolley/hatching-trolley.service';
 import { NestingTrolley } from '../../models/nesting-trolley.model';
-import { ModifyNestingIncubatorPanelComponent } from '../modification-panels/modify-nesting-incubator-panel/modify-nesting-incubator-panel.component';
+import { CreateNestingIncubatorPanelComponent } from '../popup-panels/create-nesting-incubator-panel/create-nesting-incubator-panel.component';
 
 @Component({
   selector: 'app-manager',
@@ -36,7 +36,7 @@ import { ModifyNestingIncubatorPanelComponent } from '../modification-panels/mod
     FormsModule,
     CommonModule,
     MatTabsModule,
-    ModifyNestingIncubatorPanelComponent
+    CreateNestingIncubatorPanelComponent
   ],
   templateUrl: './manager.component.html',
   styleUrl: './manager.component.css'
