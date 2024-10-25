@@ -6,30 +6,46 @@ import { apiUrl } from '../../app.config';
 import { ApiPaths } from '../../api/api.paths';
 import { AddressDetails } from '../../models/address-details.model';
 import { OrganisationDetails } from '../../models/organisation-details.model';
+import { PostIncubatorRequest } from '../../dto/post-incubator-request';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HatchingIncubatorService {
 
-  private hatchingIncubatorsAll$: Observable<HatchingIncubator[]> | null = null;
+  //private hatchingIncubatorsAll$: Observable<HatchingIncubator[]> | null = null;
 
   constructor(
     private http: HttpClient
   ) { }
 
+  // public getAllHatchingIncubators(): Observable<HatchingIncubator[]> {
+  //   if (!this.hatchingIncubatorsAll$){
+  //     this.hatchingIncubatorsAll$ = this.http.get<any>(`${apiUrl}${ApiPaths.HatchingIncubatorPaths.GET_HATCHING_INCUBATOR}`).pipe(
+  //       map(res => this.parseResponseList(res)),
+  //       shareReplay(1),
+  //       catchError(error => {
+  //         return of();
+  //       })
+  //     );
+  //   }
+  //   return this.hatchingIncubatorsAll$;
+  // }
+
   public getAllHatchingIncubators(): Observable<HatchingIncubator[]> {
-    if (!this.hatchingIncubatorsAll$){
-      this.hatchingIncubatorsAll$ = this.http.get<any>(`${apiUrl}${ApiPaths.HatchingIncubatorPaths.GET_HATCHING_INCUBATOR}`).pipe(
-        map(res => this.parseResponseList(res)),
-        shareReplay(1),
-        catchError(error => {
-          return of();
-        })
-      );
-    }
-    return this.hatchingIncubatorsAll$;
+    return this.http.get<any>(`${apiUrl}${ApiPaths.HatchingIncubatorPaths.GET_HATCHING_INCUBATOR}`).pipe(
+      map(res => this.parseResponseList(res)),
+      shareReplay(1),
+      catchError(error => {
+        return of();
+      })
+    );
   }
+
+  public postHatchingIncubator(body: PostIncubatorRequest): Observable<any> {
+    return this.http.post<any>(`${apiUrl}${ApiPaths.HatchingIncubatorPaths.POST_HATCHING_INCUBATOR}`, body);
+  }
+  
 
   private parseResponseList(list: any[]): HatchingIncubator[] {
     return list.map(listItem => this.parseResponse(listItem));

@@ -21,6 +21,7 @@ import { HatchingTrolley } from '../../models/hatching-trolley.model';
 import { HatchingTrolleyService } from '../../services/hatching-trolley/hatching-trolley.service';
 import { NestingTrolley } from '../../models/nesting-trolley.model';
 import { CreateNestingIncubatorPanelComponent } from '../popup-panels/create-nesting-incubator-panel/create-nesting-incubator-panel.component';
+import { CreateHatchingIncubatorPanelComponent } from '../popup-panels/create-hatching-incubator-panel/create-hatching-incubator-panel/create-hatching-incubator-panel.component';
 
 @Component({
   selector: 'app-manager',
@@ -36,7 +37,8 @@ import { CreateNestingIncubatorPanelComponent } from '../popup-panels/create-nes
     FormsModule,
     CommonModule,
     MatTabsModule,
-    CreateNestingIncubatorPanelComponent
+    CreateNestingIncubatorPanelComponent,
+    CreateHatchingIncubatorPanelComponent
   ],
   templateUrl: './manager.component.html',
   styleUrl: './manager.component.css'
@@ -63,6 +65,8 @@ export class ManagerComponent {
 
   public isNestingIncubatorPanelComponentEnabled: boolean = false;
   //public nestingIncubatorPanelComponentData: NestingIncubator | null = null;
+
+  public isHatchingIncubatorPanelComponentEnabled: boolean = false;
 
   public constructor (
     private userDetailsService: UserDetailsService,
@@ -162,6 +166,15 @@ export class ManagerComponent {
 
   closeNestingIncubatorPanelComponent() {
     this.isNestingIncubatorPanelComponentEnabled = false;
+    this.ngOnInit();
+  }
+
+  createHatchingIncubator() {
+    this.isHatchingIncubatorPanelComponentEnabled = true;
+  }
+
+  closeHatchingIncubatorPanelComponent() {
+    this.isHatchingIncubatorPanelComponentEnabled = false;
     this.ngOnInit();
   }
 

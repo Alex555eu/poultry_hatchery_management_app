@@ -1,19 +1,19 @@
-import { PostIncubatorRequest } from '../../../dto/post-incubator-request';
-import { Component, Output, Input, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { HatchingIncubatorService } from '../../../../services/hatching-incubator/hatching-incubator.service';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { PostIncubatorRequest } from '../../../../dto/post-incubator-request';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatSelectModule } from '@angular/material/select';
+import { CommonModule } from '@angular/common';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { CommonModule } from '@angular/common';
-import {MatSelectModule} from '@angular/material/select';
-import {MatStepperModule} from '@angular/material/stepper';
-import {MatGridListModule} from '@angular/material/grid-list';
-import { NestingIncubatorService } from '../../../services/nesting-incubator/nesting-incubator.service';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'app-create-nesting-incubator-panel',
+  selector: 'app-create-hatching-incubator-panel',
   standalone: true,
   imports: [
     MatIcon,
@@ -28,21 +28,19 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
     ReactiveFormsModule,
     MatSnackBarModule
   ],
-  templateUrl: './create-nesting-incubator-panel.component.html',
-  styleUrl: './create-nesting-incubator-panel.component.css'
+  templateUrl: './create-hatching-incubator-panel.component.html',
+  styleUrl: './create-hatching-incubator-panel.component.css'
 })
-export class CreateNestingIncubatorPanelComponent { 
-
+export class CreateHatchingIncubatorPanelComponent {
   @Output() 
   closePanelEvent = new EventEmitter();
 
   dataForm: FormGroup;
   outputTiles: string[] = [];
 
-
   constructor(
     private formBuilder: FormBuilder,
-    private nestingIncubatorService: NestingIncubatorService,
+    private nestingIncubatorService: HatchingIncubatorService,
     private snackBar: MatSnackBar
   ) {
       this.dataForm = this.formBuilder.group({
@@ -63,7 +61,7 @@ export class CreateNestingIncubatorPanelComponent {
         maxCapacity: this.dataForm.get('maxCapacity')?.value,
         numberOfColumns: this.dataForm.get('numberOfColumns')?.value
       }
-      this.nestingIncubatorService.postNestingIncubator(body).subscribe({
+      this.nestingIncubatorService.postHatchingIncubator(body).subscribe({
         next: (response) => {
           this.onClose();
         },
@@ -111,5 +109,4 @@ export class CreateNestingIncubatorPanelComponent {
     }
     return result;
   }
-
 }

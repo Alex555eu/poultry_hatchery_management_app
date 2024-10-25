@@ -1,4 +1,4 @@
-export interface PostNestingIncubatorRequest {
+export interface PostIncubatorRequest {
     maxCapacity: number, 
     humanReadableId: string, 
     numberOfColumns: number

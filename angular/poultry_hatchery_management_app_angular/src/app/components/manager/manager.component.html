@@ -130,7 +130,7 @@
                 </mat-accordion>
             </mat-tab>
             <mat-tab label="Ink. klujnikowe">
-                <button mat-mini-fab class="add-equipment-button" color="primary">
+                <button mat-mini-fab class="add-equipment-button" color="primary" (click)="createHatchingIncubator()">
                     <mat-icon>add</mat-icon>
                 </button>
                 <mat-accordion>
@@ -238,8 +238,12 @@
         </mat-tab-group>
     </div>
 
-    <app-modify-nesting-incubator-panel *ngIf="isNestingIncubatorPanelComponentEnabled" 
+    <app-create-nesting-incubator-panel *ngIf="isNestingIncubatorPanelComponentEnabled" 
     (closePanelEvent)="closeNestingIncubatorPanelComponent()">
-    </app-modify-nesting-incubator-panel>
+    </app-create-nesting-incubator-panel>
+
+    <app-create-hatching-incubator-panel *ngIf="isHatchingIncubatorPanelComponentEnabled"
+    (closePanelEvent)="closeHatchingIncubatorPanelComponent()">
+    </app-create-hatching-incubator-panel>
 
 </div>

@@ -6,7 +6,7 @@ import { apiUrl } from '../../app.config';
 import { ApiPaths } from '../../api/api.paths';
 import { AddressDetails } from '../../models/address-details.model';
 import { OrganisationDetails } from '../../models/organisation-details.model';
-import { PostNestingIncubatorRequest } from '../../dto/post-nesting-incubator-request';
+import { PostIncubatorRequest } from '../../dto/post-incubator-request';
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +42,7 @@ export class NestingIncubatorService {
     );
   }
 
-  public postNestingIncubator(body: PostNestingIncubatorRequest): Observable<any> {
+  public postNestingIncubator(body: PostIncubatorRequest): Observable<any> {
     return this.http.post<any>(`${apiUrl}${ApiPaths.NestingIncubatorPaths.POST_NESTING_INCUBATOR}`, body);
   }
 
