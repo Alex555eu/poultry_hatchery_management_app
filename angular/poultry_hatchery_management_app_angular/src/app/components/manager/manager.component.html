@@ -1,34 +1,3 @@
-
-<!-- <div class="bg-container">
-    <mat-expansion-panel class="user-info">
-        <mat-expansion-panel-header>
-            <mat-panel-title class="user-details">
-                <mat-icon>account_circle</mat-icon>
-                <label>{{ userFirstName }} {{ userLastName }}</label>
-            </mat-panel-title>
-            <mat-panel-description class="user-role">
-                <label>{{ userRole }}</label>
-            </mat-panel-description>
-        </mat-expansion-panel-header>
-        <div class="user-organization">
-            <span>Organizacja:</span>
-            <br>
-            <label>{{ userOrganisationName }}</label> 
-            <br>
-            <span>Regon:</span>
-            <br>
-            <label>{{ userOrganisationRegon }}</label> 
-            <br>
-            <span>Adres:</span>
-            <br>
-            <label [innerHTML]="userOrganisationAddress"></label> 
-
-            <button mat-raised-button color="primary">Edytuj</button>
-        </div>
-    </mat-expansion-panel>
-</div> -->
-
-
 <div class="bg-container">
 
     <div class="admin-info">
@@ -118,25 +87,159 @@
     </div>
 
 
-    <div class="equipment-info">
+    <div class="users-info">
         <div class="users-info-header">
             <mat-icon>memory</mat-icon>
             <span>Wyposażenie</span>
         </div>
         <mat-tab-group>
             <mat-tab label="Ink. lęgowe">
-                
+                <div class="add-button-container" (click)="createNestingIncubator()">
+                    <button mat-mini-fab class="add-equipment-button" color="primary">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </div>
+                <mat-accordion>
+                    <div class="user-panels">
+                        @for (item of nestingIncubatorAll; track item.id){
+                            <mat-expansion-panel>
+                                <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                Inkubator lęgowy
+                                </mat-panel-title>
+                                <mat-panel-description>
+                                    | {{ item.humanReadableId }}
+                                </mat-panel-description>
+                            </mat-expansion-panel-header>
+                            <div class="user-data-container">
+                                <div class="user-data">
+                                    <span>Id:</span>
+                                    <label>{{ item.id }}</label>
+                                    <span>Pojemność (wózki):</span>
+                                    <label>{{ item.maxCapacity }}</label>             
+                                </div>
+                                <div class="user-options-container">
+                                    <button mat-mini-fab>
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                            </mat-expansion-panel>
+                        }
+                    </div>
+                </mat-accordion>
             </mat-tab>
             <mat-tab label="Ink. klujnikowe">
-
+                <button mat-mini-fab class="add-equipment-button" color="primary">
+                    <mat-icon>add</mat-icon>
+                </button>
+                <mat-accordion>
+                    <div class="user-panels">
+                        @for (item of hatchingIncubatorAll; track item.id){
+                            <mat-expansion-panel>
+                                <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                Inkubator klujnikowy
+                                </mat-panel-title>
+                                <mat-panel-description>
+                                    | {{ item.humanReadableId }}
+                                </mat-panel-description>
+                            </mat-expansion-panel-header>
+                            <div class="user-data-container">
+                                <div class="user-data">
+                                    <span>Id:</span>
+                                    <label>{{ item.id }}</label>
+                                    <span>Pojemność (wózki):</span>
+                                    <label>{{ item.maxCapacity }}</label>             
+                                </div>
+                                <div class="user-options-container">
+                                    <button mat-mini-fab>
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                            </mat-expansion-panel>
+                        }
+                    </div>
+                </mat-accordion>
             </mat-tab>
             <mat-tab label="Wózki lęgowe">
-
+                <div class="add-button-container">
+                    <button mat-mini-fab class="add-equipment-button" color="primary">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </div>
+                <mat-accordion>
+                    <div class="user-panels">
+                        @for (item of nestingTrolleyAll; track item.id){
+                            <mat-expansion-panel>
+                                <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                Wózek lęgowy
+                                </mat-panel-title>
+                                <mat-panel-description>
+                                    | {{ item.humanReadableId }}
+                                </mat-panel-description>
+                            </mat-expansion-panel-header>
+                            <div class="user-data-container">
+                                <div class="user-data">
+                                    <span>Id:</span>
+                                    <label>{{ item.id }}</label>             
+                                    <span>Maksymalna pojemność wózka:</span>
+                                    <label>{{ item.maxCapacity }}</label>             
+                                    <span>Dostępna pojemność wózka:</span>
+                                    <label>{{ item.availableCapacity }}</label>             
+                                </div>
+                                <div class="user-options-container">
+                                    <button mat-mini-fab>
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                            </mat-expansion-panel>
+                        }
+                    </div>
+                </mat-accordion>
             </mat-tab>
             <mat-tab label="Wózki klujnikowe">
-
+                <div class="add-button-container">
+                    <button mat-mini-fab class="add-equipment-button" color="primary">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </div>
+                <mat-accordion>
+                    <div class="user-panels">
+                        @for (item of hatchingTrolleyAll; track item.id){
+                            <mat-expansion-panel>
+                                <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                Wózek klujnikowy
+                                </mat-panel-title>
+                                <mat-panel-description>
+                                    | {{ item.humanReadableId }}
+                                </mat-panel-description>
+                            </mat-expansion-panel-header>
+                            <div class="user-data-container">
+                                <div class="user-data">
+                                    <span>Id:</span>
+                                    <label>{{ item.id }}</label>             
+                                </div>
+                                <div class="user-options-container">
+                                    <button mat-mini-fab>
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                            </mat-expansion-panel>
+                        }
+                    </div>
+                </mat-accordion>
             </mat-tab>
         </mat-tab-group>
     </div>
+
+    <app-modify-nesting-incubator-panel *ngIf="isNestingIncubatorPanelComponentEnabled" 
+    (closePanelEvent)="closeNestingIncubatorPanelComponent()">
+    </app-modify-nesting-incubator-panel>
 
 </div>

@@ -1,0 +1,65 @@
+<div class="bg-cntr">
+    <div class="panel-cntr">
+        <div class="panel-header-cntr">
+            <mat-icon>memory</mat-icon>
+            <label>Dodaj inkubator lęgowy</label>
+            <button mat-mini-fab color="primary" (click)="onClose()">
+                <mat-icon>exit_to_app</mat-icon>
+            </button>
+        </div>
+        <div class="data-cntr">
+            <ng-template matStepLabel>Specyfikacja inkubatora</ng-template>
+            <form class="data-form-cntr" [formGroup]="dataForm" (ngSubmit)="onSubmit()">
+                <mat-form-field>
+                    <mat-label>Nazwa rozpoznawcza inkubatora</mat-label>
+                    <input matInput formControlName="humanReadableId" name="humanReadableId" id="humanReadableId" type="text" placeholder="np. L1">
+                    <mat-error *ngIf="dataForm.get('humanReadableId')?.invalid && dataForm.get('humanReadableId')?.touched">
+                        To pole jest wymagane.
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Max.ilość wózków w inkubatorze</mat-label>
+                    <mat-select formControlName="maxCapacity" name="maxCapacity" (ngModelChange)="reloadIncubatorLayout()">
+                        <mat-option [value]="2">2</mat-option>
+                        <mat-option [value]="4">4</mat-option>
+                        <mat-option [value]="8">8</mat-option>
+                        <mat-option [value]="16">16</mat-option>
+                        <mat-option [value]="32">32</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="dataForm.get('maxCapacity')?.invalid && dataForm.get('maxCapacity')?.touched">
+                        To pole jest wymagane.
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Liczba kolumn inkubatora</mat-label>
+                    <mat-select formControlName="numberOfColumns" name="numberOfColumns" (ngModelChange)="reloadIncubatorLayout()">
+                        <mat-option [value]="2">2</mat-option>
+                        <mat-option [value]="4">4</mat-option>
+                        <mat-option [value]="8">8</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="dataForm.get('numberOfColumns')?.invalid && dataForm.get('numberOfColumns')?.touched">
+                        To pole jest wymagane.
+                    </mat-error>
+                </mat-form-field>
+                  <div class="flex-cntr">
+                    <mat-grid-list [cols]="dataForm.get('numberOfColumns')?.value + 1" gutterSize="10px">
+                      @for ( item of outputTiles; track item ) {
+                        @if (item) {
+                            <mat-grid-tile style="background: lightblue;">
+                                {{ item }}
+                            </mat-grid-tile>
+                        } @else {
+                            <mat-grid-tile style="background: transparent;">
+                                {{ item }}
+                            </mat-grid-tile>
+                        }
+                      }
+                    </mat-grid-list>
+                  </div>
+                  <div class="panel-footer-cntr">
+                    <button color="accent" mat-raised-button type="submit" [disabled]="dataForm.invalid">Zatwierdź</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

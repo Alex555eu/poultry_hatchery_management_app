@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -40,6 +41,7 @@ public class NestingIncubatorService {
         return null;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public Optional<NestingIncubator> postNestingIncubator(PostNestingIncubatorRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if ((authentication != null && authentication.getPrincipal() instanceof UserDetails)) {
@@ -48,9 +50,22 @@ public class NestingIncubatorService {
 
             NestingIncubator incubator = NestingIncubator.builder()
                     .maxCapacity(request.maxCapacity())
+                    .numberOfColumns(request.numberOfColumns())
+                    .humanReadableId(request.humanReadableId())
                     .organisation(organisation)
                     .build();
             nestingIncubatorRepository.save(incubator);
+
+            for (int i = 0; i < request.maxCapacity(); i++) {
+                PostNestingIncubatorSpaceRequest spaceRequest = PostNestingIncubatorSpaceRequest.builder()
+                        .nestingIncubatorId(incubator.getId())
+                        .humanReadableId("S"+(i+1))
+                        .build();
+                Optional<NestingIncubatorSpace> space = this.postNestingIncubatorSpace(spaceRequest);
+                if (space.isEmpty()) {
+                    throw new RuntimeException("Error while creating nesting incubator space");
+                }
+            }
 
             return Optional.of(incubator);
         }
@@ -62,6 +77,7 @@ public class NestingIncubatorService {
 
         if (incubator.isPresent()) {
             incubator.get().setMaxCapacity(request.maxCapacity());
+            incubator.get().setHumanReadableId(request.humanReadableId());
             nestingIncubatorRepository.save(incubator.get());
 
             return incubator;

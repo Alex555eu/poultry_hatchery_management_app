@@ -24,6 +24,10 @@ public class HatchingIncubator {
 
     private Integer maxCapacity;
 
+    private Integer numberOfColumns;
+
+    private String humanReadableId;
+
     @ManyToOne
     private Organisation organisation;
 

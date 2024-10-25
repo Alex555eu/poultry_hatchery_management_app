@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { NestingTrolleyService } from './../../services/nesting-trolley/nesting-trolley.service';
+import { Component, ViewChild } from '@angular/core';
 import { MatCard } from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
 import { UserDetailsService } from '../../services/users/user-details.service';
@@ -12,6 +13,14 @@ import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
+import { NestingIncubatorService } from '../../services/nesting-incubator/nesting-incubator.service';
+import { NestingIncubator } from '../../models/nesting-incubator.model';
+import { HatchingIncubatorService } from '../../services/hatching-incubator/hatching-incubator.service';
+import { HatchingIncubator } from '../../models/hatching-incubator.model';
+import { HatchingTrolley } from '../../models/hatching-trolley.model';
+import { HatchingTrolleyService } from '../../services/hatching-trolley/hatching-trolley.service';
+import { NestingTrolley } from '../../models/nesting-trolley.model';
+import { ModifyNestingIncubatorPanelComponent } from '../modification-panels/modify-nesting-incubator-panel/modify-nesting-incubator-panel.component';
 
 @Component({
   selector: 'app-manager',
@@ -26,7 +35,8 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatRadioModule,
     FormsModule,
     CommonModule,
-    MatTabsModule
+    MatTabsModule,
+    ModifyNestingIncubatorPanelComponent
   ],
   templateUrl: './manager.component.html',
   styleUrl: './manager.component.css'
@@ -46,8 +56,20 @@ export class ManagerComponent {
   public selectedCategory: string = '';
   public searchText: string = '';
 
+  public nestingIncubatorAll: NestingIncubator[] | null = null;
+  public hatchingIncubatorAll: HatchingIncubator[] | null = null;
+  public hatchingTrolleyAll: HatchingTrolley[] | null = null;
+  public nestingTrolleyAll: NestingTrolley[] | null = null;
+
+  public isNestingIncubatorPanelComponentEnabled: boolean = false;
+  //public nestingIncubatorPanelComponentData: NestingIncubator | null = null;
+
   public constructor (
-    private userDetailsService: UserDetailsService
+    private userDetailsService: UserDetailsService,
+    private nestingIncubatorService: NestingIncubatorService,
+    private hatchingIncubatorService: HatchingIncubatorService,
+    private hatchingTrolleyService: HatchingTrolleyService,
+    private nestingTrolleyService: NestingTrolleyService
   ) {}
 
   ngOnInit() {
@@ -63,14 +85,29 @@ export class ManagerComponent {
         this.adminOrganisationAddress = `${adminDetails.organisation.address.postalCode}, 
                                         ${adminDetails.organisation.address.city}<br>
                                         ul. ${adminDetails.organisation.address.street} 
-                                        ${adminDetails.organisation.address.number}`;
-         
+                                        ${adminDetails.organisation.address.number}`; 
       }
     });
     let userDetailsAll$ = this.userDetailsService.getUserDetailsAll();
     userDetailsAll$.subscribe(userDetails => {
       this.userDetailsAll = userDetails;
       this.filteredUserDetailsAll = userDetails;
+    });
+    let nestingInsubator$ = this.nestingIncubatorService.getAllNestingIncubators();
+    nestingInsubator$.subscribe((incubators) => {
+      this.nestingIncubatorAll = incubators;
+    });
+    let hatchingIncubatorAll$ = this.hatchingIncubatorService.getAllHatchingIncubators();
+    hatchingIncubatorAll$.subscribe(incubators => {
+      this.hatchingIncubatorAll = incubators;
+    })
+    let hatchingTrolleyAll$ = this.hatchingTrolleyService.getAllHatchingTrolleys();
+    hatchingTrolleyAll$.subscribe(trolleys => {
+      this.hatchingTrolleyAll = trolleys;
+    })
+    let nestingTrolleyAll$ = this.nestingTrolleyService.getAllNestingTrolleys();
+    nestingTrolleyAll$.subscribe(trolleys => {
+      this.nestingTrolleyAll = trolleys;
     })
   }
 
@@ -106,5 +143,26 @@ export class ManagerComponent {
     this.filterItems();
   }
 
+  // modifyNestingIncubator(incubatorId: string) { 
+  //   if (this.nestingIncubatorAll) {
+  //     const data = this.nestingIncubatorAll.find((incubator) => {
+  //       return incubator.id === incubatorId;
+  //     });
+  //     if (data) {
+  //       this.nestingIncubatorPanelComponentData = data;
+  //       this.isNestingIncubatorPanelComponentEnabled = true;
+  //     }
+  //   }
+  // }
+
+  createNestingIncubator() {
+    //this.nestingIncubatorPanelComponentData = null;
+    this.isNestingIncubatorPanelComponentEnabled = true;
+  }
+
+  closeNestingIncubatorPanelComponent() {
+    this.isNestingIncubatorPanelComponentEnabled = false;
+    this.ngOnInit();
+  }
 
 }
