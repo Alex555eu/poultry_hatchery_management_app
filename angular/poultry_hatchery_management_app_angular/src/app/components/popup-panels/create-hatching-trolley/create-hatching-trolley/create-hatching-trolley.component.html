@@ -2,7 +2,7 @@
     <div class="panel-cntr">
         <div class="panel-header-cntr">
             <mat-icon>memory</mat-icon>
-            <label>Dodaj wózek lęgowy</label>
+            <label>Dodaj wózek klujnikowy</label>
             <button mat-mini-fab color="primary" (click)="onClose()">
                 <mat-icon>exit_to_app</mat-icon>
             </button>
@@ -14,13 +14,6 @@
                     <mat-label>Nazwa rozpoznawcza wózka</mat-label>
                     <input matInput formControlName="humanReadableId" name="humanReadableId" id="humanReadableId" type="text" placeholder="np. L1">
                     <mat-error *ngIf="dataForm.get('humanReadableId')?.invalid && dataForm.get('humanReadableId')?.touched">
-                        To pole jest wymagane.
-                    </mat-error>
-                </mat-form-field>
-                <mat-form-field>
-                    <mat-label>Pojemność wózka (il. jaj)</mat-label>
-                    <input matInput formControlName="maxCapacity" name="maxCapacity" id="maxCapacity" type="number" placeholder="np. 128">
-                    <mat-error *ngIf="dataForm.get('maxCapacity')?.invalid && dataForm.get('maxCapacity')?.touched">
                         To pole jest wymagane.
                     </mat-error>
                 </mat-form-field>

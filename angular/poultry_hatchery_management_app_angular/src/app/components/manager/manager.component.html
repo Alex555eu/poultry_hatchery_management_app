@@ -201,7 +201,7 @@
             </mat-tab>
             <mat-tab label="Wózki klujnikowe">
                 <div class="add-button-container">
-                    <button mat-mini-fab class="add-equipment-button" color="primary">
+                    <button mat-mini-fab class="add-equipment-button" color="primary" (click)="createHatchingTrolley()">
                         <mat-icon>add</mat-icon>
                     </button>
                 </div>
@@ -247,5 +247,9 @@
     <app-create-nesting-trolley *ngIf="isNestingTrolleyPanelComponentEnabled"
     (closePanelEvent)="closeNestingTrolleyPanelComponent()">
     </app-create-nesting-trolley>
+
+    <app-create-hatching-trolley *ngIf="isHatchingTrolleyPanelComponentEnabled"
+    (closePanelEvent)="closeHatchingTrolleyPanelComponent()">
+    </app-create-hatching-trolley>
 
 </div>
