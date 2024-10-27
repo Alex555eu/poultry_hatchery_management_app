@@ -165,7 +165,7 @@
             </mat-tab>
             <mat-tab label="Wózki lęgowe">
                 <div class="add-button-container">
-                    <button mat-mini-fab class="add-equipment-button" color="primary">
+                    <button mat-mini-fab class="add-equipment-button" color="primary" (click)="createNestingTrolley()">
                         <mat-icon>add</mat-icon>
                     </button>
                 </div>
@@ -187,8 +187,6 @@
                                     <label>{{ item.id }}</label>             
                                     <span>Maksymalna pojemność wózka:</span>
                                     <label>{{ item.maxCapacity }}</label>             
-                                    <span>Dostępna pojemność wózka:</span>
-                                    <label>{{ item.availableCapacity }}</label>             
                                 </div>
                                 <div class="user-options-container">
                                     <button mat-mini-fab>
@@ -245,5 +243,9 @@
     <app-create-hatching-incubator-panel *ngIf="isHatchingIncubatorPanelComponentEnabled"
     (closePanelEvent)="closeHatchingIncubatorPanelComponent()">
     </app-create-hatching-incubator-panel>
+
+    <app-create-nesting-trolley *ngIf="isNestingTrolleyPanelComponentEnabled"
+    (closePanelEvent)="closeNestingTrolleyPanelComponent()">
+    </app-create-nesting-trolley>
 
 </div>

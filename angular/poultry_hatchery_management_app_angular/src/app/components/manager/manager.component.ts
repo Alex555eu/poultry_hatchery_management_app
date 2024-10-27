@@ -22,6 +22,7 @@ import { HatchingTrolleyService } from '../../services/hatching-trolley/hatching
 import { NestingTrolley } from '../../models/nesting-trolley.model';
 import { CreateNestingIncubatorPanelComponent } from '../popup-panels/create-nesting-incubator-panel/create-nesting-incubator-panel.component';
 import { CreateHatchingIncubatorPanelComponent } from '../popup-panels/create-hatching-incubator-panel/create-hatching-incubator-panel/create-hatching-incubator-panel.component';
+import { CreateNestingTrolleyComponent } from '../popup-panels/create-nesting-trolley/create-nesting-trolley/create-nesting-trolley.component';
 
 @Component({
   selector: 'app-manager',
@@ -38,7 +39,8 @@ import { CreateHatchingIncubatorPanelComponent } from '../popup-panels/create-ha
     CommonModule,
     MatTabsModule,
     CreateNestingIncubatorPanelComponent,
-    CreateHatchingIncubatorPanelComponent
+    CreateHatchingIncubatorPanelComponent,
+    CreateNestingTrolleyComponent
   ],
   templateUrl: './manager.component.html',
   styleUrl: './manager.component.css'
@@ -67,6 +69,7 @@ export class ManagerComponent {
   //public nestingIncubatorPanelComponentData: NestingIncubator | null = null;
 
   public isHatchingIncubatorPanelComponentEnabled: boolean = false;
+  public isNestingTrolleyPanelComponentEnabled: boolean = false;
 
   public constructor (
     private userDetailsService: UserDetailsService,
@@ -109,7 +112,7 @@ export class ManagerComponent {
     hatchingTrolleyAll$.subscribe(trolleys => {
       this.hatchingTrolleyAll = trolleys;
     })
-    let nestingTrolleyAll$ = this.nestingTrolleyService.getAllNestingTrolleys();
+    let nestingTrolleyAll$ = this.nestingTrolleyService.getAllNestingTrolleys(true);
     nestingTrolleyAll$.subscribe(trolleys => {
       this.nestingTrolleyAll = trolleys;
     })
@@ -175,6 +178,15 @@ export class ManagerComponent {
 
   closeHatchingIncubatorPanelComponent() {
     this.isHatchingIncubatorPanelComponentEnabled = false;
+    this.ngOnInit();
+  }
+
+  createNestingTrolley() {
+    this.isNestingTrolleyPanelComponentEnabled = true;
+  }
+
+  closeNestingTrolleyPanelComponent() {
+    this.isNestingTrolleyPanelComponentEnabled = false;
     this.ngOnInit();
   }
 
