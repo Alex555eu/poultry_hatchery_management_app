@@ -160,7 +160,6 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
                 .humanReadableId("A1")
                 .maxCapacity(128)
                 .organisation(organisation)
-                .availableCapacity(128)
                 .build();
         nestingTrolleyRepository.save(nestingTrolley);
 
