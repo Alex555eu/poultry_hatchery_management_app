@@ -6,6 +6,7 @@ export class UserDetails {
     private _firstName: string;
     private _lastName: string;
     private _emailAddress: string;
+    private _phoneNumber: string;
     private _role: string;
     private _isEnabled: boolean;
     private _organisation: OrganisationDetails;
@@ -15,6 +16,7 @@ export class UserDetails {
         firstName:string,
         lastName: string,
         emailAddress: string,
+        phoneNumber: string,
         role: string,
         isEnabled: boolean,
         organisation: OrganisationDetails
@@ -23,6 +25,7 @@ export class UserDetails {
         this._firstName = firstName;
         this._lastName = lastName;
         this._emailAddress = emailAddress;
+        this._phoneNumber = phoneNumber;
         this._role = role;
         this._isEnabled = isEnabled;
         this._organisation = organisation;
@@ -54,6 +57,13 @@ export class UserDetails {
     }
     public set emailAddress(val: string){
         this._emailAddress = val;
+    }
+
+    public get phoneNumber(): string{
+        return this._phoneNumber;
+    }
+    public set phoneNumber(val: string){
+        this._phoneNumber = val;
     }
 
     public get role(): string{

@@ -43,19 +43,23 @@ public class UserService {
     }
 
     public Optional<User> postUser(PostUserRequest request) {
-        Optional<Organisation> organisation = organisationRepository.findById(request.organisationId());
-        if (organisation.isPresent()) {
-            User user = User.builder()
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if ((authentication != null && authentication.getPrincipal() instanceof UserDetails)) {
+            User user = (User) authentication.getPrincipal();
+            Organisation organisation = user.getOrganisation();
+
+            User newUser = User.builder()
                     .firstName(request.firstName())
                     .lastName(request.lastName())
                     .emailAddress(request.emailAddress())
+                    .phoneNumber(request.phoneNumber())
                     .password(passwordEncoder.encode(request.password()))
                     .role(Role.USER)
-                    .organisation(organisation.get())
+                    .organisation(organisation)
                     .isEnabled(true)
                     .build();
-            userRepository.save(user);
-            return Optional.of(user);
+            userRepository.save(newUser);
+            return Optional.of(newUser);
         }
         return Optional.empty();
     }
@@ -65,6 +69,7 @@ public class UserService {
         if (user.isPresent()) {
             user.get().setFirstName(request.firstName());
             user.get().setLastName(request.lastName());
+            user.get().setPhoneNumber(request.phoneNumber());
             userRepository.save(user.get());
             return user;
         }

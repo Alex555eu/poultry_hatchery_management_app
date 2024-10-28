@@ -41,6 +41,9 @@ public class User implements UserDetails {
     @Column(name = "email_address", unique = true)
     private String emailAddress;
 
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 

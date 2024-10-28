@@ -70,6 +70,7 @@ export class UserDetailsService {
       json.id,
       json.firstName,
       json.lastName,
+      json.phoneNumber,
       json.emailAddress,
       json.role,
       json.isEnabled,
