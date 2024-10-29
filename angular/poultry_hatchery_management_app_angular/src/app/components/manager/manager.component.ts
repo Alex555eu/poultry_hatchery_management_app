@@ -24,6 +24,7 @@ import { CreateNestingIncubatorPanelComponent } from '../popup-panels/create-nes
 import { CreateHatchingIncubatorPanelComponent } from '../popup-panels/create-hatching-incubator-panel/create-hatching-incubator-panel/create-hatching-incubator-panel.component';
 import { CreateNestingTrolleyComponent } from '../popup-panels/create-nesting-trolley/create-nesting-trolley/create-nesting-trolley.component';
 import { CreateHatchingTrolleyComponent } from '../popup-panels/create-hatching-trolley/create-hatching-trolley/create-hatching-trolley.component';
+import { CreateNewUserComponent } from '../popup-panels/create-new-user/create-new-user/create-new-user.component';
 
 @Component({
   selector: 'app-manager',
@@ -42,7 +43,8 @@ import { CreateHatchingTrolleyComponent } from '../popup-panels/create-hatching-
     CreateNestingIncubatorPanelComponent,
     CreateHatchingIncubatorPanelComponent,
     CreateNestingTrolleyComponent,
-    CreateHatchingTrolleyComponent
+    CreateHatchingTrolleyComponent,
+    CreateNewUserComponent
   ],
   templateUrl: './manager.component.html',
   styleUrl: './manager.component.css'
@@ -52,6 +54,7 @@ export class ManagerComponent {
   public adminLastName: string = 'Nazwisko';
   public adminRole: string = 'Rola';
   public adminEmail: string = 'Email';
+  public phoneNumber: string = '000 000 000';
   public adminOrganisationName: string = "Organizacja";
   public adminOrganisationRegon: string = "";
   public adminOrganisationAddress: string = "";
@@ -68,11 +71,10 @@ export class ManagerComponent {
   public nestingTrolleyAll: NestingTrolley[] | null = null;
 
   public isNestingIncubatorPanelComponentEnabled: boolean = false;
-  //public nestingIncubatorPanelComponentData: NestingIncubator | null = null;
-
   public isHatchingIncubatorPanelComponentEnabled: boolean = false;
   public isNestingTrolleyPanelComponentEnabled: boolean = false;
   public isHatchingTrolleyPanelComponentEnabled: boolean = false;
+  public isRegisterSubUserPanelComponentEnabled: boolean = false;
 
   public constructor (
     private userDetailsService: UserDetailsService,
@@ -90,6 +92,7 @@ export class ManagerComponent {
         this.adminLastName = adminDetails.lastName;
         this.adminRole = adminDetails.role;
         this.adminEmail = adminDetails.emailAddress;
+        this.phoneNumber = adminDetails.phoneNumber;
         this.adminOrganisationName = adminDetails.organisation.name;
         this.adminOrganisationRegon = adminDetails.organisation.regon;
         this.adminOrganisationAddress = `${adminDetails.organisation.address.postalCode}, 
@@ -153,20 +156,7 @@ export class ManagerComponent {
     this.filterItems();
   }
 
-  // modifyNestingIncubator(incubatorId: string) { 
-  //   if (this.nestingIncubatorAll) {
-  //     const data = this.nestingIncubatorAll.find((incubator) => {
-  //       return incubator.id === incubatorId;
-  //     });
-  //     if (data) {
-  //       this.nestingIncubatorPanelComponentData = data;
-  //       this.isNestingIncubatorPanelComponentEnabled = true;
-  //     }
-  //   }
-  // }
-
   createNestingIncubator() {
-    //this.nestingIncubatorPanelComponentData = null;
     this.isNestingIncubatorPanelComponentEnabled = true;
   }
 
@@ -199,6 +189,15 @@ export class ManagerComponent {
 
   closeHatchingTrolleyPanelComponent() {
     this.isHatchingTrolleyPanelComponentEnabled = false;
+    this.ngOnInit();
+  }
+
+  createRegisterSubUser() {
+    this.isRegisterSubUserPanelComponentEnabled = true;
+  }
+
+  closeRegisterSubUserPanelComponent() {
+    this.isRegisterSubUserPanelComponentEnabled = false;
     this.ngOnInit();
   }
 

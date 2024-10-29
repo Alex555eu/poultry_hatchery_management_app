@@ -28,7 +28,7 @@
             <div class="users-info-header">
                 <mat-icon>supervised_user_circle</mat-icon>
                 <span>Użytkownicy</span>
-                <button mat-mini-fab>
+                <button mat-mini-fab (click)="createRegisterSubUser()">
                     <mat-icon>person_add</mat-icon>
                 </button>
             </div>
@@ -72,7 +72,7 @@
                             <span>Email:</span>
                             <label>{{ item.emailAddress }}</label> 
                             <span>tel:</span>
-                            <label>111 222 333</label>              
+                            <label>{{ item.phoneNumber }}</label>              
                         </div>
                         <div class="user-options-container">
                             <button mat-mini-fab color="primary">
@@ -251,5 +251,9 @@
     <app-create-hatching-trolley *ngIf="isHatchingTrolleyPanelComponentEnabled"
     (closePanelEvent)="closeHatchingTrolleyPanelComponent()">
     </app-create-hatching-trolley>
+    
+    <app-create-new-user *ngIf="isRegisterSubUserPanelComponentEnabled"
+    (closePanelEvent)="closeRegisterSubUserPanelComponent()">
+    </app-create-new-user>
 
 </div>
