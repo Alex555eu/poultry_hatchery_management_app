@@ -1,0 +1,26 @@
+<div class="bg-cntr">
+    <div class="panel-cntr">
+        <div class="panel-header-cntr">
+            <mat-icon>memory</mat-icon>
+            <label>Dodaj wózek klujnikowy</label>
+            <button mat-mini-fab color="primary" (click)="onClose()">
+                <mat-icon>exit_to_app</mat-icon>
+            </button>
+        </div>
+        <div class="data-cntr">
+            <ng-template matStepLabel>Specyfikacja wózka</ng-template>
+            <form class="data-form-cntr" [formGroup]="dataForm" (ngSubmit)="onSubmit()">
+                <mat-form-field>
+                    <mat-label>Nazwa rozpoznawcza wózka</mat-label>
+                    <input matInput formControlName="humanReadableId" name="humanReadableId" id="humanReadableId" type="text" placeholder="np. L1">
+                    <mat-error *ngIf="dataForm.get('humanReadableId')?.invalid && dataForm.get('humanReadableId')?.touched">
+                        To pole jest wymagane.
+                    </mat-error>
+                </mat-form-field>
+                  <div class="panel-footer-cntr">
+                    <button color="accent" mat-raised-button type="submit" [disabled]="dataForm.invalid">Zatwierdź</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

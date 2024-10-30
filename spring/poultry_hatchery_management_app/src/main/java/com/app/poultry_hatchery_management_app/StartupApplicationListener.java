@@ -75,12 +75,28 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
         User user = User.builder()
                 .organisation(organisation)
                 .emailAddress("string@email.com")
+                .phoneNumber("111 222 333")
                 .firstName("user")
                 .lastName("user")
                 .password(passwordEncoder.encode("string"))
                 .role(Role.ADMIN)
+                .isEnabled(true)
                 .build();
         userRepository.save(user);
+
+        for (int i = 0; i < 7; i++) {
+            User tmp = User.builder()
+                    .organisation(organisation)
+                    .emailAddress("dragon" + i + "@email.com")
+                    .firstName("Tohru")
+                    .lastName("Kobayashi")
+                    .phoneNumber("111 222 333")
+                    .isEnabled(true)
+                    .password(passwordEncoder.encode("dragon"))
+                    .role(Role.USER)
+                    .build();
+            userRepository.save(tmp);
+        }
 
         Supplier supplier = Supplier.builder()
                 .WNI("wni-example")
@@ -131,6 +147,7 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
         NestingIncubator nestingIncubator = NestingIncubator.builder()
                 .maxCapacity(16)
                 .organisation(organisation)
+                .humanReadableId("L1")
                 .build();
         nestingIncubatorRepository.save(nestingIncubator);
 
@@ -145,7 +162,6 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
                 .humanReadableId("A1")
                 .maxCapacity(128)
                 .organisation(organisation)
-                .availableCapacity(128)
                 .build();
         nestingTrolleyRepository.save(nestingTrolley);
 

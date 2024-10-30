@@ -46,6 +46,7 @@ export class RegisterComponent {
       orgName: [''],
       orgRegon: [''],
       emailAddress: ['', [Validators.required, Validators.email]],
+      phoneNumber: ['', [Validators.required, Validators.minLength(9)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       repeatPassword: ['', Validators.required],  
     }, { validators: this.matchValidator('password', 'repeatPassword') });
@@ -96,6 +97,7 @@ export class RegisterComponent {
     emailAddress: form.get('emailAddress')?.value,
     firstName: form.get('firstName')?.value,
     lastName: form.get('firstName')?.value,
+    phoneNumber: form.get('phoneNumber')?.value,
     orgCity: form.get('orgCity')?.value,
     orgName: form.get('orgName')?.value,
     orgNumber: form.get('orgNumber')?.value,

@@ -10,8 +10,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +37,7 @@ public class HatchingIncubatorService {
         return null;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public Optional<HatchingIncubator> postHatchingIncubator(PostHatchingIncubatorRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
@@ -45,9 +46,21 @@ public class HatchingIncubatorService {
             HatchingIncubator incubator = HatchingIncubator.builder()
                     .organisation(user.getOrganisation())
                     .maxCapacity(request.maxCapacity())
+                    .humanReadableId(request.humanReadableId())
+                    .numberOfColumns(request.numberOfColumns())
                     .build();
             hatchingIncubatorRepository.save(incubator);
 
+            for (int i = 0; i < request.maxCapacity(); i++) {
+                PostHatchingIncubatorSpaceRequest spaceRequest = PostHatchingIncubatorSpaceRequest.builder()
+                        .hatchingIncubatorId(incubator.getId())
+                        .humanReadableId("S"+(i+1))
+                        .build();
+                Optional<HatchingIncubatorSpace> space = this.postHatchingIncubatorSpace(spaceRequest);
+                if (space.isEmpty()) {
+                    throw new RuntimeException("Error while creating hatching incubator space");
+                }
+            }
             return Optional.of(incubator);
         }
         return Optional.empty();
@@ -57,6 +70,7 @@ public class HatchingIncubatorService {
         Optional<HatchingIncubator> incubator = hatchingIncubatorRepository.findById(request.hatchingIncubatorId());
         if (incubator.isPresent()) {
             incubator.get().setMaxCapacity(request.maxCapacity());
+            incubator.get().setHumanReadableId(request.humanReadableId());
             hatchingIncubatorRepository.save(incubator.get());
 
             return incubator;

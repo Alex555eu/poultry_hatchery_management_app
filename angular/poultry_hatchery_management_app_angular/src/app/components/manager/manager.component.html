@@ -1,1 +1,259 @@
-<p>manager works!</p>
+<div class="bg-container">
+
+    <div class="admin-info">
+        <div class="admin-info-header">
+            <div class="admin-details">
+                <mat-icon>account_circle</mat-icon>
+                <label id="admin-name">{{ adminFirstName }} {{ adminLastName }}</label>
+                <label id="admin-role">| {{ adminRole }}</label>
+            </div>
+        </div>
+        <div class="admin-organisation">
+            <span>Email:</span>
+            <label>{{ adminEmail }}</label>
+            <span>Organizacja:</span>
+            <label>{{ adminOrganisationName }}</label> 
+            <span>Regon:</span>
+            <label>{{ adminOrganisationRegon }}</label> 
+            <span>Adres:</span>
+            <label [innerHTML]="adminOrganisationAddress"></label> 
+        </div>
+        <button class="admin-update" mat-mini-fab color="primary">
+            <mat-icon>update</mat-icon>
+        </button>
+    </div>
+
+    <div class="users-info">
+        <mat-accordion>
+            <div class="users-info-header">
+                <mat-icon>supervised_user_circle</mat-icon>
+                <span>Użytkownicy</span>
+                <button mat-mini-fab (click)="createRegisterSubUser()">
+                    <mat-icon>person_add</mat-icon>
+                </button>
+            </div>
+            <div>
+                <mat-form-field>
+                    <mat-label>Wyszukaj</mat-label>
+                    <input matInput [(ngModel)]="searchText" (ngModelChange)="filterItems()"/>
+                </mat-form-field>
+                <div>
+                <mat-radio-group [(ngModel)]="selectedCategory" (ngModelChange)="onCategoryChange($event)">
+                    <mat-radio-button value="" [checked]="true">Wszyscy</mat-radio-button>
+                    <mat-radio-button value="enabled">Aktywni</mat-radio-button>
+                    <mat-radio-button value="disabled">Dezaktywowani</mat-radio-button>
+                </mat-radio-group>
+                </div>
+            </div>
+            <div class="user-panels">
+                @for (item of filteredUserDetailsAll; track item.id){
+                    <mat-expansion-panel>
+                        <mat-expansion-panel-header [ngStyle]="{ 'opacity': item.isEnabled ? '1' : '0.5' }">
+                        <mat-panel-title>
+                        {{ item.firstName }} {{ item.lastName }}
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            | {{ item.role }}
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <div class="user-data-container">
+                        <div class="user-data">
+                            @if (item.isEnabled) {
+                                <label class="user-data-is-enabled-label"
+                                    style='color: green;'
+                                > AKTYWNE </label>
+                            } @else {
+                                <label class="user-data-is-enabled-label"
+                                    style='color: red;'
+                                > DEZAKTYWOWANE </label>
+                            }
+                            <span>Id:</span>
+                            <label>{{ item.id }}</label>
+                            <span>Email:</span>
+                            <label>{{ item.emailAddress }}</label> 
+                            <span>tel:</span>
+                            <label>{{ item.phoneNumber }}</label>              
+                        </div>
+                        <div class="user-options-container">
+                            <button mat-mini-fab color="primary">
+                                <mat-icon>update</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                    </mat-expansion-panel>
+                }
+            </div>
+          </mat-accordion>
+    </div>
+
+
+    <div class="users-info">
+        <div class="users-info-header">
+            <mat-icon>memory</mat-icon>
+            <span>Wyposażenie</span>
+        </div>
+        <mat-tab-group>
+            <mat-tab label="Ink. lęgowe">
+                <div class="add-button-container" (click)="createNestingIncubator()">
+                    <button mat-mini-fab class="add-equipment-button" color="primary">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </div>
+                <mat-accordion>
+                    <div class="user-panels">
+                        @for (item of nestingIncubatorAll; track item.id){
+                            <mat-expansion-panel>
+                                <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                Inkubator lęgowy
+                                </mat-panel-title>
+                                <mat-panel-description>
+                                    | {{ item.humanReadableId }}
+                                </mat-panel-description>
+                            </mat-expansion-panel-header>
+                            <div class="user-data-container">
+                                <div class="user-data">
+                                    <span>Id:</span>
+                                    <label>{{ item.id }}</label>
+                                    <span>Pojemność (wózki):</span>
+                                    <label>{{ item.maxCapacity }}</label>             
+                                </div>
+                                <div class="user-options-container">
+                                    <button mat-mini-fab>
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                            </mat-expansion-panel>
+                        }
+                    </div>
+                </mat-accordion>
+            </mat-tab>
+            <mat-tab label="Ink. klujnikowe">
+                <button mat-mini-fab class="add-equipment-button" color="primary" (click)="createHatchingIncubator()">
+                    <mat-icon>add</mat-icon>
+                </button>
+                <mat-accordion>
+                    <div class="user-panels">
+                        @for (item of hatchingIncubatorAll; track item.id){
+                            <mat-expansion-panel>
+                                <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                Inkubator klujnikowy
+                                </mat-panel-title>
+                                <mat-panel-description>
+                                    | {{ item.humanReadableId }}
+                                </mat-panel-description>
+                            </mat-expansion-panel-header>
+                            <div class="user-data-container">
+                                <div class="user-data">
+                                    <span>Id:</span>
+                                    <label>{{ item.id }}</label>
+                                    <span>Pojemność (wózki):</span>
+                                    <label>{{ item.maxCapacity }}</label>             
+                                </div>
+                                <div class="user-options-container">
+                                    <button mat-mini-fab>
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                            </mat-expansion-panel>
+                        }
+                    </div>
+                </mat-accordion>
+            </mat-tab>
+            <mat-tab label="Wózki lęgowe">
+                <div class="add-button-container">
+                    <button mat-mini-fab class="add-equipment-button" color="primary" (click)="createNestingTrolley()">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </div>
+                <mat-accordion>
+                    <div class="user-panels">
+                        @for (item of nestingTrolleyAll; track item.id){
+                            <mat-expansion-panel>
+                                <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                Wózek lęgowy
+                                </mat-panel-title>
+                                <mat-panel-description>
+                                    | {{ item.humanReadableId }}
+                                </mat-panel-description>
+                            </mat-expansion-panel-header>
+                            <div class="user-data-container">
+                                <div class="user-data">
+                                    <span>Id:</span>
+                                    <label>{{ item.id }}</label>             
+                                    <span>Maksymalna pojemność wózka:</span>
+                                    <label>{{ item.maxCapacity }}</label>             
+                                </div>
+                                <div class="user-options-container">
+                                    <button mat-mini-fab>
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                            </mat-expansion-panel>
+                        }
+                    </div>
+                </mat-accordion>
+            </mat-tab>
+            <mat-tab label="Wózki klujnikowe">
+                <div class="add-button-container">
+                    <button mat-mini-fab class="add-equipment-button" color="primary" (click)="createHatchingTrolley()">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </div>
+                <mat-accordion>
+                    <div class="user-panels">
+                        @for (item of hatchingTrolleyAll; track item.id){
+                            <mat-expansion-panel>
+                                <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                Wózek klujnikowy
+                                </mat-panel-title>
+                                <mat-panel-description>
+                                    | {{ item.humanReadableId }}
+                                </mat-panel-description>
+                            </mat-expansion-panel-header>
+                            <div class="user-data-container">
+                                <div class="user-data">
+                                    <span>Id:</span>
+                                    <label>{{ item.id }}</label>             
+                                </div>
+                                <div class="user-options-container">
+                                    <button mat-mini-fab>
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                            </mat-expansion-panel>
+                        }
+                    </div>
+                </mat-accordion>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+
+    <app-create-nesting-incubator-panel *ngIf="isNestingIncubatorPanelComponentEnabled" 
+    (closePanelEvent)="closeNestingIncubatorPanelComponent()">
+    </app-create-nesting-incubator-panel>
+
+    <app-create-hatching-incubator-panel *ngIf="isHatchingIncubatorPanelComponentEnabled"
+    (closePanelEvent)="closeHatchingIncubatorPanelComponent()">
+    </app-create-hatching-incubator-panel>
+
+    <app-create-nesting-trolley *ngIf="isNestingTrolleyPanelComponentEnabled"
+    (closePanelEvent)="closeNestingTrolleyPanelComponent()">
+    </app-create-nesting-trolley>
+
+    <app-create-hatching-trolley *ngIf="isHatchingTrolleyPanelComponentEnabled"
+    (closePanelEvent)="closeHatchingTrolleyPanelComponent()">
+    </app-create-hatching-trolley>
+    
+    <app-create-new-user *ngIf="isRegisterSubUserPanelComponentEnabled"
+    (closePanelEvent)="closeRegisterSubUserPanelComponent()">
+    </app-create-new-user>
+
+</div>

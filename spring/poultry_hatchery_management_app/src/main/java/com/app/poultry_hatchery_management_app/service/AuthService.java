@@ -79,9 +79,11 @@ public class AuthService {
                 .firstName(request.firstName())
                 .lastName(request.lastName())
                 .emailAddress(request.emailAddress())
+                .phoneNumber(request.phoneNumber())
                 .password(passwordEncoder.encode(request.password()))
                 .role(Role.ADMIN)
                 .organisation(organisation)
+                .isEnabled(true)
                 .build();
         userRepository.save(user);
 

@@ -41,11 +41,17 @@ public class User implements UserDetails {
     @Column(name = "email_address", unique = true)
     private String emailAddress;
 
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
     @ManyToOne
     private Organisation organisation;
+
+    @Column()
+    private Boolean isEnabled;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -73,6 +79,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.isEnabled;
     }
 }

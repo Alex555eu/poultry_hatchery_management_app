@@ -26,8 +26,6 @@ public class NestingTrolley {
 
     private Integer maxCapacity;
 
-    private Integer availableCapacity;
-
     @ManyToOne
     private Organisation organisation;
 
