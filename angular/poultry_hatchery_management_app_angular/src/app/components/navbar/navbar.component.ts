@@ -5,8 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card'
-
-import { RouterOutlet } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { UserDetails } from '../../models/user-details.model';
 import { UserDetailsService } from '../../services/users/user-details.service';
 import { Observable } from 'rxjs';
@@ -20,7 +19,7 @@ import { Observable } from 'rxjs';
     MatIconModule,
     MatButtonModule,
     MatListModule,
-    RouterOutlet,
+    RouterModule,
     MatCardModule
   ],
   templateUrl: './navbar.component.html',
