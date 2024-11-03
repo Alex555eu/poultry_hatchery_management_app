@@ -1,0 +1,74 @@
+<div class="bg-cntr">
+  <div class="panel-cntr">
+    <div class="panel-header-cntr">
+      <mat-icon>supervised_user_circle</mat-icon>
+      <label>Dostawcy</label>
+      <button mat-mini-fab color="primary" (click)="onClose(null)">
+        <mat-icon>exit_to_app</mat-icon>
+      </button>
+    </div>
+
+    <form [formGroup]="providerForm" (ngSubmit)="onSubmit()" class="data-cntr">
+      <mat-horizontal-stepper [linear]="true">
+        <!-- Krok 1: Dane Osobowe -->
+        <mat-step label="Dane osobowe">
+          <div class="users-info">
+            <mat-form-field appearance="fill">
+              <mat-label>Imię</mat-label>
+              <input matInput formControlName="firstName" />
+              <mat-error *ngIf="providerForm.get('firstName')?.invalid">Imię jest wymagane</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Nazwisko</mat-label>
+              <input matInput formControlName="lastName" />
+              <mat-error *ngIf="providerForm.get('lastName')?.invalid">Nazwisko jest wymagane</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Nr WNI</mat-label>
+              <input matInput formControlName="wni" />
+              <mat-error *ngIf="providerForm.get('wni')?.invalid">Numer jest wymagany</mat-error>
+            </mat-form-field>
+          </div>
+          <div>
+            <button mat-button matStepperNext>Dalej</button>
+          </div>
+        </mat-step>
+
+        <!-- Krok 2: Adres -->
+        <mat-step label="Adres">
+          <div formGroupName="address">
+            <mat-form-field appearance="fill">
+              <mat-label>Miasto</mat-label>
+              <input matInput formControlName="city" />
+              <mat-error *ngIf="providerForm.get('address.city')?.invalid">Miasto jest wymagane</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Kod Pocztowy</mat-label>
+              <input matInput formControlName="postalCode" />
+              <mat-error *ngIf="providerForm.get('address.postalCode')?.invalid">Kod jest nieprawidłowy</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Ulica</mat-label>
+              <input matInput formControlName="street" />
+              <mat-error *ngIf="providerForm.get('address.street')?.invalid">Ulica jest wymagana</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Nr Budynku</mat-label>
+              <input matInput formControlName="number" />
+              <mat-error *ngIf="providerForm.get('address.number')?.invalid">Numer budynku jest wymagany</mat-error>
+            </mat-form-field>
+          </div>
+          <div>
+            <button mat-button matStepperPrevious>Wróć</button>
+            <button mat-raised-button color="accent" type="submit" [disabled]="providerForm.invalid">Zapisz</button>
+          </div>
+        </mat-step>
+      </mat-horizontal-stepper>
+    </form>
+  </div>
+</div>

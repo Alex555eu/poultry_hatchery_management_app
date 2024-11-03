@@ -43,4 +43,17 @@ export namespace ApiPaths {
         DELETE_HATCHING_TROLLEY = '/api/v1/hatching-trolley/',
     }
 
+    export enum DeliveryPaths {
+        GET_ALL_DELIVERIES = '/api/v1/deliveries/',
+        GET_DELIVERIES_BY_ID = '/api/v1/deliveries/by-id',
+        GET_DELIVERIES_BY_SUPPLIER_ID = '/api/v1/deliveries/by-supplier',
+        GET_ALL_PRODUCT_TYPES = '/api/v1/deliveries/product-types-all',
+        POST_DELIVERY = '/api/v1/deliveries',
+        PUT_DELIVERY = '/api/v1/deliveries',
+        DELETE_DELIVERY = '/api/v1/deliveries',
+        
+        GET_ALL_SUPPLIERS = '/api/v1/deliveries/supplier',
+        POST_SUPPLIER = '/api/v1/deliveries/supplier',
+    }
+
 }

@@ -1,0 +1,60 @@
+<div class="bg-cntr">
+    <div class="panel-cntr">
+        <div class="panel-header-cntr">
+            <mat-icon>supervised_user_circle</mat-icon>
+            <label>Dostawcy</label>
+            <button mat-mini-fab color="primary" (click)="onClose()">
+                <mat-icon>exit_to_app</mat-icon>
+            </button>
+        </div>
+        <div class="data-cntr">
+            <div class="users-info">
+                <mat-accordion>
+                    <div class="users-info-header">
+                        <mat-form-field>
+                            <mat-label>Wyszukaj</mat-label>
+                            <input matInput [(ngModel)]="searchText" (ngModelChange)="filterItems()" />
+                        </mat-form-field>
+                        <button mat-fab extended (click)="registerNewSupplier()">
+                            <mat-icon>person_add</mat-icon>
+                            Dodaj
+                        </button>
+                    </div>                    
+                    <div class="user-panels">
+                        @for (item of filteredSuppliers; track item){
+                            <mat-expansion-panel>
+                                <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                {{ getFirstStringLetter(item.name) }}. {{ item.surname }}
+                                </mat-panel-title>
+                                <mat-panel-description>
+                                    | {{ item.address.city }}
+                                </mat-panel-description>
+                            </mat-expansion-panel-header>
+                            <div class="user-data-container">
+                                <div class="user-data">
+                                    <label style="font-weight: bold;">{{ item.name }} {{ item.surname }}</label>
+                                    <span>Adres:</span>
+                                    <label>{{ item.address.postalCode }}, {{ item.address.city }}</label>               
+                                    <label>ul. {{ item.address.street }}, {{ item.address.number }}</label>   
+                                    <span>wni:</span>
+                                    <label>{{ item.wni }}</label>            
+                                </div>
+                            </div>
+                            <div class="user-options-container">
+                                <button mat-fab extended color="primary" (click)="selectSupplier(item)">
+                                    <mat-icon>check_circle_outline</mat-icon>
+                                    Wybierz
+                                </button>
+                            </div>
+                            </mat-expansion-panel>
+                        }
+                    </div>
+                  </mat-accordion>
+            </div>
+        </div>
+    </div>
+    <app-register-supplier *ngIf="isRegisterSupplierComponentEnabled"
+    (closePanelEvent)="closeRegisterNewSupplier($event)">
+    </app-register-supplier>
+</div>

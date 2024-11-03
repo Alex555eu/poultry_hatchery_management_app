@@ -51,8 +51,6 @@ export class RegisterComponent {
       repeatPassword: ['', Validators.required],  
     }, { validators: this.matchValidator('password', 'repeatPassword') });
   }
-  
-
 
   onSubmit(): void {
     if (this.registerForm.valid) {
@@ -94,18 +92,18 @@ export class RegisterComponent {
 
   private makeRegisterRequestBody(form: FormGroup): RegisterRequest {
     let registerRequest: RegisterRequest = {
-    emailAddress: form.get('emailAddress')?.value,
-    firstName: form.get('firstName')?.value,
-    lastName: form.get('firstName')?.value,
-    phoneNumber: form.get('phoneNumber')?.value,
-    orgCity: form.get('orgCity')?.value,
-    orgName: form.get('orgName')?.value,
-    orgNumber: form.get('orgNumber')?.value,
-    orgPostalCode: form.get('orgPostalCode')?.value,
-    orgRegon: form.get('orgRegon')?.value,
-    orgStreet: form.get('orgStreet')?.value,
-    password: form.get('password')?.value,
-    };
+        emailAddress: form.get('emailAddress')?.value,
+        firstName: form.get('firstName')?.value,
+        lastName: form.get('firstName')?.value,
+        phoneNumber: form.get('phoneNumber')?.value,
+        orgCity: form.get('orgCity')?.value,
+        orgName: form.get('orgName')?.value,
+        orgNumber: form.get('orgNumber')?.value,
+        orgPostalCode: form.get('orgPostalCode')?.value,
+        orgRegon: form.get('orgRegon')?.value,
+        orgStreet: form.get('orgStreet')?.value,
+        password: form.get('password')?.value,
+      };
     return registerRequest;
   }
 

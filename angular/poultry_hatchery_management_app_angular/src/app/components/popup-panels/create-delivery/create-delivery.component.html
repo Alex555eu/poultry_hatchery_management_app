@@ -1,0 +1,97 @@
+<div class="bg-cntr">
+    <div class="panel-cntr">
+      <div class="panel-header-cntr">
+        <mat-icon>add_circle</mat-icon>
+        <label>Nowa dostawa</label>
+        <button mat-mini-fab color="primary" (click)="closeCreateDeliveryPopupComponent(null)">
+          <mat-icon>exit_to_app</mat-icon>
+        </button>
+      </div>
+  
+      <form [formGroup]="providerForm" (ngSubmit)="onSubmit()" class="data-cntr">
+        <mat-horizontal-stepper [linear]="true">
+
+            <mat-step label="Szczegoły dostawy">
+            <div class="users-info">
+                <mat-form-field>
+                    <mat-label>Gatunek dostawy</mat-label>
+                    <mat-select formControlName="productType" name="productType">
+                        @for (item of productTypes; track item){
+                            <mat-option [value]="item">{{ item }}</mat-option>
+                        }
+                    </mat-select>
+                    <mat-error *ngIf="providerForm.get('productType')?.invalid && providerForm.get('productType')?.touched">
+                        To pole jest wymagane.
+                    </mat-error>
+                </mat-form-field>
+  
+              <mat-form-field appearance="fill">
+                <mat-label>Ilość</mat-label>
+                <input matInput formControlName="quantity" />
+                <mat-error *ngIf="providerForm.get('quantity')?.invalid">Ilość jest wymagana</mat-error>
+              </mat-form-field>
+  
+            </div>
+            <div>
+              <button mat-button type="button" matStepperNext>Dalej</button>
+            </div>
+          </mat-step>
+  
+          <mat-step label="Dostawca">
+            <button mat-raised-button type="button" (click)="findSupplierPopupComponent()">Znajdź dostawcę</button>
+            <div class="supplier-cntr" *ngIf="selectedSupplier">
+                <div class="supplier-data-cntr">
+                    <div class="supplier-data-header">
+                        <mat-icon>account_circle</mat-icon>
+                        <label>Dostawca</label>
+                    </div>
+                    <div class="user-data">
+                        <label style="font-weight: bold;">{{ selectedSupplier.name }} {{ selectedSupplier.surname }}</label>
+                        <span>Adres:</span>
+                        <label>{{ selectedSupplier.address.postalCode }}, {{ selectedSupplier.address.city }}</label>               
+                        <label>ul. {{ selectedSupplier.address.street }}, {{ selectedSupplier.address.number }}</label>   
+                        <span>wni:</span>
+                        <label>{{ selectedSupplier.wni }}</label>            
+                    </div>
+                </div>
+            </div>  
+            <div>
+              <button mat-button type="button" matStepperPrevious>Wróć</button>
+              <button mat-button type="button" matStepperNext>Dalej</button>
+            <mat-step label="Podsumowanie">
+                <div class="delivery-details">
+                    <span>Gatunek</span>
+                    <label> {{ providerForm.get('productType')?.value }} </label>
+                    <span>Ilość</span>
+                    <label> {{ providerForm.get('quantity')?.value }} </label>
+                </div>
+                <div class="supplier-cntr" *ngIf="selectedSupplier">
+                    <div class="supplier-data-cntr">
+                        <div class="supplier-data-header">
+                            <mat-icon>account_circle</mat-icon>
+                            <label>Dostawca</label>
+                        </div>
+                        <div class="user-data">
+                            <label>{{ selectedSupplier.name }} {{ selectedSupplier.surname }}</label>
+                            <span>Adres:</span>
+                            <label>{{ selectedSupplier.address.postalCode }}, {{ selectedSupplier.address.city }}</label>               
+                            <label>ul. {{ selectedSupplier.address.street }}, {{ selectedSupplier.address.number }}</label>   
+                            <span>wni:</span>
+                            <label>{{ selectedSupplier.wni }}</label>            
+                        </div>
+                    </div>
+                </div>
+                <button mat-button type="button" matStepperPrevious>Wróć</button>
+                <button mat-raised-button color="accent" type="submit" [disabled]="providerForm.invalid || !selectedSupplier">Zapisz</button>   
+            </mat-step>
+              
+            </div>
+          </mat-step>
+        </mat-horizontal-stepper>
+      </form>
+    </div>
+    <app-find-supplier *ngIf="isFindSupplierPopupComponentEnabled"
+    (closePanelEvent)="closeFindSupplierPopupComponent($event)">
+    </app-find-supplier>
+  </div>
+  

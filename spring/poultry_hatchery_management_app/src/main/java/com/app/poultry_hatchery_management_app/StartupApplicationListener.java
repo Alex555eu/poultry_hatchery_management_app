@@ -27,6 +27,7 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
     private final NestingIncubatorSpaceRepository nestingIncubatorSpaceRepository;
     private final NestingTrolleyRepository nestingTrolleyRepository;
     private final NestingTrolleyIncubatorSpaceAssignmentRepository nestingTrolleyIncubatorSpaceAssignmentRepository;
+    private final ProductTypeRepository productTypeRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -116,8 +117,15 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
                 .build();
         supplierRepository.save(supplier2);
 
+        ProductType type = ProductType.builder()
+                .name("GES_BIALA_KOLUDZKA")
+                .organisation(organisation)
+                .build();
+        productTypeRepository.save(type);
+
         Delivery delivery = Delivery.builder()
                 .quantity(111)
+                .type(type)
                 .supplier(supplier)
                 .dateTime(LocalDateTime.now())
                 .build();
@@ -125,6 +133,7 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
 
         Delivery delivery2 = Delivery.builder()
                 .quantity(222)
+                .type(type)
                 .supplier(supplier2)
                 .dateTime(LocalDateTime.now())
                 .build();
