@@ -92,6 +92,7 @@ export class DeliveriesComponent implements OnInit {
 
   closeCreateDeliveryPopupComponent(delivery: Delivery | null) {
     this.isCreateDeliveryPopupComponentEnabled = false;
+    window.location.reload();
   }
 
   findSupplierPopupComponent() {
