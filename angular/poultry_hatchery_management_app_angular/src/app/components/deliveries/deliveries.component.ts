@@ -82,15 +82,6 @@ export class DeliveriesComponent implements OnInit {
     })
   }
 
-  applyFilterFromInput(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
-
   onRowClicked(row: Delivery) {
     //todo: implementation (modify delivery)
   }
@@ -112,12 +103,12 @@ export class DeliveriesComponent implements OnInit {
       this.selectedSupplier = event;
     }
     this.isFindSupplierPopupComponentEnabled = false;
-    this.filterData();
+    this.filterData(null);
   }
 
   cancelSupplierSelection() {
     this.selectedSupplier = null;
-    this.filterData();
+    this.filterData(null);
   }
 
   onDateRangeChange(event: MatDatepickerInputEvent<Date>, type: 'start' | 'end') {
@@ -126,12 +117,28 @@ export class DeliveriesComponent implements OnInit {
     } else if (type === 'end') {
       this.endDate = event.value; 
     }
-    this.filterData();
+    this.filterData(null);
   }
 
-  filterData() {
+  filterData(event: Event | null) {
     if (this.deliveriesAll){
       const filteredData = this.deliveriesAll
+      .filter(item => {
+        if (event) {
+          const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+          return item.quantity.toString().toLowerCase().includes(filterValue) ||
+                  item.dateTime.toString().toLowerCase().includes(filterValue) ||
+                  item.productType.name.toString().toLowerCase().includes(filterValue) ||
+                  item.supplier.name.toString().toLowerCase().includes(filterValue) ||
+                  item.supplier.surname.toString().toLowerCase().includes(filterValue) ||
+                  item.supplier.wni.toString().toLowerCase().includes(filterValue) ||
+                  item.supplier.address.city.toString().toLowerCase().includes(filterValue) ||
+                  item.supplier.address.number.toString().toLowerCase().includes(filterValue) ||
+                  item.supplier.address.postalCode.toString().toLowerCase().includes(filterValue) ||
+                  item.supplier.address.street.toString().toLowerCase().includes(filterValue);
+        }
+        return item;
+      })
       .filter(item => {
         if (this.startDate) {
           return this.startDate <= new Date(item.dateTime);

@@ -33,12 +33,12 @@
   
             </div>
             <div>
-              <button mat-button matStepperNext>Dalej</button>
+              <button mat-button type="button" matStepperNext>Dalej</button>
             </div>
           </mat-step>
   
           <mat-step label="Dostawca">
-            <button mat-raised-button (click)="findSupplierPopupComponent()">Znajdź dostawcę</button>
+            <button mat-raised-button type="button" (click)="findSupplierPopupComponent()">Znajdź dostawcę</button>
             <div class="supplier-cntr" *ngIf="selectedSupplier">
                 <div class="supplier-data-cntr">
                     <div class="supplier-data-header">
@@ -56,8 +56,8 @@
                 </div>
             </div>  
             <div>
-              <button mat-button matStepperPrevious>Wróć</button>
-              <button mat-button matStepperNext>Dalej</button>
+              <button mat-button type="button" matStepperPrevious>Wróć</button>
+              <button mat-button type="button" matStepperNext>Dalej</button>
             <mat-step label="Podsumowanie">
                 <div class="delivery-details">
                     <span>Gatunek</span>
@@ -81,7 +81,7 @@
                         </div>
                     </div>
                 </div>
-                <button mat-button matStepperPrevious>Wróć</button>
+                <button mat-button type="button" matStepperPrevious>Wróć</button>
                 <button mat-raised-button color="accent" type="submit" [disabled]="providerForm.invalid || !selectedSupplier">Zapisz</button>   
             </mat-step>
               

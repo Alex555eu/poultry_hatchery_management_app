@@ -77,11 +77,12 @@ public class DeliveryController {
     }
 
     @PostMapping
-    public ResponseEntity<String> postDelivery(@RequestBody PostDeliveryRequest request) {
+    public ResponseEntity<String> postDelivery(@RequestBody PostDeliveryRequest request) throws JsonProcessingException {
         try {
             Optional<Delivery> delivery = deliveryService.postDelivery(request);
             if (delivery.isPresent()) {
-                return ResponseEntity.ok().build();
+                String body = objectMapper.writeValueAsString(delivery.get());
+                return ResponseEntity.ok(body);
             }
             return ResponseEntity.notFound().build();
         } catch (ResponseStatusException ex) {

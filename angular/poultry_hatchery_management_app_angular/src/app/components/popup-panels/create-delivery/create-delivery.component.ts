@@ -47,6 +47,8 @@ export class CreateDeliveryComponent implements OnInit {
   productTypes: string[] | null = null;
   selectedProductType: string | null = null;
 
+  private isCurrentlySubmitting: boolean = false;
+
   constructor(
     private deliveriesService: DeliveriesService,
     private fb: FormBuilder
@@ -65,16 +67,13 @@ export class CreateDeliveryComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.providerForm.valid && this.selectedSupplier) {
+    if (this.providerForm.valid && this.selectedSupplier && !this.isCurrentlySubmitting) {
+      this.isCurrentlySubmitting = true;
       const request = this.makeRegisterRequestBody(this.providerForm, this.selectedSupplier.id);
       this.deliveriesService.postDelivery(request).subscribe(delivery => {
         this.closeCreateDeliveryPopupComponent(delivery);
       });
     }
-  }
-
-  createDeliveryPopupComponent() {
-    this.isFindSupplierPopupComponentEnabled = true;
   }
   
   closeCreateDeliveryPopupComponent(delivery: Delivery | null) {

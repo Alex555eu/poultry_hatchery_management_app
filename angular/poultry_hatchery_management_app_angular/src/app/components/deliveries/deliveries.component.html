@@ -8,12 +8,12 @@
         <div class="filter-body">
             <mat-form-field>
                 <mat-label>Wyszukaj</mat-label>
-                <input matInput (keyup)="applyFilterFromInput($event)" #input>
+                <input matInput (keyup)="filterData($event)" #input>
             </mat-form-field>
 
             <mat-form-field>
               <mat-label>Gatunek</mat-label>
-                <mat-select [(value)]="selectedProductType" placeholder="Typ" (valueChange)="filterData()">
+                <mat-select [(value)]="selectedProductType" placeholder="Typ" (valueChange)="filterData(null)">
                     @for (type of productTypes; track type) {
                         <mat-option [value]="type">{{ type }}</mat-option>
                     }
