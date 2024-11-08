@@ -1,41 +1,36 @@
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { UserDetailsService } from '../../../services/users/user-details.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { RegisterSubUserRequest } from '../../../dto/register-sub-user-request';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { UserDetailsService } from '../../../../services/users/user-details.service';
-import { RegisterSubUserRequest } from '../../../../dto/register-sub-user-request';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { CommonModule } from '@angular/common';
+import { UserDetails } from '../../../models/user-details.model';
 
 @Component({
-  selector: 'app-create-new-user',
+  selector: 'app-new-employee',
   standalone: true,
   imports: [
     MatIconModule,
-    MatButtonModule,
+    MatDialogModule,
     MatFormFieldModule,
-    MatInputModule,
     CommonModule,
     FormsModule,
-    ReactiveFormsModule,
-    MatSnackBarModule
+    ReactiveFormsModule
   ],
-  templateUrl: './create-new-user.component.html',
-  styleUrl: './create-new-user.component.css'
+  templateUrl: './new-employee.component.html',
+  styleUrl: './new-employee.component.css'
 })
-export class CreateNewUserComponent {
-
-  @Output()
-  closePanelEvent = new EventEmitter();
-
+export class NewEmployeeComponent {
   dataForm: FormGroup;
 
   constructor(
     private fb: FormBuilder,
     private userDetailsservice: UserDetailsService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialogRefParent: MatDialogRef<NewEmployeeComponent>
   ) {
     this.dataForm = this.fb.group({
       firstName: [''],
@@ -59,7 +54,7 @@ export class CreateNewUserComponent {
       }
       this.userDetailsservice.postSubUser(body).subscribe({
         next: (response) => {
-          this.onClose();
+          this.onClose(response);
         },
         error: (error: any) => {
           this.snackBar.open('Coś poszło nie tak', 'Zamknij', {
@@ -72,8 +67,8 @@ export class CreateNewUserComponent {
     }
   }
 
-  onClose() {
-    this.closePanelEvent.emit();
+  onClose(employee: UserDetails | null) {
+    this.dialogRefParent.close(employee);
   }
 
 
@@ -94,5 +89,4 @@ export class CreateNewUserComponent {
         }
     }
   }
-
 }

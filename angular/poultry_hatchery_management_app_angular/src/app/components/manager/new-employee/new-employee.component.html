@@ -1,9 +1,9 @@
-<div class="bg-cntr">
-    <div class="panel-cntr">
-        <div class="panel-header-cntr">
+<mat-dialog-content>
+    <div class="dialog-bg">
+        <div class="dialog-header">
             <mat-icon>supervised_user_circle</mat-icon>
             <label>Dodaj nowego użytkownika</label>
-            <button mat-mini-fab color="primary" (click)="onClose()">
+            <button mat-icon-button (click)="onClose(null)">
                 <mat-icon>exit_to_app</mat-icon>
             </button>
         </div>
@@ -61,4 +61,4 @@
             </form>
         </div>
     </div>
-</div>
+</mat-dialog-content>
