@@ -1,9 +1,9 @@
-<div class="bg-cntr">
-    <div class="panel-cntr">
-      <div class="panel-header-cntr">
+<mat-dialog-content>
+    <div class="dialog-bg">
+      <div class="dialog-header">
         <mat-icon>add_circle</mat-icon>
         <label>Nowa dostawa</label>
-        <button mat-mini-fab color="primary" (click)="closeCreateDeliveryPopupComponent(null)">
+        <button mat-icon-button (click)="onClose()">
           <mat-icon>exit_to_app</mat-icon>
         </button>
       </div>
@@ -38,7 +38,7 @@
           </mat-step>
   
           <mat-step label="Dostawca">
-            <button mat-raised-button type="button" (click)="findSupplierPopupComponent()">Znajdź dostawcę</button>
+            <button mat-raised-button type="button" (click)="findSupplier()">Znajdź dostawcę</button>
             <div class="supplier-cntr" *ngIf="selectedSupplier">
                 <div class="supplier-data-cntr">
                     <div class="supplier-data-header">
@@ -90,8 +90,5 @@
         </mat-horizontal-stepper>
       </form>
     </div>
-    <app-find-supplier *ngIf="isFindSupplierPopupComponentEnabled"
-    (closePanelEvent)="closeFindSupplierPopupComponent($event)">
-    </app-find-supplier>
-  </div>
+  </mat-dialog-content>
   

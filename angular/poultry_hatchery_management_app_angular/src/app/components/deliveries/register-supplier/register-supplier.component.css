@@ -1,0 +1,12 @@
+
+.users-info {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+}
+
+#submit-btn {
+    margin-left: auto;
+    float: right;
+}

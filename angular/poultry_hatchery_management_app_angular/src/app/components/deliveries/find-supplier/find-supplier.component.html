@@ -1,9 +1,9 @@
-<div class="bg-cntr">
-    <div class="panel-cntr">
-        <div class="panel-header-cntr">
+<mat-dialog-content>
+    <div class="dialog-bg">
+        <div class="dialog-header">
             <mat-icon>supervised_user_circle</mat-icon>
             <label>Dostawcy</label>
-            <button mat-mini-fab color="primary" (click)="onClose()">
+            <button mat-icon-button (click)="onClose()">
                 <mat-icon>exit_to_app</mat-icon>
             </button>
         </div>
@@ -15,7 +15,7 @@
                             <mat-label>Wyszukaj</mat-label>
                             <input matInput [(ngModel)]="searchText" (ngModelChange)="filterItems()" />
                         </mat-form-field>
-                        <button mat-fab extended (click)="registerNewSupplier()">
+                        <button mat-fab extended (click)="registerSupplier()">
                             <mat-icon>person_add</mat-icon>
                             Dodaj
                         </button>
@@ -54,7 +54,4 @@
             </div>
         </div>
     </div>
-    <app-register-supplier *ngIf="isRegisterSupplierComponentEnabled"
-    (closePanelEvent)="closeRegisterNewSupplier($event)">
-    </app-register-supplier>
-</div>
+</mat-dialog-content>
