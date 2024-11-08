@@ -13,8 +13,6 @@ import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { FindSupplierComponent } from '../popup-panels/find-supplier/find-supplier.component';
-import { CreateDeliveryComponent } from '../popup-panels/create-delivery/create-delivery.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { TaskNestingTrolleyAssignment } from '../../models/task-nesting-trolley-assignment.model';
@@ -24,7 +22,7 @@ import { TasksSectionComponent } from './tasks-section/tasks-section.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmActionDialogComponent } from '../../utils/confirm-action-dialog/confirm-action-dialog.component';
 import { MatDialog, MatDialogConfig, MatDialogModule } from '@angular/material/dialog';
-import {MatMenuModule} from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
 import { NewTaskComponent } from './new-task/new-task.component';
 import { FindTaskedTrolleysComponent } from './find-tasked-trolleys/find-tasked-trolleys.component';
 
@@ -45,15 +43,11 @@ import { FindTaskedTrolleysComponent } from './find-tasked-trolleys/find-tasked-
     CommonModule,
     FormsModule,
     MatButtonModule,
-    FindSupplierComponent,
-    CreateDeliveryComponent,
     MatExpansionModule,
     MatProgressSpinnerModule,
     TasksSectionComponent,
-    ConfirmActionDialogComponent,
     MatMenuModule,
-    MatDialogModule,
-    FindTaskedTrolleysComponent
+    MatDialogModule
   ],
   animations: [
     trigger('detailExpand', [

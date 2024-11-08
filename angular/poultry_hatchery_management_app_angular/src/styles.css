@@ -12,14 +12,15 @@ mat-dialog-content {
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
-    overflow: hidden !important;
+    overflow: auto !important;
     color: black !important;
+    max-height: 80vh !important;
 }
 .dialog-bg {
     padding: 5px;
     width: 600px;
-    max-height: 80vh;
-    overflow-y: auto;
+    max-height: 100%;
+    overflow-y: hidden;
 }
 .dialog-header {
     display: flex;
