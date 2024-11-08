@@ -1,6 +1,6 @@
-<div class="bg-cntr">
-    <div class="panel-cntr">
-        <div class="panel-header-cntr">
+<mat-dialog-content>
+    <div class="dialog-bg">
+        <div class="dialog-header">
             <mat-icon>memory</mat-icon>
             <label>Dodaj inkubator lęgowy</label>
             <button mat-mini-fab color="primary" (click)="onClose()">
@@ -19,7 +19,7 @@
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>Max.ilość wózków w inkubatorze</mat-label>
-                    <mat-select formControlName="maxCapacity" name="maxCapacity" (ngModelChange)="reloadIncubatorLayout()">
+                    <mat-select formControlName="maxCapacity" name="maxCapacity" (ngModelChange)="ngOnInit()">
                         <mat-option [value]="2">2</mat-option>
                         <mat-option [value]="4">4</mat-option>
                         <mat-option [value]="8">8</mat-option>
@@ -32,7 +32,7 @@
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>Liczba kolumn inkubatora</mat-label>
-                    <mat-select formControlName="numberOfColumns" name="numberOfColumns" (ngModelChange)="reloadIncubatorLayout()">
+                    <mat-select formControlName="numberOfColumns" name="numberOfColumns" (ngModelChange)="ngOnInit()">
                         <mat-option [value]="2">2</mat-option>
                         <mat-option [value]="4">4</mat-option>
                         <mat-option [value]="8">8</mat-option>
@@ -62,4 +62,4 @@
             </form>
         </div>
     </div>
-</div>
+</mat-dialog-content>

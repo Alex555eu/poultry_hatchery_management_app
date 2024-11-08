@@ -1,17 +1,17 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { PostTrolleyRequest } from '../../../../dto/post-trolley-request';
-import e from 'express';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
-import { HatchingTrolleyService } from '../../../../services/hatching-trolley/hatching-trolley.service';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { NestingTrolleyService } from '../../../services/nesting-trolley/nesting-trolley.service';
+import { PostTrolleyRequest } from '../../../dto/post-trolley-request';
 
 @Component({
-  selector: 'app-create-hatching-trolley',
+  selector: 'app-new-nesting-trolley',
   standalone: true,
   imports: [
     MatIconModule,
@@ -21,25 +21,25 @@ import { HatchingTrolleyService } from '../../../../services/hatching-trolley/ha
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDialogModule
   ],
-  templateUrl: './create-hatching-trolley.component.html',
-  styleUrl: './create-hatching-trolley.component.css'
+  templateUrl: './new-nesting-trolley.component.html',
+  styleUrl: './new-nesting-trolley.component.css'
 })
-export class CreateHatchingTrolleyComponent {
-
-  @Output() 
-  closePanelEvent = new EventEmitter();
+export class NewNestingTrolleyComponent {
 
   dataForm: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
-    private hatchingTrolleyService: HatchingTrolleyService,
-    private snackBar: MatSnackBar
+    private nestingTrolleySerice: NestingTrolleyService,
+    private snackBar: MatSnackBar,
+    private dialogRefParent: MatDialogRef<NewNestingTrolleyComponent>
   ) {
       this.dataForm = this.formBuilder.group({
         humanReadableId: ['', Validators.required],
+        maxCapacity: [1, Validators.required],
     });
   }
 
@@ -47,9 +47,9 @@ export class CreateHatchingTrolleyComponent {
     if (this.dataForm.valid) {
       let body: PostTrolleyRequest = {
         humanReadableId: this.dataForm.get('humanReadableId')?.value,
-        maxCapacity: -1
+        maxCapacity: this.dataForm.get('maxCapacity')?.value
       }
-      this.hatchingTrolleyService.postHatchingTrolley(body).subscribe({
+      this.nestingTrolleySerice.postNestingTrolley(body).subscribe({
         next: (response) => {
           this.onClose();
         },
@@ -65,9 +65,7 @@ export class CreateHatchingTrolleyComponent {
   }
 
   onClose() {
-    this.closePanelEvent.emit();
+    this.dialogRefParent.close();
   }
 
 }
-
-

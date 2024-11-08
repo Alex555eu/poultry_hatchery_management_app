@@ -1,0 +1,25 @@
+.data-form-cntr {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin-top: 10px;
+}
+
+.data-form-cntr button {
+    width: 20%;
+}
+
+.flex-cntr {
+    margin: 10% 20% 0 20%;
+    border-style: solid;
+    border-color: lightblue;
+    padding: 5px;
+    border-bottom: none;
+}
+
+.panel-footer-cntr {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 80px;
+}

@@ -1,8 +1,8 @@
-<div class="bg-cntr">
-    <div class="panel-cntr">
-        <div class="panel-header-cntr">
+<mat-dialog-content>
+    <div class="dialog-bg">
+        <div class="dialog-header">
             <mat-icon>memory</mat-icon>
-            <label>Dodaj wózek klujnikowy</label>
+            <label>Dodaj wózek lęgowy</label>
             <button mat-mini-fab color="primary" (click)="onClose()">
                 <mat-icon>exit_to_app</mat-icon>
             </button>
@@ -17,10 +17,17 @@
                         To pole jest wymagane.
                     </mat-error>
                 </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Pojemność wózka (il. jaj)</mat-label>
+                    <input matInput formControlName="maxCapacity" name="maxCapacity" id="maxCapacity" type="number" placeholder="np. 128">
+                    <mat-error *ngIf="dataForm.get('maxCapacity')?.invalid && dataForm.get('maxCapacity')?.touched">
+                        To pole jest wymagane.
+                    </mat-error>
+                </mat-form-field>
                   <div class="panel-footer-cntr">
                     <button color="accent" mat-raised-button type="submit" [disabled]="dataForm.invalid">Zatwierdź</button>
                 </div>
             </form>
         </div>
     </div>
-</div>
+</mat-dialog-content>
