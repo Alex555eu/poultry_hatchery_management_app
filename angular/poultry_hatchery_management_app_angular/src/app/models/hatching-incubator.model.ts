@@ -5,7 +5,8 @@ export class HatchingIncubator {
 
     public constructor(
         private _id: string,
-        private _maxCapacity: string,
+        private _maxCapacity: number,
+        private _numberOfColumns: number,
         private _humanReadableId: string,
         private _organisation: OrganisationDetails
     ){}
@@ -17,11 +18,18 @@ export class HatchingIncubator {
         this._id = val;
     }
 
-    public get maxCapacity(): string{
+    public get maxCapacity(): number{
         return this._maxCapacity;
     }
-    public set maxCapacity(val: string){
+    public set maxCapacity(val: number){
         this._maxCapacity = val;
+    }
+
+    public get numberOfColumns(): number {
+        return this._numberOfColumns;
+    }
+    public set numberOfColumns(value: number) {
+        this._numberOfColumns = value;
     }
 
     public get humanReadableId(): string{

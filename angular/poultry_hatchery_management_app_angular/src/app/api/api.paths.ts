@@ -20,6 +20,7 @@ export namespace ApiPaths {
         POST_NESTING_INCUBATOR = '/api/v1/nesting-incubator/',
         PUT_NESTING_INCUBATOR = '/api/v1/nesting-incubator/',
         DELETE_NESTING_INCUBATOR = '/api/v1/nesting-incubator/',
+        GET_NESTING_TROLLEY_CURR_IN_INCUBATOR_BY_INCUBATOR_ID = '/api/v1/nesting-incubator/occupation?incubatorId='
     }
 
     export enum HatchingIncubatorPaths {
@@ -54,6 +55,16 @@ export namespace ApiPaths {
         
         GET_ALL_SUPPLIERS = '/api/v1/deliveries/supplier',
         POST_SUPPLIER = '/api/v1/deliveries/supplier',
+    }
+
+    export enum TaskPaths {
+        GET_ALL_TASKS = '/api/v1/task/all',
+        GET_ALL_TASK_ASSIGNED_TROLLEYS_BY_TASK_ID = '/api/v1/task/trolley-assignments?taskId=',
+        GET_ALL_TASKS_BY_NESTING_ID = '/api/v1/task?nestingId=',
+        POST_TASK = '/api/v1/task',
+        PUT_TASK = '/api/v1/task',
+        DELETE_TASK = '/api/v1/task',
+        PATCH_TASK_STATUS = '/api/v1/task'
     }
 
 }

@@ -1,3 +1,4 @@
+import { NestingTrolleyIncubatorSpaceAssignment } from './../../models/nesting-trolley-incubator-space-assignment.model';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, of, shareReplay, throwError } from 'rxjs';
 import { NestingIncubator } from '../../models/nesting-incubator.model';
@@ -7,6 +8,7 @@ import { ApiPaths } from '../../api/api.paths';
 import { AddressDetails } from '../../models/address-details.model';
 import { OrganisationDetails } from '../../models/organisation-details.model';
 import { PostIncubatorRequest } from '../../dto/post-incubator-request';
+import { NestingTrolley } from '../../models/nesting-trolley.model';
 
 @Injectable({
   providedIn: 'root'
@@ -47,6 +49,25 @@ export class NestingIncubatorService {
   }
 
 
+
+  public getAllTrolleysCurrentlyInIncubator(incubatorId: string): Observable<NestingTrolleyIncubatorSpaceAssignment[]> {
+    return this.http.get<NestingTrolleyIncubatorSpaceAssignment[]>(`${apiUrl}${ApiPaths.NestingIncubatorPaths.GET_NESTING_TROLLEY_CURR_IN_INCUBATOR_BY_INCUBATOR_ID}${incubatorId}`).pipe(
+      shareReplay(1),
+      catchError(error => {
+        return of([]);
+      })
+    )
+  }
+
+  getIncubatorSpaceHumanReadableIdFromNestingTrolleyIncubatorSpaceAssignment(assignment: NestingTrolleyIncubatorSpaceAssignment[], trolleyId: string): string {
+    let tmp = assignment.find(it => it.nestingTrolley.id === trolleyId);
+    if (tmp) {
+      return tmp.nestingIncubatorSpace.humanReadableId;
+    }
+    return '';
+  }
+  
+
   private parseResponseList(list: any[]): NestingIncubator[] {
     return list.map(listItem => this.parseResponse(listItem));
   }
@@ -68,6 +89,7 @@ export class NestingIncubatorService {
     return new NestingIncubator(
       json.id,
       json.maxCapacity,
+      json.numberOfColumns,
       json.humanReadableId,
       organisation
     )

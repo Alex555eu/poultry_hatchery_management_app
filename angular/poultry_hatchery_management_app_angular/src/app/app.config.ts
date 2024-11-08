@@ -7,7 +7,8 @@ import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { HttpInterceptorService } from './services/interceptors/http-interceptor.service';
-import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
+import { CustomDateAdapter } from './custom-date-adapter';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,7 +24,10 @@ export const appConfig: ApplicationConfig = {
     },
     { 
       provide: MAT_DATE_LOCALE, 
-      useValue: 'en-GB' 
+      useValue: 'pl-PL' 
+    },
+    {
+      provide: DateAdapter, useClass: CustomDateAdapter
     }
   ]
 };
