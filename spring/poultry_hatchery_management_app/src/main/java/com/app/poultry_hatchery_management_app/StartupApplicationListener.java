@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @Component
@@ -28,6 +29,10 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
     private final NestingTrolleyRepository nestingTrolleyRepository;
     private final NestingTrolleyIncubatorSpaceAssignmentRepository nestingTrolleyIncubatorSpaceAssignmentRepository;
     private final ProductTypeRepository productTypeRepository;
+    private final TaskTypeRepository taskTypeRepository;
+    private final TaskRepository taskRepository;
+    private final TaskNestingTrolleyAssignmentRepository taskNestingTrolleyAssignmentRepository;
+    private final NestingTrolleyContentRepository nestingTrolleyContentRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -153,17 +158,24 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
                 .build();
         nestingLoadedDeliveriesRepository.save(nestingLoadedDeliveries);
 
+        NestingLoadedDeliveries nestingLoadedDeliveries2 = NestingLoadedDeliveries.builder()
+                .nesting(nesting)
+                .delivery(delivery2)
+                .build();
+        nestingLoadedDeliveriesRepository.save(nestingLoadedDeliveries2);
+
         NestingIncubator nestingIncubator = NestingIncubator.builder()
                 .maxCapacity(16)
                 .organisation(organisation)
                 .humanReadableId("L1")
+                .numberOfColumns(4)
                 .build();
         nestingIncubatorRepository.save(nestingIncubator);
 
         NestingIncubatorSpace nestingIncubatorSpace = NestingIncubatorSpace.builder()
                 .nestingIncubator(nestingIncubator)
                 .isCurrentlyOccupied(true)
-                .humanReadableId("InA1")
+                .humanReadableId("S1")
                 .build();
         nestingIncubatorSpaceRepository.save(nestingIncubatorSpace);
 
@@ -174,6 +186,20 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
                 .build();
         nestingTrolleyRepository.save(nestingTrolley);
 
+        NestingTrolleyContent nestingTrolleyContent = NestingTrolleyContent.builder()
+                .nestingLoadedDeliveries(nestingLoadedDeliveries)
+                .nestingTrolley(nestingTrolley)
+                .quantity(125)
+                .build();
+        nestingTrolleyContentRepository.save(nestingTrolleyContent);
+
+        NestingTrolleyContent nestingTrolleyContent2 = NestingTrolleyContent.builder()
+                .nestingLoadedDeliveries(nestingLoadedDeliveries)
+                .nestingTrolley(nestingTrolley)
+                .quantity(3)
+                .build();
+        nestingTrolleyContentRepository.save(nestingTrolleyContent2);
+
         NestingTrolleyIncubatorSpaceAssignment nestingTrolleyIncubatorSpaceAssignment =
                 NestingTrolleyIncubatorSpaceAssignment.builder()
                         .nestingTrolley(nestingTrolley)
@@ -183,6 +209,56 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
                         .build();
         nestingTrolleyIncubatorSpaceAssignmentRepository
                 .save(nestingTrolleyIncubatorSpaceAssignment);
+
+        TaskType taskType = TaskType.builder()
+                .name("WIETRZENIE")
+                .description("BRAK")
+                .organisation(organisation)
+                .build();
+        taskTypeRepository.save(taskType);
+
+        TaskType taskType2 = TaskType.builder()
+                .name("NAWILZANIE")
+                .description("BRAK")
+                .organisation(organisation)
+                .build();
+        taskTypeRepository.save(taskType2);
+
+        TaskType taskType3 = TaskType.builder()
+                .name("PRZECHYLANIE")
+                .description("BRAK")
+                .organisation(organisation)
+                .build();
+        taskTypeRepository.save(taskType3);
+
+        TaskType taskType4 = TaskType.builder()
+                .name("SWIETLENIE")
+                .description("BRAK")
+                .organisation(organisation)
+                .build();
+        taskTypeRepository.save(taskType4);
+
+        Task task = Task.builder()
+                .taskType(taskType)
+                .taskStatus(TaskStatus.NOT_STARTED)
+                .executionCompletedAt(null)
+                .executionScheduledAt(LocalDateTime.of(2024, 11, 14, 15, 20))
+                .nesting(nesting)
+                .organisation(organisation)
+                .build();
+        taskRepository.save(task);
+
+        List<NestingTrolley> trolleys = nestingTrolleyRepository.findAllTrolleysByNestingId(nesting.getId());
+        for(NestingTrolley trolley : trolleys) {
+            TaskNestingTrolleyAssignment assignment = TaskNestingTrolleyAssignment.builder()
+                    .task(task)
+                    .isTaskCompleted(false)
+                    .nestingTrolley(trolley)
+                    .executor(null)
+                    .build();
+            taskNestingTrolleyAssignmentRepository.save(assignment);
+        }
+
 
     }
 }
