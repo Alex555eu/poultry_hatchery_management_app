@@ -1,6 +1,5 @@
 package com.app.poultry_hatchery_management_app.model;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,15 +7,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
+
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity
-public class Task {
+public class TaskNestingTrolleyAssignment {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -24,20 +23,15 @@ public class Task {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    private LocalDateTime executionScheduledAt;
-
-    private LocalDateTime executionCompletedAt;
-
-    @Enumerated(EnumType.STRING)
-    private TaskStatus taskStatus;
+    private Boolean isTaskCompleted;
 
     @ManyToOne
-    private TaskType taskType;
+    private Task task;
 
     @ManyToOne
-    private Nesting nesting;
+    private NestingTrolley nestingTrolley;
 
     @ManyToOne
-    private Organisation organisation;
+    private User executor;
 
 }
