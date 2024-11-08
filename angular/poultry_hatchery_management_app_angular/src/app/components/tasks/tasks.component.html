@@ -1,0 +1,193 @@
+<div class="bg-cntr">
+
+    <div class="secondary-board-layout-cntr">
+        <app-tasks-section [tasks]="todaysTasks" [title]="'Dzisiejsze'"
+        (selectTaskEvent)="onSecondaryBoardRowClick($event)"
+        ></app-tasks-section>
+
+        <app-tasks-section [tasks]="yesterdaysTasks" [title]="'Wczorajsze'"
+        (selectTaskEvent)="onSecondaryBoardRowClick($event)"
+        ></app-tasks-section>
+
+        <app-tasks-section [tasks]="overdueTasks" [title]="'Zaległe'"
+        (selectTaskEvent)="onSecondaryBoardRowClick($event)"
+        ></app-tasks-section>
+    </div>
+
+    <div class="main-board-layout-cntr">
+        <div class="filter-cntr">
+            <div class="filter-header-cntr">
+                <mat-icon>filter_list</mat-icon>
+                <span>Filtruj</span>
+            </div>
+
+            <div class="filter-body-cntr">
+                <mat-form-field>
+                    <mat-label>Wyszukaj</mat-label>
+                    <input matInput (keyup)="filterData($event)" #input>
+                </mat-form-field>
+
+                <mat-form-field>
+                <mat-label>Status</mat-label>
+                    <mat-select [(value)]="selectedStatusValue" placeholder="Typ" (valueChange)="filterData(null)">
+                        @for (type of statusTypes; track type) {
+                            <mat-option [value]="type">{{ type }}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Zaplanowano na</mat-label>
+                    <mat-date-range-input [rangePicker]="picker">
+                    <input matInput [(ngModel)]="startDate" matStartDate placeholder="data od" (dateChange)="onDateRangeChange($event, 'start')">
+                    <input matInput [(ngModel)]="endDate" matEndDate placeholder="data do" (dateChange)="onDateRangeChange($event, 'end')">
+                    </mat-date-range-input>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-date-range-picker #picker></mat-date-range-picker>
+                </mat-form-field>
+                
+            </div>
+        </div>
+
+        <div class="main-tasks-cntr">
+            <div class="main-task-header-cntr">
+                <mat-icon>task_alt</mat-icon>
+                <label>Zadania</label>
+                <button mat-icon-button (click)="newTask()">
+                    <mat-icon>add</mat-icon>
+                </button>
+            </div>
+            <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows>
+                <!-- nesting Column -->
+                <ng-container matColumnDef="nesting">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Nakład </th>
+                <td mat-cell *matCellDef="let item">{{ item.nesting.title }} </td>
+                </ng-container>
+        
+                <!-- taskType Type Column -->
+                <ng-container matColumnDef="taskType">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Zadanie </th>
+                <td mat-cell *matCellDef="let item"> {{ item.taskType.name }} </td>
+                </ng-container>
+        
+                <!-- status Column -->
+                <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                <td mat-cell *matCellDef="let item" [ngStyle]="{'letter-spacing': '1px', 'font-weight': '550', 'color': tasksService.getStatusColor(item.taskStatus)}">
+                    <span style="margin-right: 5px;">&#11044;</span>{{ tasksService.translateStatusEnToPl(item.taskStatus) }}
+                </td>
+                
+                </ng-container>
+        
+                <!-- dueAt Column -->
+                <ng-container matColumnDef="dueAt">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Zaplanowano na </th>
+                <td mat-cell *matCellDef="let item"> {{ dfs.formatDate(item.executionScheduledAt) }} </td>
+                </ng-container>
+        
+                <!-- progressBar Column -->
+                <ng-container matColumnDef="progressBar">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Progres </th>
+                <td mat-cell *matCellDef="let item">
+                    <div class="progress-cntr" *ngIf="taskToTaskNestingTrolleyAssignmentMapping.get(item)">
+                        <div class="spinner-cntr" *ngIf="tasksService.getTaskCompletionPercentage(taskToTaskNestingTrolleyAssignmentMapping.get(item) || null) !== 100">
+                            <div class="bg-spinner">
+                                <mat-progress-spinner
+                                    diameter="30"
+                                    class="progress-spinner"
+                                    mode="determinate"
+                                    [value]="100">
+                                </mat-progress-spinner>
+                            </div>
+                            <div class="fg-spinner">
+                                <mat-progress-spinner
+                                    diameter="30"
+                                    class="progress-spinner second-spinner"
+                                    mode="determinate"
+                                    [value]="tasksService.getTaskCompletionPercentage(taskToTaskNestingTrolleyAssignmentMapping.get(item) || null)">
+                                </mat-progress-spinner>
+                            </div>
+                        </div>
+                        <div *ngIf="tasksService.getTaskCompletionPercentage(taskToTaskNestingTrolleyAssignmentMapping.get(item) || null) === 100">
+                            <mat-icon>check_circle_outline</mat-icon>
+                        </div>
+                        <div class="text-cntr">
+                            <!-- {{ getTaskCompletionPercentage(taskToTaskNestingTrolleyAssignmentMapping.get(item) || null) }}% -->
+                            {{ tasksService.getNumberOfCompletedTaskTrolleyAssignments(taskToTaskNestingTrolleyAssignmentMapping.get(item) || null) }}
+                            /
+                            {{ taskToTaskNestingTrolleyAssignmentMapping.get(item)?.length }}
+                        </div>
+                    </div>
+                </td>
+                
+                </ng-container>
+        
+                <!-- Header and Row Definitions --> 
+                <!-- <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr class="mat-row" mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onRowClicked(row)"></tr> -->
+
+                <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+                <ng-container matColumnDef="expandedDetail">
+                    <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+                    <div class="task-element-detail"
+                        [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                        <div>
+                            <strong>ID</strong>   
+                            <p>{{ element.id }}</p>
+                            <strong>Opis</strong>   
+                            <p>{{ element.taskType.description }}</p>
+                        </div>
+                        <div>
+                            <strong>Zaplanowano na</strong>   
+                            <p>{{ dfs.formatDate2(element.executionScheduledAt) }}</p>
+                            <strong>Zakończono</strong>
+                            <p>{{ dfs.formatDate2(element.executionCompletedAt) }}</p>
+                        </div>
+                        <div id="buttons-cntr">
+                            <button mat-icon-button [matMenuTriggerFor]="menu">
+                                <mat-icon>more_vert</mat-icon>
+                              </button>
+                              <mat-menu #menu="matMenu">
+                                <button mat-menu-item (click)="findTrolleys(taskToTaskNestingTrolleyAssignmentMapping.get(element) || null)">
+                                    <mat-icon>search</mat-icon>
+                                  <span>Szukaj wózków</span>
+                                </button>
+                                <button mat-menu-item *ngIf="element.taskStatus !== TaskStatus.CANCELLED" (click)="cancelTask(element)">
+                                  <mat-icon>cancel</mat-icon>
+                                  <span>Anuluj zadanie</span>
+                                </button>
+                                <button mat-menu-item *ngIf="element.taskStatus === TaskStatus.CANCELLED" (click)="reactivateTask(element)">
+                                  <mat-icon>keyboard_return</mat-icon>
+                                  <span>Reaktywuj zadanie</span>
+                                </button>
+                                <button mat-menu-item (click)="deleteTask(element)">
+                                  <mat-icon>delete</mat-icon>
+                                  <span>Usuń zadanie</span>
+                                </button>
+                              </mat-menu>
+                        </div>
+                    </div>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let element; columns: displayedColumns;"
+                    class="example-element-row"
+                    [class.example-expanded-row]="expandedElement === element"
+                    (click)="expandedElement = expandedElement === element ? null : element">
+                </tr>
+                <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+        
+
+                <!-- Row shown when there is no matching data. -->
+                <tr class="mat-row-no-data" *matNoDataRow>
+                <!-- <td class="mat-cell" colspan="4">Brak danych "{{input.value}}"</td> -->
+                </tr>
+                
+            </table>
+            <div class="paginator-cntr">
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of deliveries"></mat-paginator>
+            </div>
+        </div>
+    </div>
+</div>
