@@ -6,3 +6,38 @@ body {
     font-family: Roboto, "Helvetica Neue", sans-serif; 
     background-color: aliceblue;
 }
+
+/********************** D I A L O G   S T Y L I N G **************************************/
+mat-dialog-content {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    overflow: hidden !important;
+    color: black !important;
+}
+.dialog-bg {
+    padding: 5px;
+    width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+.dialog-header {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    width: 100%;
+    margin-bottom: 20px;
+}
+.dialog-header label {
+    font-size: large;
+    margin-left: 10px;
+}
+.dialog-header button {
+    margin-left: auto;
+}
+@media (max-width: 1300px) {
+    .dialog-bg .dialog-header{
+        width: 100%;
+    }
+}
+/*****************************************************************************************/

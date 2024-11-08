@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -7,10 +7,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { Supplier } from '../../../models/supplier.model';
 import { SupplierService } from '../../../services/supplier/supplier.service';
 import { PostSupplierRequest } from '../../../dto/post-supplier-request';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-register-supplier',
@@ -25,21 +25,20 @@ import { MatStepperModule } from '@angular/material/stepper';
     ReactiveFormsModule,
     MatSnackBarModule,
     MatStepperModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatDialogModule
   ],
   templateUrl: './register-supplier.component.html',
   styleUrl: './register-supplier.component.css'
 })
 export class RegisterSupplierComponent {
 
-  @Output() 
-  closePanelEvent = new EventEmitter<Supplier | null>();
-
   providerForm: FormGroup;
 
   constructor(
     private supplierService: SupplierService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private dialogRefParent: MatDialogRef<RegisterSupplierComponent>
   ) {
     this.providerForm = this.fb.group({
       firstName: ['', Validators.required],
@@ -57,14 +56,13 @@ export class RegisterSupplierComponent {
   onSubmit() {
     if (this.providerForm.valid) {
       this.supplierService.postSupplier(this.makeRegisterRequestBody(this.providerForm)).subscribe(supplier => {
-        this.onClose(supplier);
+        this.dialogRefParent.close(supplier);
       });
-
     }
   }
 
-  onClose(supplier: Supplier | null) {
-    this.closePanelEvent.emit(supplier);
+  onClose() {
+    this.dialogRefParent.close(null);
   }
 
   private makeRegisterRequestBody(form: FormGroup): PostSupplierRequest {
