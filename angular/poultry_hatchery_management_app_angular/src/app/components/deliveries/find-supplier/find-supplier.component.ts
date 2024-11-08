@@ -1,15 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { Supplier } from '../../../models/supplier.model';
 import { SupplierService } from '../../../services/supplier/supplier.service';
 import { RegisterSupplierComponent } from '../register-supplier/register-supplier.component';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-find-supplier',
@@ -24,26 +25,25 @@ import { RegisterSupplierComponent } from '../register-supplier/register-supplie
     ReactiveFormsModule,
     MatSnackBarModule,
     MatExpansionModule,
-    RegisterSupplierComponent
+    RegisterSupplierComponent,
+    MatDialogModule
   ],
   templateUrl: './find-supplier.component.html',
   styleUrl: './find-supplier.component.css'
 })
 export class FindSupplierComponent implements OnInit, AfterViewInit {
 
-  @Output() closePanelEvent = new EventEmitter<Supplier | null>();
-
-  isRegisterSupplierComponentEnabled: boolean = false;
-
   private suppliers: Supplier[] | null = null;
   filteredSuppliers: Supplier[] | null = null;
 
   searchText: string = '';
-  chosenSupplier: Supplier | null = null;
 
   constructor(
     private supplierService: SupplierService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private dialog: MatDialog,
+    private dialogRefParent: MatDialogRef<FindSupplierComponent>,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -59,21 +59,21 @@ export class FindSupplierComponent implements OnInit, AfterViewInit {
     this.cdr.detectChanges();
   }
 
-  registerNewSupplier() {
-    this.isRegisterSupplierComponentEnabled = true;
-  }
-
-  closeRegisterNewSupplier(supplier: Supplier | null) {
-    this.isRegisterSupplierComponentEnabled = false;
-    if (supplier) {
-      return this.selectSupplier(supplier);
-    }
-    return this.onClose();
+  registerSupplier() {
+    const dialogRefChild = this.dialog.open(RegisterSupplierComponent);
+    dialogRefChild.afterClosed().subscribe(supplier => {
+      if (supplier){
+        this.dialogRefParent.close(supplier);
+      }
+    })
   }
 
   selectSupplier(supplier: Supplier) {
-    this.chosenSupplier = supplier;
-    this.onClose();
+    this.dialogRefParent.close(supplier);
+  }
+
+  onClose() {
+    this.dialogRefParent.close(null);
   }
 
   filterItems() {
@@ -92,10 +92,6 @@ export class FindSupplierComponent implements OnInit, AfterViewInit {
 
   getFirstStringLetter(str: string): string {
     return str.charAt(0);
-  }
-
-  onClose() {
-    this.closePanelEvent.emit(this.chosenSupplier);
   }
 
 }

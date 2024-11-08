@@ -3,7 +3,7 @@
         <div class="content-header">
             <mat-icon>filter_list</mat-icon>
             <span>Filtruj</span>
-            <button mat-raised-button color="primary" (click)="createDeliveryPopupComponent()">Nowa dostawa</button>
+            <button mat-raised-button color="primary" (click)="newDelivery()">Nowa dostawa</button>
         </div>
         <div class="filter-body">
             <mat-form-field>
@@ -31,7 +31,7 @@
                 <mat-date-range-picker #picker></mat-date-range-picker>
             </mat-form-field>
             
-            <button mat-raised-button (click)="findSupplierPopupComponent()">Znajdź dostawcę</button>
+            <button mat-raised-button (click)="findSupplier()">Znajdź dostawcę</button>
         </div>
     </div>
   
@@ -47,7 +47,7 @@
                 <label class="supplier-name">{{ selectedSupplier.name }} {{ selectedSupplier.surname }}</label>
             </div>
           </div>
-          <button mat-mini-fab color="warn" (click)="cancelSupplierSelection()">
+          <button mat-mini-fab color="warn" (click)="discardSupplier()">
             <mat-icon>clear</mat-icon>
           </button>
         </div>
@@ -89,15 +89,6 @@
       <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of deliveries"></mat-paginator>
       </div>
     </div>
-
-
-    <app-find-supplier *ngIf="isFindSupplierPopupComponentEnabled"
-    (closePanelEvent)="closeFindSupplierPopupComponent($event)">
-    </app-find-supplier>
-
-    <app-create-delivery *ngIf="isCreateDeliveryPopupComponentEnabled"
-    (closePanelEvent)="closeCreateDeliveryPopupComponent($event)">
-    </app-create-delivery>
 
   </div>
   

@@ -1,3 +1,4 @@
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DeliveriesService } from '../../services/deliveries/deliveries.service';
 import { Delivery } from '../../models/delivery.model';
@@ -12,12 +13,12 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import {ChangeDetectionStrategy, signal} from '@angular/core';
-import {MatDatepickerInputEvent} from '@angular/material/datepicker';
+import { ChangeDetectionStrategy } from '@angular/core';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatButtonModule } from '@angular/material/button';
-import { FindSupplierComponent } from '../popup-panels/find-supplier/find-supplier.component';
+import { FindSupplierComponent } from './find-supplier/find-supplier.component';
 import { Supplier } from '../../models/supplier.model';
-import { CreateDeliveryComponent } from '../popup-panels/create-delivery/create-delivery.component';
+import { NewDeliveryComponent } from './new-delivery/new-delivery.component';
 
 @Component({
   selector: 'app-deliveries',
@@ -35,7 +36,8 @@ import { CreateDeliveryComponent } from '../popup-panels/create-delivery/create-
     FormsModule,
     MatButtonModule,
     FindSupplierComponent,
-    CreateDeliveryComponent
+    MatDialogModule,
+    NewDeliveryComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './deliveries.component.html',
@@ -44,7 +46,8 @@ import { CreateDeliveryComponent } from '../popup-panels/create-delivery/create-
 export class DeliveriesComponent implements OnInit {
 
   constructor (
-    private deliveriesService: DeliveriesService
+    private deliveriesService: DeliveriesService,
+    private dialog: MatDialog
   ) {}
 
   private selectedProductDefaultValue: string = 'Wszystkie';
@@ -61,10 +64,7 @@ export class DeliveriesComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  isFindSupplierPopupComponentEnabled: boolean = false;
   selectedSupplier: Supplier | null = null;
-
-  isCreateDeliveryPopupComponentEnabled: boolean = false;
 
 
   ngOnInit() {
@@ -86,28 +86,30 @@ export class DeliveriesComponent implements OnInit {
     //todo: implementation (modify delivery)
   }
 
-  createDeliveryPopupComponent() {
-    this.isCreateDeliveryPopupComponentEnabled = true;
+  newDelivery() {
+    this.dialog.open(NewDeliveryComponent);
   }
 
-  closeCreateDeliveryPopupComponent(delivery: Delivery | null) {
-    this.isCreateDeliveryPopupComponentEnabled = false;
-    window.location.reload();
+  // createDeliveryPopupComponent() {
+  //   this.isCreateDeliveryPopupComponentEnabled = true;
+  // }
+
+  // closeCreateDeliveryPopupComponent(delivery: Delivery | null) {
+  //   this.isCreateDeliveryPopupComponentEnabled = false;
+  //   window.location.reload();
+  // }
+
+  findSupplier() {
+    const dialogRef = this.dialog.open(FindSupplierComponent);
+    dialogRef.afterClosed().subscribe(supplier => {
+      if (supplier) {
+        this.selectedSupplier = supplier;
+        this.filterData(null);
+      }
+    })
   }
 
-  findSupplierPopupComponent() {
-    this.isFindSupplierPopupComponentEnabled = true;
-  }
-  
-  closeFindSupplierPopupComponent(event: Supplier | null) {
-    if (event) {
-      this.selectedSupplier = event;
-    }
-    this.isFindSupplierPopupComponentEnabled = false;
-    this.filterData(null);
-  }
-
-  cancelSupplierSelection() {
+  discardSupplier() {
     this.selectedSupplier = null;
     this.filterData(null);
   }
