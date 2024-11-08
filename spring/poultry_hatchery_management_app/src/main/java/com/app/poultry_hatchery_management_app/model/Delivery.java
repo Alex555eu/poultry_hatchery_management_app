@@ -28,6 +28,9 @@ public class Delivery {
     private Integer quantity;
 
     @ManyToOne
+    private ProductType type;
+
+    @ManyToOne
     private Supplier supplier;
 
 }

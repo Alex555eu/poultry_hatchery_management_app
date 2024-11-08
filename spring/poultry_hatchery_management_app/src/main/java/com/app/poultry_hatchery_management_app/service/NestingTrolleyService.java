@@ -42,6 +42,10 @@ public class NestingTrolleyService {
         return nestingTrolleyRepository.findById(nestingTrolleyId);
     }
 
+    public List<NestingTrolley> getAllTrolleysByNestingId(UUID nestingId) {
+        return nestingTrolleyRepository.findAllTrolleysByNestingId(nestingId);
+    }
+
 
     public Optional<NestingTrolley> postTrolley(PostNestingTrolleyRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -53,7 +57,6 @@ public class NestingTrolleyService {
                     .humanReadableId(request.humanReadableId())
                     .maxCapacity(request.maxCapacity())
                     .organisation(organisation)
-                    .availableCapacity(request.maxCapacity())
                     .build();
             nestingTrolleyRepository.save(nestingTrolley);
 
@@ -66,7 +69,6 @@ public class NestingTrolleyService {
         Optional<NestingTrolley> trolley = nestingTrolleyRepository.findById(request.trolleyId());
 
         if (trolley.isPresent()) {
-            trolley.get().setAvailableCapacity(request.availableCapacity());
             trolley.get().setMaxCapacity(request.maxCapacity());
             trolley.get().setHumanReadableId(request.humanReadableId());
 

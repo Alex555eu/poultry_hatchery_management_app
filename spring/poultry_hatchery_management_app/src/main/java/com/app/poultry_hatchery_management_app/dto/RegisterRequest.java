@@ -6,6 +6,7 @@ public record RegisterRequest(
         String firstName,
         String lastName,
         String emailAddress,
+        String phoneNumber,
         String orgName,
         String orgCity,
         String orgPostalCode,

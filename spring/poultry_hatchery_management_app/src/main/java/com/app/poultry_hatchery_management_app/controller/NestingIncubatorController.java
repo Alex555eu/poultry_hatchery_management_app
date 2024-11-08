@@ -8,6 +8,7 @@ import com.app.poultry_hatchery_management_app.service.NestingIncubatorService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,19 +44,9 @@ public class NestingIncubatorController {
     public ResponseEntity<String> postNestingIncubator(@RequestBody PostNestingIncubatorRequest request) {
         Optional<NestingIncubator> incubator = nestingIncubatorService.postNestingIncubator(request);
         if (incubator.isPresent()) {
-            for (int i = 0; i < incubator.get().getMaxCapacity(); i++) {
-                PostNestingIncubatorSpaceRequest request2 = PostNestingIncubatorSpaceRequest.builder()
-                        .humanReadableId("")
-                        .nestingIncubatorId(incubator.get().getId())
-                        .build();
-                Optional<NestingIncubatorSpace> nestingSpace = nestingIncubatorService.postNestingIncubatorSpace(request2);
-                if (nestingSpace.isEmpty()) {
-                    return ResponseEntity.status(HttpStatus.MULTI_STATUS).body("Incubator created. Error while creating incubator space.");
-                }
-            }
             return ResponseEntity.ok().build();
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @PutMapping("/")

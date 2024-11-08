@@ -1,6 +1,7 @@
 export interface RegisterRequest {
     firstName: string,
     lastName: string,
+    phoneNumber: string,
     orgCity: string,
     orgPostalCode: string,
     orgStreet: string,

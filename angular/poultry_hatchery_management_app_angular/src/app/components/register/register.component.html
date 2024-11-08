@@ -54,6 +54,13 @@
             <mat-error>Proszę wprowadzić poprawny adres email.</mat-error>
           }
         </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Nr. telefonu</mat-label>
+          <input matInput id="phoneNumber" formControlName="phoneNumber" type="text" placeholder="Wprowadź nr. telefonu">
+          @if (registerForm.get('phoneNumber')?.invalid && registerForm.get('phoneNumber')?.touched) {
+            <mat-error>Proszę wprowadzić poprawny adres email.</mat-error>
+          }
+        </mat-form-field>
   
         <mat-form-field appearance="fill">
           <mat-label>Hasło</mat-label>

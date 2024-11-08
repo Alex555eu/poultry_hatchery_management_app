@@ -22,7 +22,11 @@ public class NestingIncubator {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    private Integer maxCapacity;
+    private Integer maxCapacity; // 4, 8, 16, 32
+
+    private Integer numberOfColumns;
+
+    private String humanReadableId;
 
     @ManyToOne
     private Organisation organisation;
