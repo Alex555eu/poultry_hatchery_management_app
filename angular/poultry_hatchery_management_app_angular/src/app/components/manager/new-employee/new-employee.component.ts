@@ -8,6 +8,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CommonModule } from '@angular/common';
 import { UserDetails } from '../../../models/user-details.model';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-new-employee',
@@ -18,7 +20,9 @@ import { UserDetails } from '../../../models/user-details.model';
     MatFormFieldModule,
     CommonModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatInputModule,
+    MatButtonModule
   ],
   templateUrl: './new-employee.component.html',
   styleUrl: './new-employee.component.css'

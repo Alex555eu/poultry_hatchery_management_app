@@ -1,4 +1,4 @@
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig, MatDialogModule } from '@angular/material/dialog';
 import { NestingTrolleyService } from './../../services/nesting-trolley/nesting-trolley.service';
 import { Component } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
@@ -8,7 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatRadioModule } from '@angular/material/radio';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -25,6 +25,7 @@ import { NewNestingTrolleyComponent } from './new-nesting-trolley/new-nesting-tr
 import { NewNestingIncubatorComponent } from './new-nesting-incubator/new-nesting-incubator.component';
 import { NewHatchingIncubatorComponent } from './new-hatching-incubator/new-hatching-incubator.component';
 import { NewHatchingTrolleyComponent } from './new-hatching-trolley/new-hatching-trolley.component';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-manager',
@@ -34,6 +35,8 @@ import { NewHatchingTrolleyComponent } from './new-hatching-trolley/new-hatching
     MatButtonModule,
     MatExpansionModule,
     MatFormFieldModule,
+    ReactiveFormsModule,
+    MatSelectModule,
     MatInputModule,
     MatRadioModule,
     FormsModule,
@@ -168,7 +171,11 @@ export class ManagerComponent {
   }
 
   private openDialog(component: any) {
-    const dialogRef = this.dialog.open(component);
+    const config = new MatDialogConfig();
+    config.width = '90vw';
+    config.maxWidth = '600px';
+
+    const dialogRef = this.dialog.open(component, config);
     dialogRef.afterClosed().subscribe(employee => {
       if (employee) {
         this.ngOnInit();
