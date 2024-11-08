@@ -1,0 +1,61 @@
+
+/********************** D I A L O G   S T Y L I N G **************************************/
+mat-dialog-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+
+}
+.dialog-bg {
+    padding: 5px;
+    width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+.dialog-header {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    width: 100%;
+    margin-bottom: 20px;
+}
+.dialog-header label {
+    font-size: large;
+    margin-left: 10px;
+}
+.dialog-header button {
+    margin-left: auto;
+}
+@media (max-width: 1300px) {
+    .dialog-bg .dialog-header{
+        width: 100%;
+    }
+}
+/*****************************************************************************************/
+
+
+.item-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+}
+
+.flex-cntr {
+    width: 45%;
+    border-style: solid;
+    border-color: lightblue;
+    padding: 5px;
+    border-bottom: none;
+}
+
+@media (max-width: 1300px) {
+    .flex-cntr {
+        width: 100%;
+        padding: 10px;
+    }
+}

@@ -68,6 +68,7 @@ export class HatchingIncubatorService {
     return new HatchingIncubator(
       json.id,
       json.maxCapacity,
+      json.numberOfColumns,
       json.humanReadableId,
       organisation
     )

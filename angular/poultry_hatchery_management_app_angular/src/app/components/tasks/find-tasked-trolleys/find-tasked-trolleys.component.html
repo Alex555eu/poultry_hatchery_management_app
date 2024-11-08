@@ -1,0 +1,66 @@
+<mat-dialog-content>
+    <div class="dialog-bg">
+        <div class="dialog-header">
+            <mat-icon>search</mat-icon>
+            <label>Szukaj wózków</label>
+            <button mat-icon-button (click)="onClose()">
+                <mat-icon>exit_to_app</mat-icon>
+            </button>
+        </div>
+      <mat-accordion>
+        <div *ngFor="let incubator of trolleyToIncubatorMappingKeys">
+            <hr style="opacity: 0.5; margin-top: 30px;">
+            <h3>Inkubator: {{ incubator.humanReadableId }}</h3>
+            <mat-expansion-panel *ngFor="let assignment of trolleyToIncubatorMapping.get(incubator)">
+                <mat-expansion-panel-header>
+                <mat-panel-title>
+                    ID Wózka: {{ assignment.nestingTrolley.humanReadableId }}
+                </mat-panel-title>
+                <mat-panel-description [ngStyle]="{ color: assignment.isTaskCompleted ? '#44fd6cc5' : '#ffb3ba'}">
+                    {{ assignment.isTaskCompleted ? 'Zakończone' : 'Nie zakończone' }}
+                </mat-panel-description>
+                
+                </mat-expansion-panel-header>
+    
+                <div class="item-content">
+
+                    <div class="task-data">
+                        <p><strong>ID Stanowiska:</strong> {{ getSpaceId(incubator, assignment.nestingTrolley.id) }}</p>
+                        <p><strong>Zadanie:</strong> {{ assignment.task.taskType.name }}</p>
+                        <strong>Opis zadania</strong>
+                        <p> {{ assignment.task.taskType.description }}</p>
+                        <strong>Wykonawca</strong>
+                        <p *ngIf="assignment.executor"> {{ assignment.executor.firstName }} {{ assignment.executor.lastName }}</p>
+                            <p *ngIf="!assignment.executor">Brak danych</p>
+                    </div>
+
+                    <div class="flex-cntr">
+                        <mat-grid-list [cols]="incubator.numberOfColumns + 1" gutterSize="10px">
+                          @for ( item of reloadIncubatorLayout(incubator); track item ) {
+                            @if (item) {
+                                @if (getSpaceId(incubator, assignment.nestingTrolley.id) === item) {
+                                    <mat-grid-tile style="background: red;">
+                                        {{ item }}
+                                    </mat-grid-tile>     
+                                } @else {
+                                    <mat-grid-tile style="background: lightblue;">
+                                        {{ item }}
+                                    </mat-grid-tile>     
+                                }
+                            } @else {
+                                <mat-grid-tile style="background: transparent;">
+                                    {{ item }}
+                                </mat-grid-tile>
+                            }
+                          }
+                        </mat-grid-list>
+                    </div>
+                </div>
+
+
+            </mat-expansion-panel>
+        </div>
+      </mat-accordion>
+    </div>
+  </mat-dialog-content>
+  
