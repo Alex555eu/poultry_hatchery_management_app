@@ -1,10 +1,9 @@
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { NestingTrolleyService } from './../../services/nesting-trolley/nesting-trolley.service';
-import { Component, ViewChild } from '@angular/core';
-import { MatCard } from '@angular/material/card';
+import { Component } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { UserDetailsService } from '../../services/users/user-details.service';
 import { UserDetails } from '../../models/user-details.model';
-import { Observable } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -20,17 +19,17 @@ import { HatchingIncubator } from '../../models/hatching-incubator.model';
 import { HatchingTrolley } from '../../models/hatching-trolley.model';
 import { HatchingTrolleyService } from '../../services/hatching-trolley/hatching-trolley.service';
 import { NestingTrolley } from '../../models/nesting-trolley.model';
-import { CreateNestingIncubatorPanelComponent } from '../popup-panels/create-nesting-incubator-panel/create-nesting-incubator-panel.component';
-import { CreateHatchingIncubatorPanelComponent } from '../popup-panels/create-hatching-incubator-panel/create-hatching-incubator-panel/create-hatching-incubator-panel.component';
-import { CreateNestingTrolleyComponent } from '../popup-panels/create-nesting-trolley/create-nesting-trolley/create-nesting-trolley.component';
-import { CreateHatchingTrolleyComponent } from '../popup-panels/create-hatching-trolley/create-hatching-trolley/create-hatching-trolley.component';
-import { CreateNewUserComponent } from '../popup-panels/create-new-user/create-new-user/create-new-user.component';
+import { NewEmployeeComponent } from './new-employee/new-employee.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { NewNestingTrolleyComponent } from './new-nesting-trolley/new-nesting-trolley.component';
+import { NewNestingIncubatorComponent } from './new-nesting-incubator/new-nesting-incubator.component';
+import { NewHatchingIncubatorComponent } from './new-hatching-incubator/new-hatching-incubator.component';
+import { NewHatchingTrolleyComponent } from './new-hatching-trolley/new-hatching-trolley.component';
 
 @Component({
   selector: 'app-manager',
   standalone: true,
   imports: [
-    MatCard,
     MatIcon,
     MatButtonModule,
     MatExpansionModule,
@@ -40,11 +39,7 @@ import { CreateNewUserComponent } from '../popup-panels/create-new-user/create-n
     FormsModule,
     CommonModule,
     MatTabsModule,
-    CreateNestingIncubatorPanelComponent,
-    CreateHatchingIncubatorPanelComponent,
-    CreateNestingTrolleyComponent,
-    CreateHatchingTrolleyComponent,
-    CreateNewUserComponent
+    MatDialogModule
   ],
   templateUrl: './manager.component.html',
   styleUrl: './manager.component.css'
@@ -70,18 +65,14 @@ export class ManagerComponent {
   public hatchingTrolleyAll: HatchingTrolley[] | null = null;
   public nestingTrolleyAll: NestingTrolley[] | null = null;
 
-  public isNestingIncubatorPanelComponentEnabled: boolean = false;
-  public isHatchingIncubatorPanelComponentEnabled: boolean = false;
-  public isNestingTrolleyPanelComponentEnabled: boolean = false;
-  public isHatchingTrolleyPanelComponentEnabled: boolean = false;
-  public isRegisterSubUserPanelComponentEnabled: boolean = false;
-
   public constructor (
     private userDetailsService: UserDetailsService,
     private nestingIncubatorService: NestingIncubatorService,
     private hatchingIncubatorService: HatchingIncubatorService,
     private hatchingTrolleyService: HatchingTrolleyService,
-    private nestingTrolleyService: NestingTrolleyService
+    private nestingTrolleyService: NestingTrolleyService,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
@@ -156,49 +147,33 @@ export class ManagerComponent {
     this.filterItems();
   }
 
-  createNestingIncubator() {
-    this.isNestingIncubatorPanelComponentEnabled = true;
+  newEmployee() {
+    this.openDialog(NewEmployeeComponent)
   }
 
-  closeNestingIncubatorPanelComponent() {
-    this.isNestingIncubatorPanelComponentEnabled = false;
-    this.ngOnInit();
+  newNestingIncubator() {
+    this.openDialog(NewNestingIncubatorComponent)
   }
 
-  createHatchingIncubator() {
-    this.isHatchingIncubatorPanelComponentEnabled = true;
+  newNestingTrolley() {
+    this.openDialog(NewNestingTrolleyComponent)
   }
 
-  closeHatchingIncubatorPanelComponent() {
-    this.isHatchingIncubatorPanelComponentEnabled = false;
-    this.ngOnInit();
+  newHatchingIncubator() {
+    this.openDialog(NewHatchingIncubatorComponent)
   }
 
-  createNestingTrolley() {
-    this.isNestingTrolleyPanelComponentEnabled = true;
+  newHatchingTrolley() {
+    this.openDialog(NewHatchingTrolleyComponent)
   }
 
-  closeNestingTrolleyPanelComponent() {
-    this.isNestingTrolleyPanelComponentEnabled = false;
-    this.ngOnInit();
-  }
-
-  createHatchingTrolley() {
-    this.isHatchingTrolleyPanelComponentEnabled = true;
-  }
-
-  closeHatchingTrolleyPanelComponent() {
-    this.isHatchingTrolleyPanelComponentEnabled = false;
-    this.ngOnInit();
-  }
-
-  createRegisterSubUser() {
-    this.isRegisterSubUserPanelComponentEnabled = true;
-  }
-
-  closeRegisterSubUserPanelComponent() {
-    this.isRegisterSubUserPanelComponentEnabled = false;
-    this.ngOnInit();
-  }
+  private openDialog(component: any) {
+    const dialogRef = this.dialog.open(component);
+    dialogRef.afterClosed().subscribe(employee => {
+      if (employee) {
+        this.ngOnInit();
+      }
+    })
+  } 
 
 }
