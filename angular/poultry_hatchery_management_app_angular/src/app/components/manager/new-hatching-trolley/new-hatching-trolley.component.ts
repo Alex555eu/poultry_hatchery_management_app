@@ -1,17 +1,17 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { PostTrolleyRequest } from '../../../../dto/post-trolley-request';
-import e from 'express';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
-import { HatchingTrolleyService } from '../../../../services/hatching-trolley/hatching-trolley.service';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { HatchingTrolleyService } from '../../../services/hatching-trolley/hatching-trolley.service';
+import { PostTrolleyRequest } from '../../../dto/post-trolley-request';
 
 @Component({
-  selector: 'app-create-hatching-trolley',
+  selector: 'app-new-hatching-trolley',
   standalone: true,
   imports: [
     MatIconModule,
@@ -21,22 +21,21 @@ import { HatchingTrolleyService } from '../../../../services/hatching-trolley/ha
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDialogModule
   ],
-  templateUrl: './create-hatching-trolley.component.html',
-  styleUrl: './create-hatching-trolley.component.css'
+  templateUrl: './new-hatching-trolley.component.html',
+  styleUrl: './new-hatching-trolley.component.css'
 })
-export class CreateHatchingTrolleyComponent {
-
-  @Output() 
-  closePanelEvent = new EventEmitter();
+export class NewHatchingTrolleyComponent {
 
   dataForm: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
     private hatchingTrolleyService: HatchingTrolleyService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialogRefParent: MatDialogRef<NewHatchingTrolleyComponent>
   ) {
       this.dataForm = this.formBuilder.group({
         humanReadableId: ['', Validators.required],
@@ -65,9 +64,7 @@ export class CreateHatchingTrolleyComponent {
   }
 
   onClose() {
-    this.closePanelEvent.emit();
+    this.dialogRefParent.close();
   }
 
 }
-
-
