@@ -1,6 +1,7 @@
 package com.app.poultry_hatchery_management_app.repository;
 
 import com.app.poultry_hatchery_management_app.model.Task;
+import com.app.poultry_hatchery_management_app.model.TaskStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -31,6 +32,14 @@ public interface TaskRepository extends JpaRepository<Task, UUID> {
 """, nativeQuery = true)
     Optional<Task> findByTaskNestingTrolleyAssignmentId(@Param("assignmentId") UUID assignmentId);
 
-    List<Task> findAllByOrganisationId(UUID id);
+    @Query(value = """
+    select t from Task t
+    join Organisation org on org = t.organisation
+    where org.id = :organisationId
+    and
+    t.taskStatus in :allowedStatuses
+""")
+    List<Task> findAllTasksByStatus(@Param("organisationId") UUID organisationId, @Param("allowedStatuses") List<TaskStatus> allowedStatuses);
 
+    List<Task> findAllByOrganisationId(UUID id);
 }

@@ -31,6 +31,15 @@ export class TasksService {
     return this.allTasks;
   }
 
+  getAllActiveTasks(): Observable<Task[]> {
+    return this.http.get<Task[]>(`${apiUrl + ApiPaths.TaskPaths.GET_ALL_ACTIVE_TASKS}`).pipe(
+      catchError(error => {
+        console.error(error);
+        return of();
+      })
+    )
+  }
+
   getAllTaskNestingTrolleyAssignmentsByTaskId(taskId: string): Observable<TaskNestingTrolleyAssignment[]> {
     if (this.taskAssignmentsCache.has(taskId)) {
         return this.taskAssignmentsCache.get(taskId)!;
@@ -98,13 +107,13 @@ export class TasksService {
 
   filterOverdueTasks(tasks: Task[]): Task[] {
     const today = new Date();
-    const dayBeforeYesterday = new Date(today);
-    dayBeforeYesterday.setDate(today.getDate() - 2);
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
 
     const overdueTasks = tasks.filter(task => {
       const taskDate = new Date(task.executionScheduledAt);
       return (
-        taskDate < dayBeforeYesterday &&
+        taskDate <= yesterday &&
         task.taskStatus != TaskStatus.COMPLETED && 
         task.taskStatus != TaskStatus.CANCELLED
     );

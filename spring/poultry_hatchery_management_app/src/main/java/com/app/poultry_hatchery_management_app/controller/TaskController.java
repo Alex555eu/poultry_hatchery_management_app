@@ -35,6 +35,16 @@ public class TaskController {
         return ResponseEntity.ok(body);
     }
 
+    @GetMapping("/all/active")
+    public ResponseEntity<String> getAllActiveTasks() throws JsonProcessingException {
+        List<Task> assignments = taskService.getAllActiveTasks();
+        if (assignments.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        String response = objectMapper.writeValueAsString(assignments);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("")
     public ResponseEntity<String> getAllTasksByNestingId(@RequestParam UUID nestingId) throws JsonProcessingException {
         List<Task> tasks = taskService.getAllTasksByNestingId(nestingId);

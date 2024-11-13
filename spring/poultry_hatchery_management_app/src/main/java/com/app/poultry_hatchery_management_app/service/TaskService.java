@@ -49,6 +49,16 @@ public class TaskService {
         return taskNestingTrolleyAssignmentRepository.findAllByTaskId(taskId);
     }
 
+    public List<Task> getAllActiveTasks() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            User user = (User) authentication.getPrincipal();
+
+            return taskRepository.findAllTasksByStatus(user.getOrganisation().getId(), List.of(TaskStatus.IN_PROGRESS, TaskStatus.NOT_STARTED));
+        }
+        return List.of();
+    }
+
     @Transactional
     public Optional<Task> postTask(PostTaskRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
