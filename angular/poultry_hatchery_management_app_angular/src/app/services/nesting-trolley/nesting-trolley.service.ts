@@ -7,6 +7,7 @@ import { OrganisationDetails } from '../../models/organisation-details.model';
 import { apiUrl } from '../../app.config';
 import { ApiPaths } from '../../api/api.paths';
 import { PostTrolleyRequest } from '../../dto/post-trolley-request';
+import { NestingTrolleyContent } from '../../models/nesting-trolley-content.model';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +35,10 @@ export class NestingTrolleyService {
 
   public postNestingTrolley(body: PostTrolleyRequest): Observable<any> {
     return this.http.post<any>(`${apiUrl}${ApiPaths.NestingTrolleyPaths.POST_NESTING_TROLLEY}`, body);
+  }
+
+  public getNestingTrolleyContent(trolleyId: string): Observable<NestingTrolleyContent[]> {
+    return this.http.get<NestingTrolleyContent[]>(`${apiUrl + ApiPaths.NestingTrolleyPaths.GET_NESTING_TROLLEY_CONTENT + trolleyId}`);
   }
 
   private parseResponseList(list: any[]): NestingTrolley[] {

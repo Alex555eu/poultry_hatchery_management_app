@@ -14,7 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
     CommonModule,
     RouterModule,
     MatIconModule
-  ],
+],
   templateUrl: './incubators.component.html',
   styleUrl: './incubators.component.css'
 })
@@ -23,10 +23,10 @@ export class IncubatorsComponent implements OnInit {
 nestingIncubatorsAll: NestingIncubator[] | null = null;
 hatchingIncubatorsAll: HatchingIncubator[] | null = null;
 
+
 constructor(
   private nestingIncubatorService: NestingIncubatorService,
   private hatchingIncubatorService: HatchingIncubatorService,
-  private router: ActivatedRoute
 ){}
 
 ngOnInit(): void {

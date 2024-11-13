@@ -5,7 +5,7 @@
             <label>Inkubatory lęgowe</label>
         </div>
         <div class="tile-container">
-            <a [routerLink]="'/incubators'" [queryParams]="{type: 'nesting', id: incubator.id}" *ngFor="let incubator of nestingIncubatorsAll">
+            <a [routerLink]="'/incubators/nesting'" [queryParams]="{id: incubator.id}" *ngFor="let incubator of nestingIncubatorsAll">
                 <div class="tile">
                     {{ incubator.humanReadableId }}
                 </div>
@@ -19,7 +19,7 @@
                 <mat-icon>egg</mat-icon>
                 <label>Inkubatory klujnikowe</label>
             </div>
-            <a [routerLink]="'/incubators'" [queryParams]="{type: 'hatching', id: incubator.id}" *ngFor="let incubator of hatchingIncubatorsAll">
+            <a [routerLink]="'/incubators/hatching'" [queryParams]="{id: incubator.id}" *ngFor="let incubator of hatchingIncubatorsAll">
                 <div class="tile">
                     {{ incubator.humanReadableId }}
                 </div>

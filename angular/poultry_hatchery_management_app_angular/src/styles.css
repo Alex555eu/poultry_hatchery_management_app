@@ -7,6 +7,15 @@ body {
     background-color: aliceblue;
 }
 
+:root {
+    /********* S T A T U S E S *************/
+    --status-color-completed: #44fd6cc5 !important;
+    --status-color-not-started: gray !important;
+    --status-color-in-progress: #bae1ff !important;
+    --status-color-cancelled: #ffb3ba !important;
+    --status-color-caution: #FDFD96 !important;
+}
+
 /********************** D I A L O G   S T Y L I N G **************************************/
 mat-dialog-content {
     display: flex !important;
