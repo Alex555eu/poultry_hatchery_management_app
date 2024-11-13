@@ -1,0 +1,16 @@
+<mat-dialog-content>
+    <div class="dialog-bg">
+        <div class="dialog-header">
+            <mat-icon>swap_horiz</mat-icon>
+            <label>Wózek {{ data.trolleyContent[0].nestingTrolley.humanReadableId }}</label>
+        </div>
+        <div class="buttons-container">
+            <button mat-raised-button color="warn" (click)="onPermanentLeave()">
+                <mat-icon>logout</mat-icon>
+                Wyjazd permanentny</button>
+            <button mat-raised-button (click)="onTemporaryLeave()">
+                <mat-icon>logout</mat-icon>
+                Wyjazd tymczasowy</button>
+        </div>
+    </div>
+</mat-dialog-content>

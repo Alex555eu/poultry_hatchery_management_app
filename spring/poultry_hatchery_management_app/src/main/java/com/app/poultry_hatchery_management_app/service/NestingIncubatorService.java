@@ -41,6 +41,10 @@ public class NestingIncubatorService {
         return null;
     }
 
+    public Optional<NestingIncubator> getNestingIncubatorById(UUID id) {
+        return nestingIncubatorRepository.findById(id);
+    }
+
     @Transactional(rollbackFor = Exception.class)
     public Optional<NestingIncubator> postNestingIncubator(PostNestingIncubatorRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -124,6 +128,28 @@ public class NestingIncubatorService {
         return Optional.empty();
     }
 
+    @Transactional
+    public List<NestingIncubatorSpace> putNestingIncubatorSpaceSwap(PutNestingIncubatorSpaceSwapRequest request) {
+        Optional<NestingIncubatorSpace> space1Opt = nestingIncubatorSpaceRepository.findById(request.nestingIncubatorSpaceId1());
+        Optional<NestingIncubatorSpace> space2Opt = nestingIncubatorSpaceRepository.findById(request.nestingIncubatorSpaceId2());
+
+        if (space1Opt.isPresent() && space2Opt.isPresent()) {
+            NestingIncubatorSpace space1 = space1Opt.get();
+            NestingIncubatorSpace space2 = space2Opt.get();
+
+            String tmpHumanReadableId = space1.getHumanReadableId();
+            space1.setHumanReadableId(space2.getHumanReadableId());
+            space2.setHumanReadableId(tmpHumanReadableId);
+
+            nestingIncubatorSpaceRepository.save(space1);
+            nestingIncubatorSpaceRepository.save(space2);
+
+            return List.of(space1, space2);
+        }
+        return List.of();
+    }
+
+
     public void deleteNestingIncubatorSpace(UUID space) {
         nestingIncubatorSpaceRepository.deleteById(space);
     }
@@ -138,11 +164,38 @@ public class NestingIncubatorService {
         return nestingTrolleyIncubatorSpaceAssignmentRepository.findAllByIncubatorId(incubatorId);
     }
 
+    @Transactional
     public Optional<NestingTrolleyIncubatorSpaceAssignment> postNestingTrolleyToIncubatorSpace(PostNestingTrolleyToIncubatorRequest request) {
         Optional<NestingTrolley> trolley = nestingTrolleyRepository.findById(request.nestingTrolleyId());
         Optional<NestingIncubatorSpace> space = nestingIncubatorSpaceRepository.findById(request.nestingIncubatorSpaceId());
 
         if (trolley.isPresent() && space.isPresent()) {
+
+            Optional<NestingTrolleyIncubatorSpaceAssignment> assignmentByTrolley =
+                    nestingTrolleyIncubatorSpaceAssignmentRepository.findByNestingTrolleyId(trolley.get().getId());
+
+            Optional<NestingTrolleyIncubatorSpaceAssignment> assignmentBySpace =
+                    nestingTrolleyIncubatorSpaceAssignmentRepository.findByNestingIncubatorSpaceId(space.get().getId());
+
+            if (assignmentByTrolley.isPresent() || assignmentBySpace.isPresent()) {
+                if (assignmentByTrolley.isPresent() && assignmentBySpace.isPresent()) {
+                    if (assignmentByTrolley.get().getId().equals(assignmentBySpace.get().getId())) {
+                        return this.putNestingTrolleyToIncubatorSpace(new PutNestingTrolleyToIncubatorRequest(assignmentByTrolley.get().getId()));
+                    }
+                    this.putNestingIncubatorSpaceSwap(new PutNestingIncubatorSpaceSwapRequest(
+                            assignmentByTrolley.get().getNestingIncubatorSpace().getId(),
+                            assignmentBySpace.get().getNestingIncubatorSpace().getId())
+                    );
+                    return this.putNestingTrolleyToIncubatorSpace(new PutNestingTrolleyToIncubatorRequest(assignmentByTrolley.get().getId()));
+                }
+                if (assignmentByTrolley.isPresent()) {
+                    this.deleteNestingTrolleyFromIncubatorSpace(assignmentByTrolley.get().getId());
+                }
+                if (assignmentBySpace.isPresent()) {
+                    return Optional.empty();
+                }
+            }
+
             NestingTrolleyIncubatorSpaceAssignment ntisa = NestingTrolleyIncubatorSpaceAssignment.builder()
                     .nestingTrolley(trolley.get())
                     .nestingIncubatorSpace(space.get())

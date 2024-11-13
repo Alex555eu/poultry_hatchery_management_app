@@ -1,5 +1,6 @@
 package com.app.poultry_hatchery_management_app.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,6 +25,7 @@ public class NestingIncubatorSpace {
 
     private String humanReadableId;
 
+    @JsonProperty(value="isCurrentlyOccupied")
     private boolean isCurrentlyOccupied;
 
     @ManyToOne

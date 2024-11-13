@@ -179,6 +179,13 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
                 .build();
         nestingIncubatorSpaceRepository.save(nestingIncubatorSpace);
 
+        NestingIncubatorSpace nestingIncubatorSpace2 = NestingIncubatorSpace.builder()
+                .nestingIncubator(nestingIncubator)
+                .isCurrentlyOccupied(false)
+                .humanReadableId("S2")
+                .build();
+        nestingIncubatorSpaceRepository.save(nestingIncubatorSpace2);
+
         NestingTrolley nestingTrolley = NestingTrolley.builder()
                 .humanReadableId("A1")
                 .maxCapacity(128)
