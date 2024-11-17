@@ -38,6 +38,17 @@ public class NestingTrolleyService {
         return null;
     }
 
+    public List<NestingTrolley> getAllTrolleysFromOutsideOfIncubators() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if ((authentication != null && authentication.getPrincipal() instanceof UserDetails)) {
+            User user = (User) authentication.getPrincipal();
+            Organisation organisation = user.getOrganisation();
+
+            return nestingTrolleyRepository.findAllTrolleysOutsideOfIncubators(organisation.getId());
+        }
+        return null;
+    }
+
     public Optional<NestingTrolley> getTrolleyById(UUID nestingTrolleyId) {
         return nestingTrolleyRepository.findById(nestingTrolleyId);
     }

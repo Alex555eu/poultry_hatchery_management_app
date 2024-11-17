@@ -22,4 +22,14 @@ public interface NestingTrolleyRepository extends JpaRepository<NestingTrolley, 
 """, nativeQuery = true)
     List<NestingTrolley> findAllTrolleysByNestingId(@Param("nestingId") UUID nestingId);
 
+
+    @Query(value = """
+    select nt from NestingTrolley nt
+    where nt not in (
+    select ntisa.nestingTrolley from NestingTrolleyIncubatorSpaceAssignment ntisa
+    where ntisa.nestingIncubatorSpace.isCurrentlyOccupied = true)
+""")
+    List<NestingTrolley> findAllTrolleysOutsideOfIncubators(@Param("organisationId") UUID organisationId);
+
+
 }

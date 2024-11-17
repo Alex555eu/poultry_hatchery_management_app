@@ -129,19 +129,21 @@ public class NestingIncubatorController {
     }
 
     @PostMapping("/occupation")
-    public ResponseEntity<String> postNestingTrolleyToIncubatorSpace(@RequestBody PostNestingTrolleyToIncubatorRequest request) {
+    public ResponseEntity<String> postNestingTrolleyToIncubatorSpace(@RequestBody PostNestingTrolleyToIncubatorRequest request) throws JsonProcessingException {
         Optional<NestingTrolleyIncubatorSpaceAssignment> assignment = nestingIncubatorService.postNestingTrolleyToIncubatorSpace(request);
         if (assignment.isPresent()) {
-            return ResponseEntity.ok().build();
+            String body = objectMapper.writeValueAsString(assignment.get());
+            return ResponseEntity.ok(body);
         }
         return ResponseEntity.notFound().build();
     }
 
     @PutMapping("/occupation")
-    public ResponseEntity<String> putNestingTrolleyToIncubatorSpace(@RequestBody PutNestingTrolleyToIncubatorRequest request) {
+    public ResponseEntity<String> putNestingTrolleyToIncubatorSpace(@RequestBody PutNestingTrolleyToIncubatorRequest request) throws JsonProcessingException {
         Optional<NestingTrolleyIncubatorSpaceAssignment> assignment = nestingIncubatorService.putNestingTrolleyToIncubatorSpace(request);
         if (assignment.isPresent()) {
-            return ResponseEntity.ok().build();
+            String body = objectMapper.writeValueAsString(assignment.get());
+            return ResponseEntity.ok(body);
         }
         return ResponseEntity.notFound().build();
     }

@@ -172,19 +172,21 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
                 .build();
         nestingIncubatorRepository.save(nestingIncubator);
 
+        for(int i = 1; i < 16; i++) {
+            NestingIncubatorSpace nestingIncubatorSpace = NestingIncubatorSpace.builder()
+                    .nestingIncubator(nestingIncubator)
+                    .isCurrentlyOccupied(true)
+                    .humanReadableId("S" + (i+1))
+                    .build();
+            nestingIncubatorSpaceRepository.save(nestingIncubatorSpace);
+        }
+
         NestingIncubatorSpace nestingIncubatorSpace = NestingIncubatorSpace.builder()
                 .nestingIncubator(nestingIncubator)
-                .isCurrentlyOccupied(true)
+                .isCurrentlyOccupied(false)
                 .humanReadableId("S1")
                 .build();
         nestingIncubatorSpaceRepository.save(nestingIncubatorSpace);
-
-        NestingIncubatorSpace nestingIncubatorSpace2 = NestingIncubatorSpace.builder()
-                .nestingIncubator(nestingIncubator)
-                .isCurrentlyOccupied(false)
-                .humanReadableId("S2")
-                .build();
-        nestingIncubatorSpaceRepository.save(nestingIncubatorSpace2);
 
         NestingTrolley nestingTrolley = NestingTrolley.builder()
                 .humanReadableId("A1")
@@ -192,6 +194,13 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
                 .organisation(organisation)
                 .build();
         nestingTrolleyRepository.save(nestingTrolley);
+
+        NestingTrolley nestingTrolley2 = NestingTrolley.builder()
+                .humanReadableId("A2")
+                .maxCapacity(128)
+                .organisation(organisation)
+                .build();
+        nestingTrolleyRepository.save(nestingTrolley2);
 
         NestingTrolleyContent nestingTrolleyContent = NestingTrolleyContent.builder()
                 .nestingLoadedDeliveries(nestingLoadedDeliveries)
@@ -206,6 +215,7 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
                 .quantity(3)
                 .build();
         nestingTrolleyContentRepository.save(nestingTrolleyContent2);
+
 
         NestingTrolleyIncubatorSpaceAssignment nestingTrolleyIncubatorSpaceAssignment =
                 NestingTrolleyIncubatorSpaceAssignment.builder()

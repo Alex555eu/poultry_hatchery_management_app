@@ -7,6 +7,7 @@ import com.app.poultry_hatchery_management_app.repository.NestingIncubatorSpaceR
 import com.app.poultry_hatchery_management_app.repository.NestingTrolleyIncubatorSpaceAssignmentRepository;
 import com.app.poultry_hatchery_management_app.repository.NestingTrolleyRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +24,7 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @Service
+@Slf4j
 public class NestingIncubatorService {
 
     private final NestingIncubatorRepository nestingIncubatorRepository;
@@ -173,7 +175,6 @@ public class NestingIncubatorService {
 
             Optional<NestingTrolleyIncubatorSpaceAssignment> assignmentByTrolley =
                     nestingTrolleyIncubatorSpaceAssignmentRepository.findByNestingTrolleyId(trolley.get().getId());
-
             Optional<NestingTrolleyIncubatorSpaceAssignment> assignmentBySpace =
                     nestingTrolleyIncubatorSpaceAssignmentRepository.findByNestingIncubatorSpaceId(space.get().getId());
 
@@ -190,6 +191,8 @@ public class NestingIncubatorService {
                 }
                 if (assignmentByTrolley.isPresent()) {
                     this.deleteNestingTrolleyFromIncubatorSpace(assignmentByTrolley.get().getId());
+                    nestingTrolleyIncubatorSpaceAssignmentRepository.flush();
+                    nestingIncubatorSpaceRepository.flush();
                 }
                 if (assignmentBySpace.isPresent()) {
                     return Optional.empty();
@@ -231,11 +234,14 @@ public class NestingIncubatorService {
         return Optional.empty();
     }
 
+    @Transactional
     public void deleteNestingTrolleyFromIncubatorSpace(UUID assignmentId) {
         Optional<NestingTrolleyIncubatorSpaceAssignment> ntisa =
                 nestingTrolleyIncubatorSpaceAssignmentRepository.findById(assignmentId);
         if (ntisa.isPresent()) {
-            ntisa.get().getNestingIncubatorSpace().setCurrentlyOccupied(false);
+            NestingIncubatorSpace space = ntisa.get().getNestingIncubatorSpace();
+            space.setCurrentlyOccupied(false);
+            nestingIncubatorSpaceRepository.save(space);
             nestingTrolleyIncubatorSpaceAssignmentRepository.delete(ntisa.get());
         }
     }
