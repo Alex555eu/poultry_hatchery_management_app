@@ -1,6 +1,7 @@
+import { Candling } from "./candling.model";
 import { NestingTrolley } from "./nesting-trolley.model";
 
-export class Candling {
+export class CandlingNestingTrolleyAssignment {
 
     constructor(
         private _id: string,

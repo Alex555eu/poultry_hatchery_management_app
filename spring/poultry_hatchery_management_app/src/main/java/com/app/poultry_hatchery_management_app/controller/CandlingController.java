@@ -47,19 +47,21 @@ public class CandlingController {
     }
 
     @PostMapping("")
-    public ResponseEntity<String> postCandling(@RequestBody PostCandlingRequest request) {
+    public ResponseEntity<String> postCandling(@RequestBody PostCandlingRequest request) throws JsonProcessingException {
         Optional<Candling> candling = candlingService.postCandling(request);
         if (candling.isPresent()) {
-            return ResponseEntity.ok().build();
+            String body = objectMapper.writeValueAsString(candling.get());
+            return ResponseEntity.ok(body);
         }
         return ResponseEntity.notFound().build();
     }
 
     @PutMapping("")
-    public ResponseEntity<String> putCandling(@RequestBody PutCandlingRequest request) {
+    public ResponseEntity<String> putCandling(@RequestBody PutCandlingRequest request) throws JsonProcessingException {
         Optional<Candling> candling = candlingService.putCandling(request);
         if (candling.isPresent()) {
-            return ResponseEntity.ok().build();
+            String body = objectMapper.writeValueAsString(candling.get());
+            return ResponseEntity.ok(body);
         }
         return ResponseEntity.notFound().build();
     }
@@ -82,10 +84,11 @@ public class CandlingController {
     }
 
     @PostMapping("/trolley")
-    public ResponseEntity<String> postCandledTrolleyAssignment(@RequestBody PostCandlingNestingTrolleyAssignmentRequest request) {
+    public ResponseEntity<String> postCandledTrolleyAssignment(@RequestBody PostCandlingNestingTrolleyAssignmentRequest request) throws JsonProcessingException {
         Optional<CandlingNestingTrolleyAssignment> candling = candlingService.postCandledTrolleyAssignment(request);
         if (candling.isPresent()) {
-            return ResponseEntity.ok().build();
+            String body = objectMapper.writeValueAsString(candling.get());
+            return ResponseEntity.ok(body);
         }
         return ResponseEntity.notFound().build();
     }
