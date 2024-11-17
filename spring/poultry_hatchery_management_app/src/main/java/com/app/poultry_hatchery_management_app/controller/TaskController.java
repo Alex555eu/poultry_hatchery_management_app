@@ -55,6 +55,16 @@ public class TaskController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/all/active/task-type")
+    public ResponseEntity<String> getAllActiveTasksByTaskTypeId(@RequestParam UUID taskTypeId) throws JsonProcessingException {
+        List<Task> tasks = taskService.getAllActiveTasksByTaskTypeId(taskTypeId);
+        if (tasks.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        String response = objectMapper.writeValueAsString(tasks);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("")
     public ResponseEntity<String> getAllTasksByNestingId(@RequestParam UUID nestingId) throws JsonProcessingException {
         List<Task> tasks = taskService.getAllTasksByNestingId(nestingId);

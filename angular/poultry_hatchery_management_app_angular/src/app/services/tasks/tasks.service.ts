@@ -41,6 +41,15 @@ export class TasksService {
     )
   }
 
+  getAllActiveTasksByTaskTypeId(taskTypeId: string): Observable<Task[]> {
+    return this.http.get<Task[]>(`${apiUrl + ApiPaths.TaskPaths.GET_ALL_ACTIVE_TASKS_BY_TASK_TYPE_ID + taskTypeId}`).pipe(
+      catchError(error => {
+        console.error(error);
+        return of([]);
+      })
+    )
+  }
+
   getAllActiveTasksByTrolleyId(trolleyId: string): Observable<Task[]> {
     return this.http.get<Task[]>(`${apiUrl + ApiPaths.TaskPaths.GET_ALL_ACTIVE_TASKS_BY_TROLLEY_ID + trolleyId}`).pipe(
       catchError(error => {
