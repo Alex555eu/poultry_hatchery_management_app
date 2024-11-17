@@ -8,7 +8,7 @@
             @if (tasks && tasks.length > 0) {
                 <ng-container *ngFor="let item of tasks">
                     <mat-divider></mat-divider>
-                    <mat-list-item (click)="selectTask(item.id)" [ngClass]="setColorClass()">
+                    <mat-list-item (click)="selectTask(item.id)" [class]="setColorClass(item.id)">
                         <div class="task-item-cntr">
                             <label>{{ item.nesting.title }}</label>
                             <label>{{ item.taskType.name }}</label>

@@ -24,14 +24,17 @@ export class TasksSectionComponent {
   @Output() selectTaskEvent = new EventEmitter<string>();
 
   private isCurrentlyToggled: boolean = false;
+  private toggledTaskId = '';
 
   selectTask(taskId: string) {
     if (this.isToggleable) {
       if (this.isCurrentlyToggled) {
         this.isCurrentlyToggled = false;
+        this.toggledTaskId = '';
         this.selectTaskEvent.emit('')
       } else {
         this.isCurrentlyToggled = true;
+        this.toggledTaskId = taskId;
         this.selectTaskEvent.emit(taskId) 
       }
       return; //safety check
@@ -40,9 +43,9 @@ export class TasksSectionComponent {
     this.selectTaskEvent.emit(taskId);
   }
 
-  setColorClass(): string {
+  setColorClass(taskId: string): string {
     if (this.isToggleable) {
-      if (this.isCurrentlyToggled) {
+      if (this.isCurrentlyToggled && this.toggledTaskId === taskId) {
         return 'toggled';
       } else {
         return '';
