@@ -1,9 +1,74 @@
 .buttons-container {
-    margin-top: auto;
+    margin-top: 20px;
     margin-bottom: 10px;
 
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.total-quantity {
+    margin-top: 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: #fff;
+    display: flex;
+    justify-content: space-between;
+    
+}
+
+.trolley-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-family: Arial, sans-serif;
+    background-color: #fefefe;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    max-height: 300px; /* ograniczenie wysokości kontenera */
+    overflow-y: auto; /* przewijanie w osi Y */
+}
+
+.content-item {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.item-title {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.supplier-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.supplier-name {
+    font-weight: normal;
+}
+
+.quantity {
+    font-weight: bold;
+    color: #d33;
+    font-size: 0.9rem;
+}
+
+.supplier-name, .quantity {
+    margin-right: 6px;
 }
