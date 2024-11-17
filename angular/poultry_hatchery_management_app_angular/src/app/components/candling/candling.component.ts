@@ -10,21 +10,37 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatIconModule } from '@angular/material/icon';
 import { CustomDateFormatterPipe } from '../../utils/date-format/custom-date-formatter.pipe';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { CandlingService } from '../../services/candling/candling.service';
+import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-candling',
   standalone: true,
   imports: [
-    TasksSectionComponent,
     MatTableModule,
     MatPaginatorModule,
+    MatSortModule,
+    MatFormFieldModule,
+    MatInputModule,
     MatIconModule,
-    CustomDateFormatterPipe,
+    MatSelectModule,
+    MatDatepickerModule,
+    CommonModule,
+    FormsModule,
+    MatButtonModule,
+    TasksSectionComponent,
     MatMenuModule,
-    MatButtonModule
+    MatDialogModule,
+    CustomDateFormatterPipe
   ],
   animations: [
     trigger('detailExpand', [
@@ -55,16 +71,70 @@ export class CandlingComponent implements OnInit {
   endDate: Date | null = null;
 
   constructor(
-    private taskService: TasksService
+    private taskService: TasksService,
+    private candlingService: CandlingService
   ){}
 
   
-
   ngOnInit(): void {
-    this.getCandlingTaskType().subscribe();
-
+    this.initTasks();
+    this.initCandlings();
     
   }
+
+  onSecondaryBoardRowClick(selectedTaskId: string) {
+    this.filterData(selectedTaskId);
+  }
+
+  onDateRangeChange(event: MatDatepickerInputEvent<Date>, type: 'start' | 'end') {
+    if (type === 'start') {
+      this.startDate = event.value; 
+    } else if (type === 'end') {
+      this.endDate = event.value; 
+    }
+    this.filterData(null);
+  }
+
+  filterData(event: Event | null | string) {
+    if (this.candlingsAll){
+      let filteredData: any | null = null;
+
+      if (typeof event === 'string') {
+        filteredData = this.candlingsAll.filter(it => {
+          let task: Task | null = this.todayCandlings?.find(task => task.id === event) || null;
+          if (task) {
+            return it.nesting.id === task.nesting.id &&
+            it.scheduledAt.getFullYear === task.executionScheduledAt.getFullYear &&
+            it.scheduledAt.getMonth === task.executionScheduledAt.getMonth &&
+            it.scheduledAt.getDay === task.executionScheduledAt.getDay;
+          } 
+          return it;
+        }); // 'event' is of type 'string', when requested with specific task ID
+
+      } else {
+        filteredData = this.candlingsAll
+        .filter(item => {
+          if (this.startDate) {
+            return this.startDate <= new Date(item.scheduledAt);
+          }
+          return item;
+        })
+        .filter(item => {
+          if (this.endDate) {
+            return this.endDate >= new Date(item.scheduledAt);
+          }
+          return item;
+        })
+      };
+
+      this.dataSource.data = filteredData; 
+      this.dataSource.sort = this.sort;
+      if (this.dataSource.paginator) {
+        this.dataSource.paginator.firstPage();
+      }
+    }
+  }
+
 
   newNesting() {
 
@@ -74,6 +144,22 @@ export class CandlingComponent implements OnInit {
 
   }
 
+
+
+  private initCandlings() {
+    this.candlingService.getAllCandlings().subscribe(response => {
+      if (response) {
+        this.candlingsAll = response;
+        this.dataSource = new MatTableDataSource(response);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      }
+    })
+  }
+
+  private initTasks() {
+    this.getCandlingTaskType().subscribe();
+  }
 
   private getCandlingTaskType(): Observable<any> {
     return this.taskService.getAllTaskTypes().pipe(
