@@ -34,6 +34,16 @@
     font-size: 14px;
 }
 
+.task-item-comment-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    word-break: break-word;
+    overflow-y: auto;
+
+}
+
 mat-list-item {
     transition: background-color 0.3s ease;
 }

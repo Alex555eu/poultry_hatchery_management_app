@@ -24,7 +24,8 @@ export class TasksSectionComponent {
   @Output() selectTaskEvent = new EventEmitter<string>();
 
   private isCurrentlyToggled: boolean = false;
-  private toggledTaskId = '';
+  
+  toggledTaskId = '';
 
   selectTask(taskId: string) {
     if (this.isToggleable) {

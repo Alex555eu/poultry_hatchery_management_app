@@ -7,6 +7,11 @@
         <mat-list>
             @if (tasks && tasks.length > 0) {
                 <ng-container *ngFor="let item of tasks">
+                    <div class="task-item-comment-section" *ngIf="toggledTaskId === item.id">
+                        <mat-divider></mat-divider>
+                        <h3>Komentarz do zadania:</h3>
+                        <label> {{ item.comment }} </label>
+                    </div>
                     <mat-divider></mat-divider>
                     <mat-list-item (click)="selectTask(item.id)" [class]="setColorClass(item.id)">
                         <div class="task-item-cntr">

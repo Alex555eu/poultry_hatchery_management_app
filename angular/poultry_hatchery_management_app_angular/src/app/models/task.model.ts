@@ -8,6 +8,7 @@ export class Task {
         private _id: string,
         private _executionScheduledAt: Date,
         private _executionCompletedAt: Date,
+        private _comment: string,
         private _taskStatus: TaskStatus,
         private _taskType: TaskType,
         private _nesting: Nesting,
@@ -30,6 +31,12 @@ export class Task {
     }
     public set executionCompletedAt(value: Date) {
         this._executionCompletedAt = value;
+    }
+    public get comment(): string {
+        return this._comment;
+    }
+    public set comment(value: string) {
+        this._comment = value;
     }
     public get taskStatus(): TaskStatus {
         return this._taskStatus;
