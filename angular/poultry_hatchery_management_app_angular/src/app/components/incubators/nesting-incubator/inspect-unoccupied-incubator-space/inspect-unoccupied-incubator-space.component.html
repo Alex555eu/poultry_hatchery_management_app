@@ -1,1 +1,58 @@
-<p>inspect-unoccupied-incubator-space works!</p>
+<mat-dialog-content>
+    <div class="dialog-bg">
+
+        <div class="dialog-header">
+            <mat-icon>subdirectory_arrow_right</mat-icon>
+            <label>Wjazd do inkubatora</label>
+            <button mat-icon-button (click)="onClose()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+
+
+        <h4>Znadź swój wózek:</h4>
+        <ng-container *ngIf="allAvailableTrolleys$ | async as trolleys; else loading">
+            <div class="second-gr">
+                <mat-radio-group (change)="onTrolleySelectionChange($event.value)">
+                    <mat-list *ngIf="trolleys.length > 0; else empty">
+                      <mat-list-item *ngFor="let trolley of trolleys">
+                        <mat-radio-button [value]="trolley">{{ trolley.humanReadableId }}</mat-radio-button>
+                      </mat-list-item>
+                    </mat-list>
+                  </mat-radio-group>
+            </div>
+        </ng-container>
+
+
+        <ng-container *ngIf="selectedTrolley$ | async as selectedTrolley">
+            <h3>Czy wykonałeś któreś z poniższych zadań?</h3>
+            <div class="third-gr" *ngIf="tasksBySelectedTrolley$ | async as tasks; else loading">
+              <ng-container *ngIf="tasks.length > 0; else empty">
+                <mat-selection-list [(ngModel)]="selectedTasks">
+                  <mat-list-option *ngFor="let task of tasks" [value]="task">
+                    <div class="list">
+                      <span>{{ task.taskType.name }} &nbsp; &nbsp; &nbsp;</span>
+                      <span>{{task.nesting.title }} &nbsp; &nbsp; &nbsp;</span> 
+                      <span>{{ task.executionScheduledAt | customDateFormatter }} </span>
+                    </div>
+                  </mat-list-option>
+                </mat-selection-list>
+              </ng-container>
+            </div>
+          </ng-container>
+          
+
+        <div class="button-container">
+          <button mat-raised-button color="primary" (click)="submitSelection()">Potwierdź</button>
+        </div>
+
+      </div>
+</mat-dialog-content>
+
+<ng-template #loading>
+    <mat-spinner></mat-spinner>
+</ng-template>
+
+<ng-template #empty>
+    <p>Brak</p>
+</ng-template>
