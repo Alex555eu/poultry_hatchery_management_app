@@ -7,7 +7,7 @@ import { ApiPaths } from '../../api/api.paths';
 import { TaskNestingTrolleyAssignment } from '../../models/task-nesting-trolley-assignment.model';
 import { TaskStatus } from '../../models/task-status-enum';
 import { PutTaskRequest } from '../../dto/put-task-request';
-import { TaskType } from 'zone.js/lib/zone-impl';
+import { TaskType } from '../../models/task-type.model';
 
 @Injectable({
   providedIn: 'root'
