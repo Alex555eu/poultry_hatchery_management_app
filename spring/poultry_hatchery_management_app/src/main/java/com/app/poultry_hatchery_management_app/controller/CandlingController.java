@@ -24,7 +24,18 @@ public class CandlingController {
     private final ObjectMapper objectMapper;
     private final CandlingService candlingService;
 
-    @GetMapping("/")
+    @GetMapping("")
+    public ResponseEntity<String> getAllCandlings() throws JsonProcessingException {
+        List<Candling> candlingList = candlingService.getAllCandlings();
+        if (candlingList.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            String response = objectMapper.writeValueAsString(candlingList);
+            return ResponseEntity.ok(response);
+        }
+    }
+
+    @GetMapping("/by-nesting")
     public ResponseEntity<String> getCandlingByNestingId(@RequestParam UUID nestingId) throws JsonProcessingException {
         List<Candling> candlingList = candlingService.getCandlingByNestingId(nestingId);
         if (candlingList.isEmpty()) {
@@ -35,7 +46,7 @@ public class CandlingController {
         }
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<String> postCandling(@RequestBody PostCandlingRequest request) {
         Optional<Candling> candling = candlingService.postCandling(request);
         if (candling.isPresent()) {
@@ -44,7 +55,7 @@ public class CandlingController {
         return ResponseEntity.notFound().build();
     }
 
-    @PutMapping("/")
+    @PutMapping("")
     public ResponseEntity<String> putCandling(@RequestBody PutCandlingRequest request) {
         Optional<Candling> candling = candlingService.putCandling(request);
         if (candling.isPresent()) {
@@ -53,7 +64,7 @@ public class CandlingController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping("")
     public ResponseEntity<String> deleteCandling(@RequestParam UUID candlingId) {
         candlingService.deleteCandling(candlingId);
         return ResponseEntity.ok().build();

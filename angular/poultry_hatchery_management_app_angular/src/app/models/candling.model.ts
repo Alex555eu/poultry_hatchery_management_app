@@ -1,4 +1,5 @@
 import { Nesting } from "./nesting.model";
+import { OrganisationDetails } from "./organisation-details.model";
 
 export class Candling {
 
@@ -7,6 +8,7 @@ export class Candling {
         private _scheduledAt: Date,
         private _candlingNumber: number,
         private _nesting: Nesting,
+        private _organisationDetails: OrganisationDetails,
     ){}
 
     public get id(): string {
@@ -32,6 +34,12 @@ export class Candling {
     }
     public set nesting(value: Nesting) {
         this._nesting = value;
+    }
+    public get organisationDetails(): OrganisationDetails {
+        return this._organisationDetails;
+    }
+    public set organisationDetails(value: OrganisationDetails) {
+        this._organisationDetails = value;
     }
     
 }

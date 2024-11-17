@@ -82,4 +82,15 @@ export namespace ApiPaths {
         GET_ALL_TASK_TYPES = '/api/v1/task/task-type'
     }
 
+    export enum CandlingPaths {
+        GET_ALL_CANDLINGS = '/api/v1/candling',
+        POST_CANDLING = '/api/v1/candling',
+        PUT_CANDLING = '/api/v1/candling',
+        DELETE_CANDLING = '/api/v1/candling',
+
+        GET_ALL_CANDLING_TROLLEY_ASSIGNMENTS = '/api/v1/candling/trolley?candlingId=',
+        POST_CANDLING_TROLLEY_ASSIGNMENT = '/api/v1/candling/trolley',
+        DELETE_CANDLING_TROLLEY_ASSIGNMENT = '/api/v1/candling/trolley?candledNestingTrolleyAssignmentId='
+    }
+
 }

@@ -30,4 +30,7 @@ public class Candling {
     @ManyToOne
     private Nesting nesting;
 
+    @ManyToOne
+    private Organisation organisation;
+
 }
