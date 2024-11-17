@@ -168,7 +168,13 @@ public class TaskService {
 
 
     public List<TaskType> getAllTaskTypes() {
-        return taskTypeRepository.findAll();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            User user = (User) authentication.getPrincipal();
+
+            return taskTypeRepository.findAllByOrganisationId(user.getOrganisation().getId());
+        }
+        return List.of();
     }
 
 }
