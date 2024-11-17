@@ -1,1 +1,68 @@
-<p>inspect-temporarily-unoccupied-incubator-space works!</p>
+<mat-dialog-content>
+    <div class="dialog-bg">
+
+        <div class="dialog-header">
+            <mat-icon>subdirectory_arrow_right</mat-icon>
+            <label>Wjazd do inkubatora</label>
+            <button mat-icon-button (click)="onClose()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+
+        <h3>Oczekuje na wózek <b>{{ data.selfAssignment.nestingTrolley.humanReadableId }}</b></h3>
+        <h3>Czy chcesz wjechać innym wózkiem ?</h3>
+        
+        <div class="first-gr">
+            <mat-radio-group (change)="onDifferentAssignmentOption($event.value)">
+                <mat-radio-button [value]="false" checked>
+                    Nie
+                </mat-radio-button>
+                <mat-radio-button [value]="true">
+                    Tak
+                </mat-radio-button>
+            </mat-radio-group>
+        </div>
+        
+        <ng-container *ngIf="assignmentOption !== false">
+            <h4>Znadź swój wózek:</h4>
+            <div class="second-gr">
+                <mat-radio-group (change)="onAssignmentChange($event.value)">
+                        <mat-list>
+                        <mat-list-item *ngFor="let assignment of allAvailableAssginments">
+                            <mat-radio-button [value]="assignment">{{ assignment.nestingTrolley.humanReadableId }}</mat-radio-button>
+                        </mat-list-item>
+                        </mat-list>
+                </mat-radio-group>
+            </div>
+        </ng-container>
+        
+        <ng-container *ngIf="availableTasks$ | async as tasks; else loading">
+        <div class="third-gr">
+            <h3>Czy wykonałeś któreś z poniższych zadań?</h3>
+            <mat-selection-list *ngIf="tasks.length > 0; else empty" [(ngModel)]="selectedTasks">
+            <mat-list-option *ngFor="let task of tasks" [value]="task">
+                <div class="list">
+                    <span>{{ task.taskType.name }} &nbsp; &nbsp; &nbsp;</span>
+                    <span>{{task.nesting.title }} &nbsp; &nbsp; &nbsp;</span> 
+                    <span>{{ task.executionScheduledAt | customDateFormatter }} </span>
+                  </div>
+            </mat-list-option>
+            </mat-selection-list>
+        </div>
+        </ng-container>
+
+        <div class="button-container">
+          <button mat-raised-button color="primary" (click)="submitSelection()">Potwierdź</button>
+        </div>
+
+      </div>
+      
+</mat-dialog-content>
+
+<ng-template #loading>
+    <mat-spinner></mat-spinner>
+</ng-template>
+
+<ng-template #empty>
+    <p>Brak</p>
+</ng-template>
