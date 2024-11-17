@@ -23,14 +23,22 @@ export class NestingTrolleyService {
   public getAllNestingTrolleys(forceReload: boolean = false): Observable<NestingTrolley[]> {
     if (!this.nestingTrolleyAll$ || forceReload){
       this.nestingTrolleyAll$ = this.http.get<any>(`${apiUrl}${ApiPaths.NestingTrolleyPaths.GET_NESTING_TROLLEY}`).pipe(
-        map(res => this.parseResponseList(res)),
         shareReplay(1),
         catchError(error => {
-          return of();
+          return of([]);
         })
       );
     }
     return this.nestingTrolleyAll$;
+  }
+
+  public getAllNestingTrolleysFromOutsideOfIncubators(): Observable<NestingTrolley[]> {
+    return this.nestingTrolleyAll$ = this.http.get<any>(`${apiUrl}${ApiPaths.NestingTrolleyPaths.GET_ALL_NESTING_TROLLEYS_FROM_OUTSIDE_OF_INCUBATORS}`).pipe(
+      shareReplay(1),
+      catchError(error => {
+        return of([]);
+      })
+    );
   }
 
   public postNestingTrolley(body: PostTrolleyRequest): Observable<any> {
@@ -38,32 +46,11 @@ export class NestingTrolleyService {
   }
 
   public getNestingTrolleyContent(trolleyId: string): Observable<NestingTrolleyContent[]> {
-    return this.http.get<NestingTrolleyContent[]>(`${apiUrl + ApiPaths.NestingTrolleyPaths.GET_NESTING_TROLLEY_CONTENT + trolleyId}`);
+    return this.http.get<NestingTrolleyContent[]>(`${apiUrl + ApiPaths.NestingTrolleyPaths.GET_NESTING_TROLLEY_CONTENT + trolleyId}`).pipe(
+      catchError(error => {
+        return of([]);
+      })
+    );
   }
 
-  private parseResponseList(list: any[]): NestingTrolley[] {
-    return list.map(listItem => this.parseResponse(listItem));
-  }
-
-  private parseResponse(json: any): NestingTrolley {
-    const address = new AddressDetails(
-      json.organisation.address.id,
-      json.organisation.address.city,
-      json.organisation.address.postalCode,
-      json.organisation.address.street,
-      json.organisation.address.number
-    );
-    const organisation = new OrganisationDetails(
-      json.organisation.id,
-      json.organisation.name,
-      json.organisation.regon,
-      address
-    );
-    return new NestingTrolley(
-      json.id,
-      json.humanReadableId,
-      json.maxCapacity,
-      organisation
-    )
-  }
 }

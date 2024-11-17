@@ -1,8 +1,8 @@
-import { Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { NestingIncubatorService } from '../../../services/nesting-incubator/nesting-incubator.service';
 import { NestingTrolleyIncubatorSpaceAssignment } from '../../../models/nesting-trolley-incubator-space-assignment.model';
 import { NestingTrolleyContent } from '../../../models/nesting-trolley-content.model';
-import { forkJoin, mergeMap, of, switchMap, tap, filter, from } from 'rxjs';
+import { forkJoin, mergeMap, of, switchMap, tap, filter, from, BehaviorSubject, Observable, catchError } from 'rxjs';
 import { NestingTrolleyService } from '../../../services/nesting-trolley/nesting-trolley.service';
 import { Task } from '../../../models/task.model';
 import { TasksService } from '../../../services/tasks/tasks.service';
@@ -18,6 +18,12 @@ import { MatDialog, MatDialogConfig, MatDialogModule } from '@angular/material/d
 import { MatButtonModule } from '@angular/material/button';
 import { InspectOccupiedIncubatorSpaceComponent } from './inspect-occupied-incubator-space/inspect-occupied-incubator-space.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { NestingIncubatorSpace } from '../../../models/nesting-incubator-space.model';
+import { InspectTemporarilyUnoccupiedIncubatorSpaceComponent } from './inspect-temporarily-unoccupied-incubator-space/inspect-temporarily-unoccupied-incubator-space.component';
+import { NestingTrolley } from '../../../models/nesting-trolley.model';
+import { isNumberObject } from 'util/types';
+import { InspectUnoccupiedIncubatorSpaceComponent } from './inspect-unoccupied-incubator-space/inspect-unoccupied-incubator-space.component';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-nesting-incubator',
@@ -30,27 +36,26 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     TasksSectionComponent,
     MatDialogModule,
     MatButtonModule
-  ],
+    
+],
   templateUrl: './nesting-incubator.component.html',
   styleUrl: './nesting-incubator.component.css'
 })
 export class NestingIncubatorComponent implements OnInit {
 
   incubator: NestingIncubator | null = null;
+  incubatorSpaces: NestingIncubatorSpace[] = []
+  
+  private incubatorSpaceAssignments: NestingTrolleyIncubatorSpaceAssignment[] = [];
+  private trolleysContent: NestingTrolleyContent[][] = [];
 
-  incubatorSpaceAssignments: NestingTrolleyIncubatorSpaceAssignment[] | null = null;
-
-  trolleysContent: NestingTrolleyContent[][] = [];
-
-  tasks: Task[] | null = null;
-  taskTrolleyAssignments: Map<Task, TaskNestingTrolleyAssignment[]> = new Map();
-
-  outputTiles: string[] | null = null;
+  private tasks: Task[] | null = null;
+  private taskTrolleyAssignments: Map<Task, TaskNestingTrolleyAssignment[]> = new Map();
 
   todaysTasks: Task[] | null = null;
   uncompletedTasks: Task[] | null = null;
 
-  @ViewChildren('tile') tiles!: QueryList<ElementRef>;
+  @ViewChildren('tile') private tiles!: QueryList<ElementRef>;
 
   constructor(
     private nestingIncubatorService: NestingIncubatorService,
@@ -59,8 +64,10 @@ export class NestingIncubatorComponent implements OnInit {
     private incubatorPrinterService: IncubatorPrinterService,
     private route: ActivatedRoute,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private cdr: ChangeDetectorRef
   ) {}
+
 
   ngOnInit(): void { 
     this.route.queryParamMap.pipe(
@@ -72,78 +79,43 @@ export class NestingIncubatorComponent implements OnInit {
       }),
       switchMap(incubator => {
         this.incubator = incubator;
-        this.outputTiles = this.incubatorPrinterService.getIncubatorLayout(incubator.maxCapacity, incubator.numberOfColumns);
-        let assignment$ = this.nestingIncubatorService.getAllTrolleysCurrentlyInIncubator(incubator.id);
-        return assignment$.pipe(
-          tap(response => {
-            this.incubatorSpaceAssignments = this.sortByHumanReadableId(response);
-          }),
-          switchMap(response => {
-            return from(response).pipe(
-              mergeMap(assignment => 
-                this.nestingTrolleyService.getNestingTrolleyContent(assignment.nestingTrolley.id).pipe(
-                  tap(trolleyContentResponse => this.trolleysContent.push(trolleyContentResponse))
-                )
-              )
-            );
-          })
-        )
-      })
-    ).subscribe();
-    let tasks$ = this.tasksService.getAllActiveTasks();
-    tasks$.pipe(
-      tap(response => {
-        this.tasks = response;
-        this.todaysTasks = this.tasksService.filterTodaysTasks(response);
-        this.uncompletedTasks = this.tasksService.filterOverdueTasks(response);
-      }),
-      switchMap(response => {
-        return from(response).pipe(
-          mergeMap(task => 
-            this.tasksService.getAllTaskNestingTrolleyAssignmentsByTaskId(task.id).pipe(
-              tap(trolleyContentResponse => {
-                this.taskTrolleyAssignments.set(
-                  task,
-                  (this.taskTrolleyAssignments.get(task) || []).concat(trolleyContentResponse)
-                );                    
-              })
-            )
-          )
-        );
+        this.getIncubatorSpaces(incubator);
+        return this.getAllTrolleysCurrentlyInIncubator(incubator.id);
       })
     ).subscribe();
   }
 
-  findNestingTrolleyIncubatorSpaceAssignmentByHumanReadableId(id: string): NestingTrolleyIncubatorSpaceAssignment | null{
-    return this.incubatorSpaceAssignments?.find(it => it.nestingIncubatorSpace.humanReadableId === id) || null;
+
+  findTrolleySpaceAssignment(space: NestingIncubatorSpace): NestingTrolleyIncubatorSpaceAssignment | null{
+    return this.incubatorSpaceAssignments?.find(it => it.nestingIncubatorSpace.id === space.id) || null;
   }
 
-  getTileColorClass(spaceId: string): string {
-    let assignment: NestingTrolleyIncubatorSpaceAssignment | null = this.findNestingTrolleyIncubatorSpaceAssignmentByHumanReadableId(spaceId);
+
+  getTileColorClass(space: NestingIncubatorSpace): string {
+    let assignment: NestingTrolleyIncubatorSpaceAssignment | null = this.findTrolleySpaceAssignment(space);
     if (assignment) {
       if (assignment.nestingIncubatorSpace.isCurrentlyOccupied) {
           return 'currently-occupied'
-      } else {
-          return 'used-but-not-occupied';
-      }
+      } 
+      return 'used-but-not-occupied';
     }
     return 'empty';
   }
 
-  inspectIncubatorSpace(spaceId: string) {
-    const assignment = this.findNestingTrolleyIncubatorSpaceAssignmentByHumanReadableId(spaceId);
+
+  inspectIncubatorSpace(space: NestingIncubatorSpace) {
+    const assignment = this.findTrolleySpaceAssignment(space);
     if (assignment) {
       if (assignment.nestingIncubatorSpace.isCurrentlyOccupied) {
-        this.trolleyCurrentlyInIncubator(assignment);
+        this.incubatorSpaceCurrentlyOccupied(assignment);
       } else {
-        //todo: implment component for serving trolley that resides in incubator, 
-        //      but not currently (backend remembers last trolley and waits for it by default, unless we forbid it)
-        
+        this.incubatorSpaceCurrentlyUnoccupied(assignment);
       }
     } else {
-      //todo: implment component for serving empty incubaotr space
+      this.incubatorSpaceEmpty(space);
     }
   }
+  
   
   highlightTrolleysBySelectedTask(taskId: string) {
     if (taskId === '') {
@@ -177,29 +149,28 @@ export class NestingIncubatorComponent implements OnInit {
     }
   }
 
-  private trolleyCurrentlyInIncubator(assignment: NestingTrolleyIncubatorSpaceAssignment) {
+
+  private incubatorSpaceCurrentlyOccupied(assignment: NestingTrolleyIncubatorSpaceAssignment) {
     let config = new MatDialogConfig();
     config.data = {
-      trolleyContent: this.trolleysContent.find(it => it[0].nestingTrolley.id === assignment.nestingTrolley.id) || null
+      trolley: assignment.nestingTrolley,
+      trolleyContent: this.trolleysContent.find(it => it[0]?.nestingTrolley.id === assignment.nestingTrolley.id) || null
     }
     let dialogRef = this.dialog.open(InspectOccupiedIncubatorSpaceComponent, config);
     dialogRef.afterClosed().subscribe(result => {
-      // result = 'PERMANENT' | 'TEMPORARY'
       switch (result) {
         case 'PERMANENT': {
           let ob$ = this.nestingIncubatorService.deleteNestingTrolleyFromIncubatorSpace(assignment.id);
-          ob$.subscribe(result => {
-            if (result) {
-              location.reload();
-            }
+          ob$.subscribe(() => {
+              this.ngOnInit();
           })
           break;
         }
         case 'TEMPORARY': {
           let ob$ = this.nestingIncubatorService.putNestingTrolleyToIncubatorSpace(assignment.id);
-          ob$.subscribe(result => {
-            if (result) {
-              location.reload();
+          ob$.subscribe(response => {
+            if (response) {
+              this.ngOnInit();
             }
           })
           break;
@@ -208,12 +179,91 @@ export class NestingIncubatorComponent implements OnInit {
     })
   }
 
+  private incubatorSpaceCurrentlyUnoccupied(assignment: NestingTrolleyIncubatorSpaceAssignment) {
+    let config = new MatDialogConfig();
+    config.data = {
+      selfAssignment: assignment,
+      allAssignments: this.incubatorSpaceAssignments,
+      tasks: this.taskTrolleyAssignments
+    }
+    let dialogRef = this.dialog.open(InspectTemporarilyUnoccupiedIncubatorSpaceComponent, config);
+    dialogRef.afterClosed().subscribe(response => {
+      if (response) {
+        this.ngOnInit();
+      }
+    })
+  }
 
- private sortByHumanReadableId(assignments: NestingTrolleyIncubatorSpaceAssignment[]): NestingTrolleyIncubatorSpaceAssignment[]{
-  return assignments.sort((it1, it2) => 
-    it1.nestingIncubatorSpace.humanReadableId > it2.nestingIncubatorSpace.humanReadableId ? 1 : -1
-  );    
-} 
+
+  private incubatorSpaceEmpty(incubatorSpace: NestingIncubatorSpace) {
+    let config = new MatDialogConfig();
+    config.data = {
+      incubatorSpace: incubatorSpace
+    }
+    let dialogRef = this.dialog.open(InspectUnoccupiedIncubatorSpaceComponent, config);
+    dialogRef.afterClosed().subscribe(response => {
+      if (response) {
+        this.ngOnInit();
+      }
+    })
+  }
 
 
+  private getIncubatorSpaces(incubator: NestingIncubator) {
+    let incubatorSpaces$ = this.nestingIncubatorService.getAllNestingIncubatorSpaces(incubator.id);
+    incubatorSpaces$.subscribe(response => {
+      this.incubatorSpaces =  this.incubatorPrinterService.getIncubatorLayout2(incubator.numberOfColumns, response); 
+    });
+  }
+
+
+  private getAllTrolleysCurrentlyInIncubator(incubatorId: string): Observable<any> {
+    return this.nestingIncubatorService.getAllTrolleysCurrentlyInIncubator(incubatorId).pipe(
+      tap(response => {
+        this.incubatorSpaceAssignments = response;
+      }),
+      switchMap(response => this.getTrolleyContents(response)),
+      switchMap(() => this.getAllActiveTasksByIncubatorId(incubatorId))
+    )
+  }
+
+
+  private getTrolleyContents(response: NestingTrolleyIncubatorSpaceAssignment[]): Observable<any> {
+    return from(response).pipe(
+      mergeMap(assignment => 
+        this.nestingTrolleyService.getNestingTrolleyContent(assignment.nestingTrolley.id).pipe(
+          tap(trolleyContentResponse => this.trolleysContent.push(trolleyContentResponse))
+        )
+      )
+    );
+  }
+
+
+  private getAllActiveTasksByIncubatorId(incubatorId: string): Observable<any> {
+    return this.tasksService.getAllActiveTasksByIncubatorId(incubatorId).pipe(
+      tap(response => {
+        this.tasks = response;
+        this.todaysTasks = this.tasksService.filterTodaysTasks(response);
+        this.uncompletedTasks = this.tasksService.filterOverdueTasks(response);
+      }),
+      switchMap(response => this.getAllTaskNestingTrolleyAssignmentsByTaskId(response)))
+  }
+
+
+  private getAllTaskNestingTrolleyAssignmentsByTaskId(response: Task[]): Observable<any> {
+    this.taskTrolleyAssignments.clear();
+    return from(response).pipe(
+      mergeMap(task => 
+        this.tasksService.getAllTaskNestingTrolleyAssignmentsByTaskId(task.id).pipe(
+          tap(trolleyContentResponse => {
+            this.taskTrolleyAssignments.set(
+              task,
+              (this.taskTrolleyAssignments.get(task) || []).concat(trolleyContentResponse)
+            );                    
+          })
+        )
+      )
+    );
+  }
+  
 }

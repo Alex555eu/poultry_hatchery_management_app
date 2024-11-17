@@ -1,27 +1,15 @@
 export class AddressDetails {
 
-    private _id: string;
-    private _city: string;
-    private _postalCode: string;
-    private _street: string;
-    private _number: string;
-
     public constructor(
-        id: string, 
-        city:string,
-        postalCode: string,
-        street: string,
-        number: string
-    ) {
-        this._id = id;
-        this._city = city;
-        this._postalCode = postalCode;
-        this._street = street;
-        this._number = number;
-    }
+        private _id: string, 
+        private _city :string,
+        private _postalCode: string,
+        private _street: string,
+        private _number: string
+    ) {}
 
     public get id(): string{
-        return this.id;
+        return this._id;
     }
     public set id(val: string){
         this._id = val;

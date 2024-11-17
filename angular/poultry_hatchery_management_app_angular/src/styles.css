@@ -21,7 +21,7 @@ mat-dialog-content {
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
-    overflow: auto !important;
+    overflow-y: auto !important;
     color: black !important;
     max-height: 80vh !important;
 }
