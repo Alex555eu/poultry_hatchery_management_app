@@ -39,7 +39,7 @@ public class CandlingService {
         if (nesting.isPresent()) {
             Candling candling = Candling.builder()
                     .candlingNumber(candlingList.size() + 1)
-                    .timeStamp(LocalDateTime.now())
+                    .scheduledAt(LocalDateTime.now())
                     .nesting(nesting.get())
                     .build();
             return Optional.of(candling);
