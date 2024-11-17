@@ -166,4 +166,9 @@ public class TaskService {
         return Optional.empty();
     }
 
+
+    public List<TaskType> getAllTaskTypes() {
+        return taskTypeRepository.findAll();
+    }
+
 }

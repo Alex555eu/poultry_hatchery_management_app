@@ -77,7 +77,9 @@ export namespace ApiPaths {
         POST_TASK = '/api/v1/task',
         PUT_TASK = '/api/v1/task',
         DELETE_TASK = '/api/v1/task',
-        PATCH_TASK_STATUS = '/api/v1/task'
+        PATCH_TASK_STATUS = '/api/v1/task',
+
+        GET_ALL_TASK_TYPES = '/api/v1/task/task-type'
     }
 
 }

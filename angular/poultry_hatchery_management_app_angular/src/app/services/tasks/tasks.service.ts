@@ -7,6 +7,7 @@ import { ApiPaths } from '../../api/api.paths';
 import { TaskNestingTrolleyAssignment } from '../../models/task-nesting-trolley-assignment.model';
 import { TaskStatus } from '../../models/task-status-enum';
 import { PutTaskRequest } from '../../dto/put-task-request';
+import { TaskType } from 'zone.js/lib/zone-impl';
 
 @Injectable({
   providedIn: 'root'
@@ -104,6 +105,17 @@ export class TasksService {
     );
   }
 
+  getAllTaskTypes(): Observable<TaskType[]> {
+    return this.http.get<TaskType[]>(`${apiUrl}${ApiPaths.TaskPaths.GET_ALL_TASK_TYPES}`).pipe(
+      shareReplay(1),
+      catchError(error => {
+        console.error('Error patching task type', error);
+        return of([]); 
+      })
+    );
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////
   filterTodaysTasks(tasks: Task[]): Task[] {
     const today = new Date();
     const todaysTasks = tasks.filter(task => {

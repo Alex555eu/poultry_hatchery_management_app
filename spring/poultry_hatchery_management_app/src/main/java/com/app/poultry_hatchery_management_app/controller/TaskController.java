@@ -5,6 +5,7 @@ import com.app.poultry_hatchery_management_app.dto.PostTaskRequest;
 import com.app.poultry_hatchery_management_app.dto.PutTaskRequest;
 import com.app.poultry_hatchery_management_app.model.Task;
 import com.app.poultry_hatchery_management_app.model.TaskNestingTrolleyAssignment;
+import com.app.poultry_hatchery_management_app.model.TaskType;
 import com.app.poultry_hatchery_management_app.service.TaskService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -118,5 +119,18 @@ public class TaskController {
         }
         return ResponseEntity.badRequest().build();
     }
+
+    ////////////////////////////////////////////////
+
+    @GetMapping("/task-type")
+    public ResponseEntity<String> getAllTaskTypes() throws JsonProcessingException {
+        List<TaskType> assignments = taskService.getAllTaskTypes();
+        if (assignments.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        String response = objectMapper.writeValueAsString(assignments);
+        return ResponseEntity.ok(response);
+    }
+
 
 }
