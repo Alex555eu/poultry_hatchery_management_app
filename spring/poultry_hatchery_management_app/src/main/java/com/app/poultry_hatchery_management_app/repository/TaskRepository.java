@@ -48,9 +48,9 @@ public interface TaskRepository extends JpaRepository<Task, UUID> {
     select distinct t from Task t
     where t.taskStatus in :allowedStatuses
     and
-    t.taskType.id = :taskTypeId
+    t.taskType.name = :taskTypeName
 """)
-    List<Task> findAllByTaskTypeId(@Param("taskTypeId") UUID taskTypeId, @Param("allowedStatuses") List<TaskStatus> allowedStatuses);
+    List<Task> findAllByTaskTypeName(@Param("taskTypeName") String taskTypeName, @Param("allowedStatuses") List<TaskStatus> allowedStatuses);
 
     List<Task> findAllByOrganisationId(UUID id);
 }

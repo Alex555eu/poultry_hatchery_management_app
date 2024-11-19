@@ -57,8 +57,8 @@ public class TaskController {
     }
 
     @GetMapping("/all/active/task-type")
-    public ResponseEntity<String> getAllActiveTasksByTaskTypeId(@RequestParam UUID taskTypeId) throws JsonProcessingException {
-        List<Task> tasks = taskService.getAllActiveTasksByTaskTypeId(taskTypeId);
+    public ResponseEntity<String> getAllActiveTasksByTaskTypeName(@RequestParam String taskTypeName) throws JsonProcessingException {
+        List<Task> tasks = taskService.getAllActiveTasksByTaskTypeName(taskTypeName);
         if (tasks.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -87,10 +87,11 @@ public class TaskController {
     }
 
     @PostMapping("")
-    public ResponseEntity<String> postTask(@RequestBody PostTaskRequest request) {
+    public ResponseEntity<String> postTask(@RequestBody PostTaskRequest request) throws JsonProcessingException {
         Optional<Task> tasks = taskService.postTask(request);
         if (tasks.isPresent()) {
-            return ResponseEntity.ok().build();
+            String body = objectMapper.writeValueAsString(tasks.get());
+            return ResponseEntity.ok(body);
         }
         return ResponseEntity.notFound().build();
     }

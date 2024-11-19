@@ -8,6 +8,7 @@ import { TaskNestingTrolleyAssignment } from '../../models/task-nesting-trolley-
 import { TaskStatus } from '../../models/task-status-enum';
 import { PutTaskRequest } from '../../dto/put-task-request';
 import { TaskType } from '../../models/task-type.model';
+import { PostTaskRequest } from '../../dto/post-task-request';
 
 @Injectable({
   providedIn: 'root'
@@ -42,8 +43,8 @@ export class TasksService {
     )
   }
 
-  getAllActiveTasksByTaskTypeId(taskTypeId: string): Observable<Task[]> {
-    return this.http.get<Task[]>(`${apiUrl + ApiPaths.TaskPaths.GET_ALL_ACTIVE_TASKS_BY_TASK_TYPE_ID + taskTypeId}`).pipe(
+  getAllActiveTasksByTaskTypeName(taskTypeName: string): Observable<Task[]> {
+    return this.http.get<Task[]>(`${apiUrl + ApiPaths.TaskPaths.GET_ALL_ACTIVE_TASKS_BY_TASK_TYPE_NAME + taskTypeName}`).pipe(
       catchError(error => {
         console.error(error);
         return of([]);
@@ -76,12 +77,21 @@ export class TasksService {
     return taskAssignments$;
   }
 
+  postTask(body: PostTaskRequest): Observable<Task> {
+    return this.http.post<Task>(`${apiUrl + ApiPaths.TaskPaths.POST_TASK}`, body).pipe(
+      catchError(error => {
+        console.error(error);
+        return of(); 
+      })
+    )
+  }
+ 
   putTaskProgressOnTrolley(body: PutTaskRequest): Observable<Task> {
     return this.http.put<any>(`${apiUrl + ApiPaths.TaskPaths.PUT_TASK}`, body).pipe(
       catchError(error => {
         console.error(error);
         return of(); 
-    })
+      })
     )
   }
 

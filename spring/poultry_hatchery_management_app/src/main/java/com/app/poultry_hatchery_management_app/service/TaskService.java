@@ -57,8 +57,12 @@ public class TaskService {
         return taskRepository.findAllTasksByNestingTrolleyIdAndStatus(trolleyId, List.of(TaskStatus.IN_PROGRESS, TaskStatus.NOT_STARTED));
     }
 
-    public List<Task> getAllActiveTasksByTaskTypeId(UUID taskTypeId) {
-        return taskRepository.findAllByTaskTypeId(taskTypeId, List.of(TaskStatus.IN_PROGRESS, TaskStatus.NOT_STARTED));
+    public List<Task> getAllActiveTasksByTaskTypeName(String taskTypeName) {
+        return taskRepository.findAllByTaskTypeName(taskTypeName, List.of(TaskStatus.IN_PROGRESS, TaskStatus.NOT_STARTED));
+    }
+
+    Optional<Task> getTaskById(UUID taskId) {
+        return taskRepository.findById(taskId);
     }
 
     @Transactional
@@ -74,6 +78,7 @@ public class TaskService {
                         .taskType(taskType.get())
                         .taskStatus(TaskStatus.NOT_STARTED)
                         .executionScheduledAt(request.executionDateTime())
+                        .comment(request.comment())
                         .executionCompletedAt(null)
                         .nesting(null)
                         .organisation(user.getOrganisation())
@@ -136,6 +141,7 @@ public class TaskService {
                             task.get().setTaskStatus(TaskStatus.IN_PROGRESS);
                         }
                     }
+                    task.get().setComment(request.comment());
                     taskRepository.save(task.get());
                     taskNestingTrolleyAssignmentRepository.save(assignment.get());
 
