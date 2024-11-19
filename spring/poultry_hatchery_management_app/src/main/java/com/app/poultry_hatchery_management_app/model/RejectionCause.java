@@ -7,7 +7,12 @@ import java.util.Set;
 public enum RejectionCause {
 
     BRAK,
-    STLUCZKA;
+    STLUCZKA,
+    BRAK_ZARODKA,
+    ZAMARLY_ZARODEK,
+    NIEWYKLUTE,
+    WYBRAKOWANE,
+    INNE;
 
     public RejectionCause verify(RejectionGroup group) throws IllegalArgumentException {
         if(getAvailableCauses(group).contains(this))
@@ -18,16 +23,16 @@ public enum RejectionCause {
 
     public static List<RejectionCause> getAvailableCauses(RejectionGroup group) {
         return switch (group) {
-            case REJECTION_1 ->
-                    List.of(BRAK, STLUCZKA);
-            case REJECTION_2 ->
-                    List.of(BRAK);
-            case REJECTION_3 ->
-                    List.of(STLUCZKA);
-            case REJECTION_4 ->
-                    null;
+            case REJECTION_1 ->                                             // nesting -> loading deliveries
+                    List.of(BRAK, STLUCZKA, INNE);
+            case REJECTION_2 ->                                             // candling
+                    List.of(BRAK_ZARODKA, ZAMARLY_ZARODEK, STLUCZKA, INNE);
+            case REJECTION_3 ->                                             // hatching -> loading nesting
+                    List.of(STLUCZKA, INNE);
+            case REJECTION_4 ->                                             // hatching -> result
+                    List.of(NIEWYKLUTE, WYBRAKOWANE, INNE);
             case REJECTION_UNEXPECTED ->
-                    null;
+                    List.of(STLUCZKA, INNE);
         };
     }
 

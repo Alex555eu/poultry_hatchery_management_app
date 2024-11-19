@@ -4,9 +4,13 @@ import com.app.poultry_hatchery_management_app.dto.*;
 import com.app.poultry_hatchery_management_app.model.*;
 import com.app.poultry_hatchery_management_app.repository.*;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,6 +29,10 @@ public class RejectionService {
     private final CandlingService candlingService;
     private final HatchingService hatchingService;
     private final NestingService nestingService;
+
+    public List<RejectionCause> getAllPossibleRejectionCauses() {
+        return Arrays.stream(RejectionCause.values()).toList();
+    }
 
     public List<Rejection1> getAllRejections1ByNestingId(UUID nestingId) {
         return rejection1Repository.findAllByNestingId(nestingId);

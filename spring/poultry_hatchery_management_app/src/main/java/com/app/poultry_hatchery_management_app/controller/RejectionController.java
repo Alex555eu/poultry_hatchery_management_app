@@ -22,6 +22,16 @@ public class RejectionController {
     private final ObjectMapper objectMapper;
     private final RejectionService rejectionService;
 
+    @GetMapping("/causes")
+    public ResponseEntity<String> getAllPossibleRejectionCauses() throws JsonProcessingException {
+        List<RejectionCause> rejections = rejectionService.getAllPossibleRejectionCauses();
+        if (rejections.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        String response = objectMapper.writeValueAsString(rejections);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/one")
     public ResponseEntity<String> getAllRejections1ByNestingId(@RequestParam UUID nestingId) throws JsonProcessingException {
         List<Rejection1> rejections = rejectionService.getAllRejections1ByNestingId(nestingId);
