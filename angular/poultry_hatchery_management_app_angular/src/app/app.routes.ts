@@ -9,6 +9,7 @@ import { IncubatorsComponent } from './components/incubators/incubators.componen
 import { NestingIncubatorComponent } from './components/incubators/nesting-incubator/nesting-incubator.component';
 import { HatchingIncubatorComponent } from './components/incubators/hatching-incubator/hatching-incubator.component';
 import { CandlingComponent } from './components/candling/candling.component';
+import { OpenCandlingComponent } from './components/candling/open-candling/open-candling.component';
 
 export const routes: Routes = [
     { path: '', component: NavbarComponent,
@@ -19,7 +20,8 @@ export const routes: Routes = [
             { path: 'incubators', component: IncubatorsComponent},
             { path: 'incubators/nesting', component: NestingIncubatorComponent},
             { path: 'incubators/hatching', component: HatchingIncubatorComponent},
-            { path: 'candling', component: CandlingComponent}
+            { path: 'candling', component: CandlingComponent},
+            { path: 'candling/open', component: OpenCandlingComponent}
         ],
     },
     { path: 'login', component: LoginComponent},

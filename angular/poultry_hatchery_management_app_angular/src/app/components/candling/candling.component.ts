@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TasksSectionComponent } from "../tasks/tasks-section/tasks-section.component";
-import { BehaviorSubject, Observable, of, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, from, mergeMap, Observable, of, switchMap, tap } from 'rxjs';
 import { Task } from '../../models/task.model';
 import { TasksService } from '../../services/tasks/tasks.service';
 import { Candling } from '../../models/candling.model';
@@ -20,7 +20,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig, MatDialogModule } from '@angular/material/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { response } from 'express';
+import { TaskNestingTrolleyAssignment } from '../../models/task-nesting-trolley-assignment.model';
+import { TaskUtilsPipe } from '../../utils/task/task-utils.pipe';
+import { ConfirmActionDialogComponent } from '../../utils/confirm-action-dialog/confirm-action-dialog.component';
+import { NewCandlingComponent } from './new-candling/new-candling.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-candling',
@@ -40,7 +47,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     TasksSectionComponent,
     MatMenuModule,
     MatDialogModule,
-    CustomDateFormatterPipe
+    CustomDateFormatterPipe,
+    MatProgressSpinnerModule
   ],
   animations: [
     trigger('detailExpand', [
@@ -57,13 +65,16 @@ export class CandlingComponent implements OnInit {
   private candlingTaskTypeName = 'SWIETLENIE';
 
   todayCandlings: Task[] | null = null;
+  selectedCandlingTask: string = '';
+
+  taskToTaskNestingTrolleyAssignmentMapping = new Map<Task, TaskNestingTrolleyAssignment[]>;
 
   expandedElement: Candling | null = null;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  displayedColumns: string[] = ['nesting', 'dueAt', 'number'];
+  displayedColumns: string[] = ['nesting', 'number', 'status', 'dueAt', 'progressBar'];
   dataSource = new MatTableDataSource<Candling>();
   candlingsAll: Candling[] | null = null;
 
@@ -72,17 +83,18 @@ export class CandlingComponent implements OnInit {
 
   constructor(
     private taskService: TasksService,
-    private candlingService: CandlingService
+    private candlingService: CandlingService,
+    private dialog: MatDialog,
+    private router: Router
   ){}
 
-  
   ngOnInit(): void {
-    this.initTasks();
+    this.initTasks(this.candlingTaskTypeName);
     this.initCandlings();
-    
   }
 
   onSecondaryBoardRowClick(selectedTaskId: string) {
+    this.selectedCandlingTask = selectedTaskId;
     this.filterData(selectedTaskId);
   }
 
@@ -99,17 +111,8 @@ export class CandlingComponent implements OnInit {
     if (this.candlingsAll){
       let filteredData: any | null = null;
 
-      if (typeof event === 'string') {
-        filteredData = this.candlingsAll.filter(it => {
-          let task: Task | null = this.todayCandlings?.find(task => task.id === event) || null;
-          if (task) {
-            return it.nesting.id === task.nesting.id &&
-            it.scheduledAt.getFullYear === task.executionScheduledAt.getFullYear &&
-            it.scheduledAt.getMonth === task.executionScheduledAt.getMonth &&
-            it.scheduledAt.getDay === task.executionScheduledAt.getDay;
-          } 
-          return it;
-        }); // 'event' is of type 'string', when requested with specific task ID
+      if (typeof event === 'string' && event !== '') {
+        filteredData = this.candlingsAll.filter(it => it.task.id === event); // 'event' is of type 'string', when requested with specific task ID
 
       } else {
         filteredData = this.candlingsAll
@@ -137,51 +140,83 @@ export class CandlingComponent implements OnInit {
 
 
   newNesting() {
-
+    if (!this.selectedCandlingTask){
+      let config = new MatDialogConfig();
+      config.data = { 
+        title: 'Uwaga',
+        question: 'Nie wybrano zaplanowanego zadania. Czy chcesz rozpocząć nowe świetlenie poza harmonogramem ?',
+        negativeResponse: 'Wróć',
+        positiveResponse: 'Kontynuuj'
+      }
+      const dialogRef = this.dialog.open(ConfirmActionDialogComponent, config);
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.dialog.open(NewCandlingComponent);
+        }
+      })
+    } else {
+      let config = new MatDialogConfig();
+      const task = this.todayCandlings?.find(it => it.id === this.selectedCandlingTask);
+      config.data = { 
+        task: task,
+      }
+      this.dialog.open(NewCandlingComponent, config);
+    }
   }
 
-  deleteCandling(element: Candling) {
-
+  goToCandling(element: Candling) {
+    this.router.navigate(['candling/open'], { queryParams: { id: element.id } });
   }
 
-
+  getStatusColor(status: string) {
+    return this.taskService.getStatusColor(status);
+  }
+  translateStatusEnToPl(status: string) {
+    return this.taskService.translateStatusEnToPl(status);
+  }
+  getTaskCompletionPercentage(assignments: TaskNestingTrolleyAssignment[] | null) {
+    return this.taskService.getTaskCompletionPercentage(assignments);
+  }
+  getNumberOfCompletedTaskTrolleyAssignments(assignments: TaskNestingTrolleyAssignment[] | null) {
+    return this.taskService.getNumberOfCompletedTaskTrolleyAssignments(assignments);
+  }
 
   private initCandlings() {
-    this.candlingService.getAllCandlings().subscribe(response => {
-      if (response) {
-        this.candlingsAll = response;
-        this.dataSource = new MatTableDataSource(response);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      }
-    })
+    this.candlingService.getAllCandlings().pipe(
+      tap(response => {
+        if (response) {
+          this.candlingsAll = response;
+          this.dataSource = new MatTableDataSource(response);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+        }
+      }),
+      switchMap(response => this.initCandlingTaskDetails(response))
+    ).subscribe();
   }
 
-  private initTasks() {
-    this.getCandlingTaskType().subscribe();
-  }
-
-  private getCandlingTaskType(): Observable<any> {
-    return this.taskService.getAllTaskTypes().pipe(
-      switchMap(response => {
-        const taskType = response.find(type => type.name === this.candlingTaskTypeName) || null;
-        return this.getAllActiveTasksByCandlingTaskType(taskType);
+  private initCandlingTaskDetails(candlings: Candling[]): Observable<any> {
+    return from(candlings).pipe(
+      mergeMap(candling => {
+        return this.taskService.getAllTaskNestingTrolleyAssignmentsByTaskId(candling.task.id).pipe(
+          tap(response => {
+            this.taskToTaskNestingTrolleyAssignmentMapping.set(candling.task, response);
+          })
+        )
       })
     );
   }
 
-  private getAllActiveTasksByCandlingTaskType(types: TaskType | null): Observable<any> {
-    if (types) {
-      return this.taskService.getAllActiveTasksByTaskTypeId(types.id).pipe(
-        tap(response => {
-          if (response) {
-            this.todayCandlings = response;
-          }
-        })
-      );
-    }
-    return of();
+  private initTasks(type: string) {
+    this.taskService.getAllActiveTasksByTaskTypeName(type)
+    .subscribe(response => {
+      if (response) {
+        this.todayCandlings = response;
+      }
+    });
   }
+
+  
 
 
 }

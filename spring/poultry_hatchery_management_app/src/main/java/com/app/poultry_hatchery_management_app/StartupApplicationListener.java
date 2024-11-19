@@ -1,7 +1,9 @@
 package com.app.poultry_hatchery_management_app;
 
+import com.app.poultry_hatchery_management_app.dto.PostCandlingRequest;
 import com.app.poultry_hatchery_management_app.model.*;
 import com.app.poultry_hatchery_management_app.repository.*;
+import com.app.poultry_hatchery_management_app.service.CandlingService;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -33,19 +35,12 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
     private final TaskRepository taskRepository;
     private final TaskNestingTrolleyAssignmentRepository taskNestingTrolleyAssignmentRepository;
     private final NestingTrolleyContentRepository nestingTrolleyContentRepository;
+    private final CandlingRepository candlingRepository;
 
     private final PasswordEncoder passwordEncoder;
 
     @Override
     public void onApplicationEvent(@NonNull ApplicationReadyEvent event) {
-/*        Rejection1 rejection1 = Rejection1.builder()
-                .nestingLoadedDeliveries(null)
-                .quantity(10)
-                .cause(RejectionCause.BRAK.verify(RejectionGroup.REJECTION_1))
-                .build();
-        rejection1Repository.save(rejection1);*/
-
-        //System.out.println(RejectionCause.getAvailableCauses(RejectionGroup.REJECTION_1).toString());
 
         Address address = Address.builder()
                 .city("Krakow")
@@ -149,6 +144,7 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
                 .title("New Nesting")
                 .description("Lots of new eggs to nest")
                 .dateTime(LocalDateTime.now())
+                .isFinished(false)
                 .build();
         nestingRepository.save(nesting);
 
@@ -276,6 +272,35 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
             taskNestingTrolleyAssignmentRepository.save(assignment);
         }
 
+        Task toBeAssigned = Task.builder()
+                .taskStatus(TaskStatus.NOT_STARTED)
+                .executionScheduledAt(LocalDateTime.now())
+                .organisation(organisation)
+                .taskType(taskType4)
+                .nesting(nesting)
+                .comment(nesting.getTitle() + " " + LocalDateTime.now())
+                .build();
+        taskRepository.save(toBeAssigned);
+
+        List<NestingTrolley> trolleys2 = nestingTrolleyRepository.findAllTrolleysByNestingId(nesting.getId());
+        for(NestingTrolley trolley : trolleys2) {
+            TaskNestingTrolleyAssignment assignment = TaskNestingTrolleyAssignment.builder()
+                    .task(toBeAssigned)
+                    .isTaskCompleted(false)
+                    .nestingTrolley(trolley)
+                    .executor(null)
+                    .build();
+            taskNestingTrolleyAssignmentRepository.save(assignment);
+        }
+
+        Candling candling = Candling.builder()
+                .candlingNumber(1)
+                .scheduledAt(LocalDateTime.now())
+                .nesting(nesting)
+                .organisation(organisation)
+                .task(toBeAssigned)
+                .build();
+        candlingRepository.save(candling);
 
     }
 }

@@ -1,5 +1,6 @@
 import { Nesting } from "./nesting.model";
 import { OrganisationDetails } from "./organisation-details.model";
+import { Task } from "./task.model";
 
 export class Candling {
 
@@ -8,6 +9,7 @@ export class Candling {
         private _scheduledAt: Date,
         private _candlingNumber: number,
         private _nesting: Nesting,
+        private _task: Task,
         private _organisationDetails: OrganisationDetails,
     ){}
 
@@ -34,6 +36,12 @@ export class Candling {
     }
     public set nesting(value: Nesting) {
         this._nesting = value;
+    }
+    public get task(): Task {
+        return this._task;
+    }
+    public set task(value: Task) {
+        this._task = value;
     }
     public get organisationDetails(): OrganisationDetails {
         return this._organisationDetails;

@@ -15,6 +15,10 @@ export namespace ApiPaths {
         DELETE_USER = '/api/v1/user/admin'
     }
 
+    export enum NestingPaths {
+        GET_ALL_UNFINISHED_NESTINGS = '/api/v1/nesting/unfinished'
+    }
+
     export enum NestingIncubatorPaths {
         GET_ALL_NESTING_INCUBATORS = '/api/v1/nesting-incubator/all',
         GET_NESTING_INCUBATOR = '/api/v1/nesting-incubator?incubatorId=',
@@ -70,7 +74,7 @@ export namespace ApiPaths {
     export enum TaskPaths {
         GET_ALL_TASKS = '/api/v1/task/all',
         GET_ALL_ACTIVE_TASKS_BY_INCUBATOR_ID = '/api/v1/task/all/active?incubatorId=',
-        GET_ALL_ACTIVE_TASKS_BY_TASK_TYPE_ID = '/api/v1/task/all/active/task-type?taskTypeId=',
+        GET_ALL_ACTIVE_TASKS_BY_TASK_TYPE_NAME = '/api/v1/task/all/active/task-type?taskTypeName=',
         GET_ALL_ACTIVE_TASKS_BY_TROLLEY_ID = '/api/v1/task/all/active/trolley?trolleyId=',
         GET_ALL_TASK_ASSIGNED_TROLLEYS_BY_TASK_ID = '/api/v1/task/trolley-assignments?taskId=',
         GET_ALL_TASKS_BY_NESTING_ID = '/api/v1/task?nestingId=',
@@ -83,7 +87,8 @@ export namespace ApiPaths {
     }
 
     export enum CandlingPaths {
-        GET_ALL_CANDLINGS = '/api/v1/candling',
+        GET_ALL_CANDLINGS = '/api/v1/candling/all',
+        GET_CANDLING_BY_ID = '/api/v1/candling?candlingId=',
         POST_CANDLING = '/api/v1/candling',
         PUT_CANDLING = '/api/v1/candling',
         DELETE_CANDLING = '/api/v1/candling',

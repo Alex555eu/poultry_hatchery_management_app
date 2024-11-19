@@ -66,7 +66,7 @@ public class TaskService {
     }
 
     @Transactional
-    public Optional<Task> postTask(PostTaskRequest request) {
+    public Optional<Task> postTask(PotTaskRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             User user = (User) authentication.getPrincipal();

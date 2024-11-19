@@ -24,7 +24,7 @@ public class CandlingController {
     private final ObjectMapper objectMapper;
     private final CandlingService candlingService;
 
-    @GetMapping("")
+    @GetMapping("/all")
     public ResponseEntity<String> getAllCandlings() throws JsonProcessingException {
         List<Candling> candlingList = candlingService.getAllCandlings();
         if (candlingList.isEmpty()) {
@@ -32,6 +32,17 @@ public class CandlingController {
         } else {
             String response = objectMapper.writeValueAsString(candlingList);
             return ResponseEntity.ok(response);
+        }
+    }
+
+    @GetMapping("")
+    public ResponseEntity<String> getCandlingById(@RequestParam UUID candlingId) throws JsonProcessingException {
+        Optional<Candling> candling = candlingService.getCandlingById(candlingId);
+        if (candling.isPresent()) {
+            String response = objectMapper.writeValueAsString(candling);
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 

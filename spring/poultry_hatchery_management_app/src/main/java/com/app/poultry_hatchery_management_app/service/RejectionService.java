@@ -63,11 +63,11 @@ public class RejectionService {
     }
 
     public Optional<Rejection2> postRejection2(PostRejection2Request request) {
-        Optional<CandlingNestingTrolleyAssignment> cnta =
+        Optional<CandlingNestingTrolleyAssignment> assignment =
                 candlingService.getCandledTrolleyAssignment(request.candlingNestingTrolleyAssignmentId());
-        if(cnta.isPresent()) {
+        if(assignment.isPresent()) {
             Rejection2 rejection2 = Rejection2.builder()
-                    .candlingNestingTrolleyAssignment(cnta.get())
+                    .candlingNestingTrolleyAssignment(assignment.get())
                     .quantity(request.quantity())
                     .cause(RejectionCause.valueOf(request.cause()).verify(RejectionGroup.REJECTION_2))
                     .build();

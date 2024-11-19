@@ -26,10 +26,19 @@ export class CandlingService {
     );
   }
 
-  postCandling(body: PostCandlingRequest): Observable<Candling[]> {
-    return this.http.post<Candling[]>(`${apiUrl + ApiPaths.CandlingPaths.POST_CANDLING}`, body).pipe(
+  getCandlingById(candlingId: string): Observable<Candling> {
+    return this.http.get<Candling>(`${apiUrl + ApiPaths.CandlingPaths.GET_CANDLING_BY_ID + candlingId}`).pipe(
+      shareReplay(1),
       catchError(error => {
-        return of([]);
+        return of();
+      })
+    );
+  }
+
+  postCandling(body: PostCandlingRequest): Observable<Candling> {
+    return this.http.post<Candling>(`${apiUrl + ApiPaths.CandlingPaths.POST_CANDLING}`, body).pipe(
+      catchError(error => {
+        return of();
       })
     );
   }

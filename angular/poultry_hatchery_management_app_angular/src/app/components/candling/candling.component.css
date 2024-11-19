@@ -101,6 +101,41 @@ tr.example-element-row:not(.example-expanded-row):active {
     flex-direction: column;
 }
 
+
+.progress-cntr {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    position: relative;
+}
+
+.progress-cntr mat-icon {
+    transform: scale(1.5);
+    color: #44fd6cc5;
+
+}
+
+.spinner-cntr {
+    position: relative; 
+    display: inline-block;
+}
+
+.bg-spinner .mat-mdc-progress-spinner { 
+    position: absolute; 
+    top: 0; 
+    left: 0;
+    --mdc-circular-progress-active-indicator-color: rgb(230, 229, 229); 
+}
+
+.fg-spinner .mat-mdc-progress-spinner {
+    --mdc-circular-progress-active-indicator-color: #44fd6cc5; 
+}
+
+
 @media (max-width: 1300px) {
     .filter-cntr {
         width: 80vw;
