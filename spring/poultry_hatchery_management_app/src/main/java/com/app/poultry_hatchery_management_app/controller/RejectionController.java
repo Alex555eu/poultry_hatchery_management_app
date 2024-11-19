@@ -22,7 +22,7 @@ public class RejectionController {
     private final ObjectMapper objectMapper;
     private final RejectionService rejectionService;
 
-    @GetMapping("/causes")
+    @GetMapping("/causes/all")
     public ResponseEntity<String> getAllPossibleRejectionCauses() throws JsonProcessingException {
         List<RejectionCause> rejections = rejectionService.getAllPossibleRejectionCauses();
         if (rejections.isEmpty()) {
@@ -31,6 +31,17 @@ public class RejectionController {
         String response = objectMapper.writeValueAsString(rejections);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/causes/one")
+    public ResponseEntity<String> getPossibleRejection1Causes() throws JsonProcessingException {
+        List<RejectionCause> rejections = rejectionService.getPossibleRejection1Causes();
+        if (rejections.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        String response = objectMapper.writeValueAsString(rejections);
+        return ResponseEntity.ok(response);
+    }
+
 
     @GetMapping("/one")
     public ResponseEntity<String> getAllRejections1ByNestingId(@RequestParam UUID nestingId) throws JsonProcessingException {
@@ -67,6 +78,16 @@ public class RejectionController {
     }
 
 
+    @GetMapping("/causes/two")
+    public ResponseEntity<String> getPossibleRejection2Causes() throws JsonProcessingException {
+        List<RejectionCause> rejections = rejectionService.getPossibleRejection2Causes();
+        if (rejections.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        String response = objectMapper.writeValueAsString(rejections);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/two")
     public ResponseEntity<String> getAllRejections2ByNestingId(@RequestParam UUID nestingId) throws JsonProcessingException {
         List<Rejection2> rejections = rejectionService.getAllRejections2ByNestingId(nestingId);
@@ -101,6 +122,15 @@ public class RejectionController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/causes/three")
+    public ResponseEntity<String> getPossibleRejection3Causes() throws JsonProcessingException {
+        List<RejectionCause> rejections = rejectionService.getPossibleRejection3Causes();
+        if (rejections.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        String response = objectMapper.writeValueAsString(rejections);
+        return ResponseEntity.ok(response);
+    }
 
     @GetMapping("/three")
     public ResponseEntity<String> getAllRejections3ByNestingId(@RequestParam UUID nestingId) throws JsonProcessingException {
@@ -136,6 +166,16 @@ public class RejectionController {
         return ResponseEntity.ok().build();
     }
 
+
+    @GetMapping("/causes/four")
+    public ResponseEntity<String> getPossibleRejection4Causes() throws JsonProcessingException {
+        List<RejectionCause> rejections = rejectionService.getPossibleRejection4Causes();
+        if (rejections.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        String response = objectMapper.writeValueAsString(rejections);
+        return ResponseEntity.ok(response);
+    }
 
     @GetMapping("/four")
     public ResponseEntity<String> getAllRejections4ByNestingId(@RequestParam UUID nestingId) throws JsonProcessingException {

@@ -34,6 +34,22 @@ public class RejectionService {
         return Arrays.stream(RejectionCause.values()).toList();
     }
 
+    public List<RejectionCause> getPossibleRejection1Causes() {
+        return RejectionCause.getAvailableCauses(RejectionGroup.REJECTION_1);
+    }
+
+    public List<RejectionCause> getPossibleRejection2Causes() {
+        return RejectionCause.getAvailableCauses(RejectionGroup.REJECTION_2);
+    }
+
+    public List<RejectionCause> getPossibleRejection3Causes() {
+        return RejectionCause.getAvailableCauses(RejectionGroup.REJECTION_3);
+    }
+
+    public List<RejectionCause> getPossibleRejection4Causes() {
+        return RejectionCause.getAvailableCauses(RejectionGroup.REJECTION_4);
+    }
+
     public List<Rejection1> getAllRejections1ByNestingId(UUID nestingId) {
         return rejection1Repository.findAllByNestingId(nestingId);
     }
