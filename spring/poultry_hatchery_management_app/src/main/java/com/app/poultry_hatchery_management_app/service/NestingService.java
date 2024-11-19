@@ -36,6 +36,16 @@ public class NestingService {
         return null;
     }
 
+    public List<Nesting> getAllUnfinishedNestings() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if ((authentication != null && authentication.getPrincipal() instanceof UserDetails)) {
+            User user = (User) authentication.getPrincipal();
+
+            return nestingRepository.findAllByOrganisationIdAndFinished(user.getOrganisation().getId(), false);
+        }
+        return null;
+    }
+
     public Optional<Nesting> getNesting(UUID nestingId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if ((authentication != null && authentication.getPrincipal() instanceof UserDetails)) {
@@ -58,6 +68,7 @@ public class NestingService {
                     .organisation(user.getOrganisation())
                     .dateTime(LocalDateTime.now())
                     .title(request.title())
+                    .isFinished(false)
                     .description(request.description())
                     .build();
             nestingRepository.save(nesting);
@@ -72,6 +83,7 @@ public class NestingService {
         if (nesting.isPresent()) {
             nesting.get().setTitle(request.title());
             nesting.get().setDescription(request.description());
+            nesting.get().setFinished(request.isFinished());
             nestingRepository.save(nesting.get());
 
             return nesting;

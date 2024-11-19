@@ -7,6 +7,7 @@ export class Nesting {
         private _dateTime: Date,
         private _title: string,
         private _description: string,
+        private _isFinished: boolean,
         private _organisation: OrganisationDetails,
     ){}
 
@@ -33,6 +34,12 @@ export class Nesting {
     }
     public set description(value: string) {
         this._description = value;
+    }
+    public get isFinished(): boolean {
+        return this._isFinished;
+    }
+    public set isFinished(value: boolean) {
+        this._isFinished = value;
     }
     public get organisation(): OrganisationDetails {
         return this._organisation;
