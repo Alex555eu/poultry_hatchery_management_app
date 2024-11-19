@@ -88,6 +88,16 @@ public class RejectionController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/two/candling")
+    public ResponseEntity<String> getAllRejections2ByCandlingId(@RequestParam UUID candlingId) throws JsonProcessingException {
+        List<Rejection2> rejections = rejectionService.getAllRejections2ByCandlingId(candlingId);
+        if (rejections.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        String response = objectMapper.writeValueAsString(rejections);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/two")
     public ResponseEntity<String> getAllRejections2ByNestingId(@RequestParam UUID nestingId) throws JsonProcessingException {
         List<Rejection2> rejections = rejectionService.getAllRejections2ByNestingId(nestingId);

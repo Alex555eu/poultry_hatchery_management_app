@@ -54,6 +54,10 @@ public class RejectionService {
         return rejection1Repository.findAllByNestingId(nestingId);
     }
 
+    public List<Rejection2> getAllRejections2ByCandlingId(UUID candlingId) {
+        return rejection2Repository.findAllByCandlingId(candlingId);
+    }
+
     public List<Rejection2> getAllRejections2ByNestingId(UUID nestingId) {
         return rejection2Repository.findAllByNestingId(nestingId);
     }

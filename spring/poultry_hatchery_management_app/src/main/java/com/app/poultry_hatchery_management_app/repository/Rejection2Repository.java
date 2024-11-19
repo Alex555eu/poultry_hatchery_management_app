@@ -21,5 +21,10 @@ public interface Rejection2Repository extends JpaRepository<Rejection2, UUID> {
 """, nativeQuery = true)
     List<Rejection2> findAllByNestingId(@Param("nestingId") UUID nestingId);
 
-
+    @Query(value = """
+    select r2 from Rejection2 r2
+    join Candling c on c.id = r2.candlingNestingTrolleyAssignment.candling.id
+    where c.id = :candlingId
+""")
+    List<Rejection2> findAllByCandlingId(@Param("candlingId") UUID candlingId);
 }
