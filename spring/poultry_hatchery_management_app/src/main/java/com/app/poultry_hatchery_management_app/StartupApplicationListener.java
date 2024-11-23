@@ -311,7 +311,7 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
 
         Rejection2 rejection2 = Rejection2.builder()
                 .candlingNestingTrolleyAssignment(cnta)
-                .nestingTrolleyContent(nestingTrolleyContent)
+                .nestingLoadedDeliveries(nestingLoadedDeliveries)
                 .cause(RejectionCause.STLUCZKA)
                 .quantity(1)
                 .build();

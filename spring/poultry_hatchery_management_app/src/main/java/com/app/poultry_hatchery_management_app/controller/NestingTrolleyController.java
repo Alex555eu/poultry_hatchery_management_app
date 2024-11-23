@@ -1,10 +1,7 @@
 package com.app.poultry_hatchery_management_app.controller;
 
 
-import com.app.poultry_hatchery_management_app.dto.PostNestingTrolleyContentRequest;
-import com.app.poultry_hatchery_management_app.dto.PostNestingTrolleyRequest;
-import com.app.poultry_hatchery_management_app.dto.PutNestingTrolleyContentRequest;
-import com.app.poultry_hatchery_management_app.dto.PutNestingTrolleyRequest;
+import com.app.poultry_hatchery_management_app.dto.*;
 import com.app.poultry_hatchery_management_app.model.NestingTrolley;
 import com.app.poultry_hatchery_management_app.model.NestingTrolleyContent;
 import com.app.poultry_hatchery_management_app.service.NestingTrolleyService;
@@ -115,6 +112,16 @@ public class NestingTrolleyController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/content/transfer")
+    public ResponseEntity<String> postTrolleyContent(@RequestBody PostNestingTrolleyContentTransferRequest request) throws JsonProcessingException {
+        List<NestingTrolleyContent> trolleyContent = nestingTrolleyService.postTrolleyContentTransfer(request);
+        if (trolleyContent.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        String body = objectMapper.writeValueAsString(trolleyContent);
+        return ResponseEntity.ok(body);
     }
 
     @PutMapping("/content")
