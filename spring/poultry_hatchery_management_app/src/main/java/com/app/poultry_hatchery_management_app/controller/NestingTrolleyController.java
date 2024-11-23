@@ -115,7 +115,7 @@ public class NestingTrolleyController {
     }
 
     @PostMapping("/content/transfer")
-    public ResponseEntity<String> postTrolleyContent(@RequestBody PostNestingTrolleyContentTransferRequest request) throws JsonProcessingException {
+    public ResponseEntity<String> postTrolleyContentTransfer(@RequestBody PostNestingTrolleyContentTransferRequest request) throws JsonProcessingException {
         List<NestingTrolleyContent> trolleyContent = nestingTrolleyService.postTrolleyContentTransfer(request);
         if (trolleyContent.isEmpty()) {
             return ResponseEntity.notFound().build();
