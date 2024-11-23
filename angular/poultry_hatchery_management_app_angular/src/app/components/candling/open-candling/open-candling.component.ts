@@ -1,4 +1,3 @@
-import { PutTaskRequest } from './../../../dto/put-task-request';
 import { Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, from, map, mergeMap, Observable, of, switchMap, tap } from 'rxjs';
@@ -23,10 +22,10 @@ import { MatDividerModule } from '@angular/material/divider';
 import { FindTaskedTrolleysComponent } from '../../tasks/find-tasked-trolleys/find-tasked-trolleys.component';
 import { MatDialog, MatDialogConfig, MatDialogModule } from '@angular/material/dialog';
 import { RejectionPanelComponent } from './rejection-panel/rejection-panel.component';
-import { NestingTrolley } from '../../../models/nesting-trolley.model';
 import { RejectionPanelTotalComponent } from './rejection-panel-total/rejection-panel-total.component';
 import { SwapTrolleyContentsComponent } from './swap-trolley-contents/swap-trolley-contents.component';
-
+import { NestingLoadedDeliveries } from '../../../models/nesting-loaded-deliveries.model';
+import { NestingLoadedDeliveriesService } from '../../../services/nesting-loaded-deliveries/nesting-loaded-deliveries.service';
 
 @Component({
   selector: 'app-open-candling',
@@ -54,27 +53,18 @@ export class OpenCandlingComponent implements OnInit {
 
   candling = new BehaviorSubject<Candling|null>(null);
   candlingNestingTrolleyAssignment: CandlingNestingTrolleyAssignment[] | null=null;
-
   selectedTrolley: CandlingNestingTrolleyAssignment[] | null = null;
-
 
   trolleyRejection = new Map<CandlingNestingTrolleyAssignment, Rejection2[]>();
   trolleyContent = new Map<CandlingNestingTrolleyAssignment, NestingTrolleyContent[]>();
-
-  quantityOfAllEggsAtTheBeginningOfCandling: number = -1;
 
   rejectionCauses: string[] = [];
 
   taskTrolleyAssignment = new Map<CandlingNestingTrolleyAssignment, TaskNestingTrolleyAssignment>();
 
-  selectedTrolleyContent: NestingTrolleyContent | null = null;
+  nestingLoadedDeliveries: NestingLoadedDeliveries[] | null = null;
+  selectedNestingLoadedDelivery: NestingLoadedDeliveries | null = null;
 
-  trolleyContentQuantityPercentage = new Map<NestingTrolleyContent, number>();
-  trolleyRejectedContentQuantityPercentage = new Map<NestingTrolleyContent, number>();
-
-  rejectedContentTotal = new Map<CandlingNestingTrolleyAssignment, number>();
-
-  
 
   constructor(
     private route: ActivatedRoute,
@@ -83,6 +73,7 @@ export class OpenCandlingComponent implements OnInit {
     private nestingTrolleyService: NestingTrolleyService,
     private taskService: TasksService,
     private dialog: MatDialog,
+    private nldService: NestingLoadedDeliveriesService
   ){}
 
 
@@ -98,6 +89,7 @@ export class OpenCandlingComponent implements OnInit {
       switchMap(candling => this.initCandlingTrolleyAssignments(candling)),
       switchMap(assignment => this.initTrolleyContent(assignment).pipe(map(() => assignment))), 
       switchMap(assignment => this.initTaskTrolleyAssignment(assignment).pipe(map(() => assignment))),
+      switchMap(assignment => this.initNestingLoadedDeliveries(assignment).pipe(map(() => assignment))),
       switchMap(assignment => this.initRejections(assignment)),
       switchMap(() => this.initRejectionCauses())
 
@@ -118,11 +110,22 @@ updateRejectionAndNestingTrolleyContent(flag: boolean) {
 
 getRejectedContentPercentage(content: NestingTrolleyContent): number {
   if (this.selectedTrolley && this.selectedTrolley.length > 0) {
-    let rejections = this.trolleyRejection.get(this.selectedTrolley[0])?.filter(it => it.nestingTrolleyContent.id === content.id);
+    let rejections = this.trolleyRejection.get(this.selectedTrolley[0])?.filter(it => it.nestingLoadedDeliveries.id === content.nestingLoadedDeliveries.id);
 
-    let rejectSum = rejections?.reduce((sum, item) => sum + item.quantity, 0) || -1;
+    let rejectSum = rejections?.reduce((sum, item) => sum + item.quantity, 0) || 0;
   
     return Math.ceil(rejectSum*100/content.nestingTrolley.maxCapacity);
+  }
+  return -1;
+}
+
+getRejectedContentPercentageByNestingLoadedDelivery(delivery: NestingLoadedDeliveries): number {
+  if (this.selectedTrolley && this.selectedTrolley.length > 0) {
+    let rejections = this.trolleyRejection.get(this.selectedTrolley[0])?.filter(it => it.nestingLoadedDeliveries.id === delivery.id);
+
+    let rejectSum = rejections?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+  
+    return Math.ceil(rejectSum*100/this.selectedTrolley[0].nestingTrolley.maxCapacity);
   }
   return -1;
 }
@@ -135,18 +138,24 @@ getContentPercentage(content: NestingTrolleyContent): number {
 }
 
 
-selectContent(selectedTrolleyContent: NestingTrolleyContent) {
-  this.selectedTrolleyContent = selectedTrolleyContent;
+selectNestingLoadedDelivery(delivery: NestingLoadedDeliveries) {
+  this.selectedNestingLoadedDelivery = delivery;
 }
 
 
-getTrolleyContent(assignment: CandlingNestingTrolleyAssignment[] | null) {
+getTrolleyContent(assignment: CandlingNestingTrolleyAssignment[] | null): NestingTrolleyContent[] {
   if (assignment) {
-    return this.trolleyContent.get(assignment[0]);
+    return this.trolleyContent.get(assignment[0]) ?? [];
   }
   return [];
 }
 
+getTrolleyContentByNestingLoadedDelivery(loadedDelivery: NestingLoadedDeliveries | null): NestingTrolleyContent | null {
+  if (loadedDelivery && this.selectedTrolley) {
+    return this.trolleyContent.get(this.selectedTrolley[0])?.find(it => it.nestingLoadedDeliveries.id === loadedDelivery.id) || null;
+  }
+  return null;
+}
 
 
 
@@ -283,12 +292,23 @@ getAllRejections(): Rejection2[] {
     return this.candlingService.getAllCandlingTrolleyAssignments(candling.id).pipe(
       tap(response => {
         if (response) {
-          //this.candlingNestingTrolleyAssignment.next(response);
           this.candlingNestingTrolleyAssignment = response;
         }
       })
     )
   } 
+
+
+  private initNestingLoadedDeliveries(assignment: CandlingNestingTrolleyAssignment[]): Observable<any> {
+    const nestingId: string = assignment[0].candling.nesting.id;
+    return this.nldService.getAllNestingLoadedDeliveriesByNestingId(nestingId).pipe(
+      tap(response => {
+        if (response) {
+          this.nestingLoadedDeliveries = response;
+        }
+      })
+    )
+  }
 
 
   private initRejectionCauses(): Observable<any> {

@@ -207,7 +207,7 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
         nestingTrolleyContentRepository.save(nestingTrolleyContent);
 
         NestingTrolleyContent nestingTrolleyContent2 = NestingTrolleyContent.builder()
-                .nestingLoadedDeliveries(nestingLoadedDeliveries)
+                .nestingLoadedDeliveries(nestingLoadedDeliveries2)
                 .nestingTrolley(nestingTrolley)
                 .quantity(3)
                 .build();

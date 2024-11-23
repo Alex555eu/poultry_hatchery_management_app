@@ -10,6 +10,7 @@ import { NestingTrolleyContent } from '../../../../models/nesting-trolley-conten
 import { BehaviorSubject, tap, Subscription, take, switchMap, of, takeLast } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
 import { CandlingNestingTrolleyAssignment } from '../../../../models/candling-nesting-trolley-assignment.model';
+import { NestingLoadedDeliveries } from '../../../../models/nesting-loaded-deliveries.model';
 
 
 @Component({
@@ -30,7 +31,7 @@ export class RejectionPanelComponent implements OnChanges, OnInit {
 
   @ViewChild('scrollMe') scrollMe!: ElementRef;
 
-  @Input() content: NestingTrolleyContent | null = null;
+  @Input() delivery: NestingLoadedDeliveries | null = null;
   @Input() assignment: CandlingNestingTrolleyAssignment[] | null = null;
   @Input() rejectionCause: string = 'default';
   @Output() refresh = new EventEmitter<boolean>();
@@ -52,11 +53,11 @@ export class RejectionPanelComponent implements OnChanges, OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (this.content && this.rejectionCause && this.assignment && this.assignment.length > 0) {
+    if (this.delivery && this.rejectionCause && this.assignment && this.assignment.length > 0) {
       this.rejectionService.getAllRejection2(this.assignment[0].candling.id)
         .subscribe(response => {
           if (response){
-            let filteredRejections = response.filter(it => it.nestingTrolleyContent.id === this.content?.id && it.cause === this.rejectionCause);
+            let filteredRejections = response.filter(it => it.nestingLoadedDeliveries.id === this.delivery?.id && it.cause === this.rejectionCause);
             let total = filteredRejections.reduce((sum, item) => sum + item.quantity, 0);
 
             this.rejectionsSubject.next(filteredRejections);
@@ -109,10 +110,10 @@ export class RejectionPanelComponent implements OnChanges, OnInit {
 
 
   private getRequestBody(): PostRejection2Request | null {
-    if (this.inputValue && !isNaN(+this.inputValue) && this.content && this.assignment) {
+    if (this.inputValue && !isNaN(+this.inputValue) && this.delivery && this.assignment) {
       return {
         candlingNestingTrolleyAssignmentId: this.assignment[0].id,
-        nestingTrolleyContentId: this.content.id,
+        nestingLoadedDeliveryId: this.delivery.id,
         cause: this.rejectionCause,
         quantity: +this.inputValue,
       };

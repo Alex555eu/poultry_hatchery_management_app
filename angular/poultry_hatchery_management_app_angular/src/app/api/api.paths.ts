@@ -49,6 +49,7 @@ export namespace ApiPaths {
         DELETE_NESTING_TROLLEY = '/api/v1/nesting-trolley/',
 
         GET_NESTING_TROLLEY_CONTENT = '/api/v1/nesting-trolley/content?trolleyId=',
+        POST_NESTING_TROLLEY_CONTENT_TRANSFER = '/api/v1/nesting-trolley/content/transfer'
     }
 
     export enum HatchingTrolleyPaths {
@@ -108,6 +109,11 @@ export namespace ApiPaths {
         GET_ALL_REJECTION_TWO_BY_CANDLING_ID = '/api/v1/rejection/two/candling?candlingId=',
         POST_REJECTION_TWO = '/api/v1/rejection/two',
         DELETE_REJECTION_TWO = '/api/v1/rejection/two?rejectionId='
+    }
+
+    export enum NestingLoadedDeliveries {
+        GET_ALL_NESTING_LOADED_DELIVERIES = '/api/v1/nesting-loaded-deliveries',
+        GET_ALL_NESTING_LOADED_DELIVERIES_BY_NESTING_ID = '/api/v1/nesting-loaded-deliveries/nesting?nestingId='
     }
 
 }

@@ -12,6 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { PostNestingTrolleyContentTransferRequest } from '../../../../dto/post-nesting-trolley-content-transfer-request';
 
 @Component({
   selector: 'app-swap-trolley-contents',
@@ -45,6 +46,7 @@ export class SwapTrolleyContentsComponent implements OnInit {
     private snackBar: MatSnackBar
   ){}
 
+  
   selectedSource: CandlingNestingTrolleyAssignment | null = null;
   selectedTarget: CandlingNestingTrolleyAssignment | null = null;
   selectedContent: NestingTrolleyContent | null = null;
@@ -54,6 +56,7 @@ export class SwapTrolleyContentsComponent implements OnInit {
   ngOnInit(): void {
     this.selectedSource = this.data.selectedAssignment;
   }
+
 
   selectContent(content: NestingTrolleyContent) {
     if (this.selectedContent?.id === content.id) {
@@ -76,23 +79,34 @@ export class SwapTrolleyContentsComponent implements OnInit {
           });
           return;
         }
-        this.nestingTrolleyService.postContentSwap().subscribe(response => {
+        this.nestingTrolleyService.postNestingTrolleyContentTransfer(this.getRequestBody()).subscribe(response => {
           if (response) {
-            
+            this.dialogRefParent.close(true);
           }
         })
     }
   }
 
+  
   onClose() {
     this.dialogRefParent.close(null);
   }
+
 
   sumOccupiedSpace(assignment: CandlingNestingTrolleyAssignment | null): number {
     if (assignment){  
       return this.data.allTrolleyContents.get(assignment)?.reduce((sum, item) => sum + item.quantity, 0) || -1;
     }
     return -1;
+  }
+
+
+  private getRequestBody(): PostNestingTrolleyContentTransferRequest {
+    return {
+      sourceNestingTrolleyContentId: this.selectedContent?.id ?? '',
+      targetNestingTrolleyId: this.selectedTarget?.nestingTrolley.id ?? '',
+      quantity: this.requestedQuantity
+    }
   }
 
 }

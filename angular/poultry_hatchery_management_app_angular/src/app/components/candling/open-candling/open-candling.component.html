@@ -55,24 +55,42 @@
             <label>Gatunek |</label>
             <label>Zawartość wózka</label>
         </div>
+
         <ng-container *ngIf="selectedTrolley">
-            <div class="supplier-container" *ngFor="let content of getTrolleyContent(selectedTrolley)" [class.active]="selectedTrolleyContent?.id === content.id" (click)="selectContent(content)">
+            <div class="supplier-container" *ngFor="let loadedDelivery of nestingLoadedDeliveries" 
+                [class.active]="selectedNestingLoadedDelivery?.id === loadedDelivery.id" 
+                (click)="selectNestingLoadedDelivery(loadedDelivery)"
+            >
                 <div id="supplier-data">
-                    <label>{{ content.nestingLoadedDeliveries.delivery.supplier.name }}</label>
-                    <label>{{ content.nestingLoadedDeliveries.delivery.supplier.surname }}</label>
+                    <label>{{ loadedDelivery.delivery.supplier.name }}</label>
+                    <label>{{ loadedDelivery.delivery.supplier.surname }}</label>
                 </div>
-                <label>{{ content.nestingLoadedDeliveries.delivery.productType.name }}</label>
-                <label>{{ content.quantity }}/{{ content.nestingTrolley.maxCapacity }}</label>
-                <mat-progress-bar mode="buffer" [value]="getContentPercentage(content)" [bufferValue]="getContentPercentage(content) + getRejectedContentPercentage(content)"></mat-progress-bar>
+
+                <label>{{ loadedDelivery.delivery.productType.name }}</label>
+
+                <ng-container *ngIf="getTrolleyContentByNestingLoadedDelivery(loadedDelivery) as content; else defaultContent">
+                    <label>{{ content.quantity }}/{{ content.nestingTrolley.maxCapacity }}</label>
+                    <mat-progress-bar mode="buffer" 
+                      [value]="getContentPercentage(content)" 
+                      [bufferValue]="getContentPercentage(content) + getRejectedContentPercentage(content)">
+                    </mat-progress-bar>
+                  </ng-container>
+                  
+                  <ng-template #defaultContent>
+                    <label>{{ 0 }}/{{ selectedTrolley[0].nestingTrolley.maxCapacity }}</label>
+                    <mat-progress-bar mode="buffer" 
+                      [value]="0" 
+                      [bufferValue]="getRejectedContentPercentageByNestingLoadedDelivery(loadedDelivery)">
+                    </mat-progress-bar>
+                  </ng-template>
             </div>
         </ng-container>
 
-
         <div class="rejection-container">
-            <ng-container *ngIf="selectedTrolleyContent">
+            <ng-container *ngIf="selectedNestingLoadedDelivery">
                 <app-rejection-panel 
                     *ngFor="let cause of rejectionCauses;"
-                    [content]="selectedTrolleyContent" 
+                    [delivery]="selectedNestingLoadedDelivery" 
                     [rejectionCause]="cause" 
                     [assignment]="selectedTrolley"
                     (refresh)="updateRejectionAndNestingTrolleyContent($event)"
