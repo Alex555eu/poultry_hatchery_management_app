@@ -98,4 +98,16 @@ export namespace ApiPaths {
         DELETE_CANDLING_TROLLEY_ASSIGNMENT = '/api/v1/candling/trolley?candledNestingTrolleyAssignmentId='
     }
 
+    export enum RejectionPaths {
+        ALL_REJECTION_CAUSES = '/api/v1/rejection/causes/all',
+        REJECTION_CAUSES_ONE = '/api/v1/rejection/causes/one',
+        REJECTION_CAUSES_TWO = '/api/v1/rejection/causes/two',
+        REJECTION_CAUSES_THREE = '/api/v1/rejection/causes/three',
+        REJECTION_CAUSES_FOUR = '/api/v1/rejection/causes/four',
+
+        GET_ALL_REJECTION_TWO_BY_CANDLING_ID = '/api/v1/rejection/two/candling?candlingId=',
+        POST_REJECTION_TWO = '/api/v1/rejection/two',
+        DELETE_REJECTION_TWO = '/api/v1/rejection/two?rejectionId='
+    }
+
 }

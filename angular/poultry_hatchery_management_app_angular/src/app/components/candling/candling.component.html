@@ -51,8 +51,8 @@
         
                 <!-- dueAt Column -->
                 <ng-container matColumnDef="dueAt">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Zaplanowano na </th>
-                <td mat-cell *matCellDef="let item"> {{ item.scheduledAt | customDateFormatter: 'full' }} </td>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Utworzono </th>
+                <td mat-cell *matCellDef="let item"> {{ item.createdAt | customDateFormatter: 'full' }} </td>
                 </ng-container>
 
 

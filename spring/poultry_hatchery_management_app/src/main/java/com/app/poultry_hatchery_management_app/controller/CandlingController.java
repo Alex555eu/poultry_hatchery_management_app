@@ -39,7 +39,7 @@ public class CandlingController {
     public ResponseEntity<String> getCandlingById(@RequestParam UUID candlingId) throws JsonProcessingException {
         Optional<Candling> candling = candlingService.getCandlingById(candlingId);
         if (candling.isPresent()) {
-            String response = objectMapper.writeValueAsString(candling);
+            String response = objectMapper.writeValueAsString(candling.get());
             return ResponseEntity.ok(response);
         } else {
             return ResponseEntity.notFound().build();
@@ -67,15 +67,15 @@ public class CandlingController {
         return ResponseEntity.notFound().build();
     }
 
-    @PutMapping("")
-    public ResponseEntity<String> putCandling(@RequestBody PutCandlingRequest request) throws JsonProcessingException {
-        Optional<Candling> candling = candlingService.putCandling(request);
-        if (candling.isPresent()) {
-            String body = objectMapper.writeValueAsString(candling.get());
-            return ResponseEntity.ok(body);
-        }
-        return ResponseEntity.notFound().build();
-    }
+//    @PutMapping("")
+//    public ResponseEntity<String> putCandling(@RequestBody PutCandlingRequest request) throws JsonProcessingException {
+//        Optional<Candling> candling = candlingService.putCandling(request);
+//        if (candling.isPresent()) {
+//            String body = objectMapper.writeValueAsString(candling.get());
+//            return ResponseEntity.ok(body);
+//        }
+//        return ResponseEntity.notFound().build();
+//    }
 
     @DeleteMapping("")
     public ResponseEntity<String> deleteCandling(@RequestParam UUID candlingId) {

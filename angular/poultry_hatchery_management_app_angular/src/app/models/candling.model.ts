@@ -6,7 +6,7 @@ export class Candling {
 
     constructor(
         private _id: string,
-        private _scheduledAt: Date,
+        private _createdAt: Date,
         private _candlingNumber: number,
         private _nesting: Nesting,
         private _task: Task,
@@ -19,11 +19,11 @@ export class Candling {
     public set id(value: string) {
         this._id = value;
     }
-    public get scheduledAt(): Date {
-        return this._scheduledAt;
+    public get createdAt(): Date {
+        return this._createdAt;
     }
-    public set scheduledAt(value: Date) {
-        this._scheduledAt = value;
+    public set createdAt(value: Date) {
+        this._createdAt = value;
     }
     public get candlingNumber(): number {
         return this._candlingNumber;

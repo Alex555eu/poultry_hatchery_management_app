@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -29,6 +30,8 @@ public class RejectionService {
     private final CandlingService candlingService;
     private final HatchingService hatchingService;
     private final NestingService nestingService;
+
+    private final NestingTrolleyContentRepository nestingTrolleyContentRepository;
 
     public List<RejectionCause> getAllPossibleRejectionCauses() {
         return Arrays.stream(RejectionCause.values()).toList();
@@ -90,20 +93,58 @@ public class RejectionService {
         return Optional.empty();
     }
 
+    @Transactional
     public Optional<Rejection2> postRejection2(PostRejection2Request request) {
-        Optional<CandlingNestingTrolleyAssignment> assignment =
+        Optional<NestingTrolleyContent> contentOpt =
+                nestingTrolleyContentRepository.findById(request.nestingTrolleyContentId());
+        Optional<CandlingNestingTrolleyAssignment> assignmentOpt =
                 candlingService.getCandledTrolleyAssignment(request.candlingNestingTrolleyAssignmentId());
-        if(assignment.isPresent()) {
+
+        if(assignmentOpt.isPresent() && contentOpt.isPresent()) {
+            NestingTrolleyContent content = contentOpt.get();
+            CandlingNestingTrolleyAssignment assignment = assignmentOpt.get();
+
             Rejection2 rejection2 = Rejection2.builder()
-                    .candlingNestingTrolleyAssignment(assignment.get())
+                    .candlingNestingTrolleyAssignment(assignment)
+                    .nestingTrolleyContent(content)
                     .quantity(request.quantity())
                     .cause(RejectionCause.valueOf(request.cause()).verify(RejectionGroup.REJECTION_2))
                     .build();
             rejection2Repository.save(rejection2);
 
+            content.setQuantity(content.getQuantity() - request.quantity());
+            nestingTrolleyContentRepository.save(content);
+
             return Optional.of(rejection2);
         }
         return Optional.empty();
+    }
+
+    public Optional<Rejection2> putRejection2(PutRejectionRequest request) {
+        Optional<Rejection2> rejection2 = rejection2Repository.findById(request.rejectionId());
+        if (rejection2.isPresent()) {
+            rejection2.get().setQuantity(request.quantity());
+            rejection2.get().setCause(RejectionCause.valueOf(request.cause()).verify(RejectionGroup.REJECTION_2));
+            rejection2Repository.save(rejection2.get());
+
+            return rejection2;
+        }
+        return Optional.empty();
+    }
+
+    @Transactional
+    public void deleteRejection2ById(UUID rejectionId) {
+        Optional<Rejection2> rejectionOpt = rejection2Repository.findById(rejectionId);
+        if (rejectionOpt.isPresent()) {
+            Rejection2 rejection = rejectionOpt.get();
+            NestingTrolleyContent content = rejection.getNestingTrolleyContent();
+            content.setQuantity(content.getQuantity() + rejection.getQuantity());
+
+            nestingTrolleyContentRepository.save(content);
+            nestingTrolleyContentRepository.flush();
+            rejection2Repository.deleteById(rejectionId);
+            rejection2Repository.flush();
+        }
     }
 
     public Optional<Rejection3> postRejection3(PostRejection3Request request) {
@@ -167,17 +208,6 @@ public class RejectionService {
         return Optional.empty();
     }
 
-    public Optional<Rejection2> putRejection2(PutRejectionRequest request) {
-        Optional<Rejection2> rejection2 = rejection2Repository.findById(request.rejectionId());
-        if (rejection2.isPresent()) {
-            rejection2.get().setQuantity(request.quantity());
-            rejection2.get().setCause(RejectionCause.valueOf(request.cause()).verify(RejectionGroup.REJECTION_2));
-            rejection2Repository.save(rejection2.get());
-
-            return rejection2;
-        }
-        return Optional.empty();
-    }
 
     public Optional<Rejection3> putRejection3(PutRejectionRequest request) {
         Optional<Rejection3> rejection3 = rejection3Repository.findById(request.rejectionId());
@@ -219,9 +249,6 @@ public class RejectionService {
         rejection1Repository.deleteById(rejectionId);
     }
 
-    public void deleteRejection2ById(UUID rejectionId) {
-        rejection2Repository.deleteById(rejectionId);
-    }
 
     public void deleteRejection3ById(UUID rejectionId) {
         rejection3Repository.deleteById(rejectionId);

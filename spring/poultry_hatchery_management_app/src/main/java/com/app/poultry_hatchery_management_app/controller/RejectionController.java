@@ -109,10 +109,11 @@ public class RejectionController {
     }
 
     @PostMapping("/two")
-    public ResponseEntity<String> postRejection2(@RequestBody PostRejection2Request request) {
+    public ResponseEntity<String> postRejection2(@RequestBody PostRejection2Request request) throws JsonProcessingException {
         Optional<Rejection2> rejection = rejectionService.postRejection2(request);
         if (rejection.isPresent()) {
-            return ResponseEntity.ok().build();
+            String body = objectMapper.writeValueAsString(rejection.get());
+            return ResponseEntity.ok(body);
         }
         return ResponseEntity.notFound().build();
     }

@@ -1,1 +1,105 @@
-<p>open-candling works!</p>
+<div class="bg-container">
+
+    <div class="trolley-container" *ngIf="candlingNestingTrolleyAssignment">
+        <div class="dialog-header">
+            <mat-icon>select_all</mat-icon>
+            <label>Wózki lęgowe</label>
+        </div>
+
+        <mat-selection-list [hideSingleSelectionIndicator]="true" [(ngModel)]="selectedTrolley" [multiple]="false">
+            <ng-container *ngFor="let assignment of candlingNestingTrolleyAssignment">
+                <mat-list-option 
+                    (click)="selectTrolley(trolleyListOptionContainers)" 
+                    [value]="assignment"
+                >
+                    <div class="card-content" #trolleyListOptionContainers>
+                        <span>{{ assignment.nestingTrolley.humanReadableId }}</span>
+                        <span>| {{ countTrolleyCapacity(assignment) }}/{{ assignment.nestingTrolley.maxCapacity }}</span>
+
+                        <span [style]="{'letter-spacing': '1px', 'font-weight': '550', 'color': getTrolleyTaskStatusColor(assignment)}">&#11044;</span>
+
+                        <button mat-icon-button [matMenuTriggerFor]="menu">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu">
+                            <button mat-menu-item (click)="markAsCompleted(assignment)" *ngIf="!taskTrolleyAssignment.get(assignment)?.isTaskCompleted" >
+                                <mat-icon>check_circle_outline</mat-icon>
+                                <span>Oznacz jako zakończone</span>
+                            </button>
+                            <button mat-menu-item (click)="markAsUncompleted(assignment)" *ngIf="taskTrolleyAssignment.get(assignment)?.isTaskCompleted">
+                                <mat-icon>trip_origin</mat-icon>
+                                <span>Oznacz jako niezakończone</span>
+                            </button>
+                            <button mat-menu-item (click)="findTrolleyLocation(assignment)">
+                                <mat-icon>search</mat-icon>
+                                <span>Szukaj wózka</span>
+                            </button>
+                            <button mat-menu-item (click)="swapTrolleyContents(assignment)">
+                                <mat-icon>compare_arrows</mat-icon>
+                                <span>Przenieś zawartość wózka</span>
+                            </button>
+                        </mat-menu>
+                    </div>
+                </mat-list-option>
+            </ng-container>
+        </mat-selection-list>
+    </div>
+
+    <div class="main-container">
+        <div class="dialog-header">
+            <mat-icon>select_all</mat-icon>
+            <label>Wybrany wózek</label>
+        </div>
+        <div class="dialog-header">
+            <label>Dostawca |</label>
+            <label>Gatunek |</label>
+            <label>Zawartość wózka</label>
+        </div>
+        <ng-container *ngIf="selectedTrolley">
+            <div class="supplier-container" *ngFor="let content of getTrolleyContent(selectedTrolley)" [class.active]="selectedTrolleyContent?.id === content.id" (click)="selectContent(content)">
+                <div id="supplier-data">
+                    <label>{{ content.nestingLoadedDeliveries.delivery.supplier.name }}</label>
+                    <label>{{ content.nestingLoadedDeliveries.delivery.supplier.surname }}</label>
+                </div>
+                <label>{{ content.nestingLoadedDeliveries.delivery.productType.name }}</label>
+                <label>{{ content.quantity }}/{{ content.nestingTrolley.maxCapacity }}</label>
+                <mat-progress-bar mode="buffer" [value]="getContentPercentage(content)" [bufferValue]="getContentPercentage(content) + getRejectedContentPercentage(content)"></mat-progress-bar>
+            </div>
+        </ng-container>
+
+
+        <div class="rejection-container">
+            <ng-container *ngIf="selectedTrolleyContent">
+                <app-rejection-panel 
+                    *ngFor="let cause of rejectionCauses;"
+                    [content]="selectedTrolleyContent" 
+                    [rejectionCause]="cause" 
+                    [assignment]="selectedTrolley"
+                    (refresh)="updateRejectionAndNestingTrolleyContent($event)"
+                >
+            </app-rejection-panel>
+            </ng-container>
+        </div>
+    </div>
+
+    <div class="total-rejections-container" *ngIf="trolleyRejection && trolleyContent">
+        <app-rejection-panel-total 
+            *ngFor="let cause of rejectionCauses;"
+            [contentAll]="getAllNestingTrolleyContent()" 
+            [rejectionCause]="cause" 
+            [rejectionsAll]="getAllRejections()"
+        >
+        </app-rejection-panel-total>
+        <app-rejection-panel-total 
+            [contentAll]="getAllNestingTrolleyContent()" 
+            [rejectionsAll]="getAllRejections()"
+        >
+        </app-rejection-panel-total>
+    </div>
+
+
+</div>
+
+
+
+

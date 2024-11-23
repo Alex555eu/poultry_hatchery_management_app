@@ -23,7 +23,7 @@ public class Candling {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    private LocalDateTime scheduledAt;
+    private LocalDateTime createdAt;
 
     private Integer candlingNumber;
 

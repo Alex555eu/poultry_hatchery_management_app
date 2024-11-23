@@ -118,13 +118,13 @@ export class CandlingComponent implements OnInit {
         filteredData = this.candlingsAll
         .filter(item => {
           if (this.startDate) {
-            return this.startDate <= new Date(item.scheduledAt);
+            return this.startDate <= new Date(item.createdAt);
           }
           return item;
         })
         .filter(item => {
           if (this.endDate) {
-            return this.endDate >= new Date(item.scheduledAt);
+            return this.endDate >= new Date(item.createdAt);
           }
           return item;
         })

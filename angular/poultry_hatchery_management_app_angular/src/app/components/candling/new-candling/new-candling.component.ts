@@ -71,9 +71,8 @@ export class NewCandlingComponent implements OnInit {
       this.getTaskType().subscribe(response => {
         if (response) {
           this.router.navigate(['candling/open'], { queryParams: { id: response.id } });
-        } else {
-          this.dialogRefParent.close(null);
-        }
+        } 
+        this.dialogRefParent.close(null);
       })
     }
   }

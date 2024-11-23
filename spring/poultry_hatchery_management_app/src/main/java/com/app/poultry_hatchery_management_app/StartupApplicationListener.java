@@ -19,7 +19,7 @@ import java.util.List;
 public class StartupApplicationListener implements ApplicationListener<ApplicationReadyEvent> {
 
     private final AddressRepository addressRepository;
-    private final Rejection1Repository rejection1Repository;
+    private final Rejection2Repository rejection2Repository;
     private final OrganisationRepository organisationRepository;
     private final SupplierRepository supplierRepository;
     private final DeliveryRepository deliveryRepository;
@@ -36,6 +36,7 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
     private final TaskNestingTrolleyAssignmentRepository taskNestingTrolleyAssignmentRepository;
     private final NestingTrolleyContentRepository nestingTrolleyContentRepository;
     private final CandlingRepository candlingRepository;
+    private final CandlingNestingTrolleyAssignmentRepository candlingNestingTrolleyAssignmentRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -125,7 +126,7 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
 
         Delivery delivery = Delivery.builder()
                 .quantity(111)
-                .type(type)
+                .productType(type)
                 .supplier(supplier)
                 .dateTime(LocalDateTime.now())
                 .build();
@@ -133,7 +134,7 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
 
         Delivery delivery2 = Delivery.builder()
                 .quantity(222)
-                .type(type)
+                .productType(type)
                 .supplier(supplier2)
                 .dateTime(LocalDateTime.now())
                 .build();
@@ -201,7 +202,7 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
         NestingTrolleyContent nestingTrolleyContent = NestingTrolleyContent.builder()
                 .nestingLoadedDeliveries(nestingLoadedDeliveries)
                 .nestingTrolley(nestingTrolley)
-                .quantity(125)
+                .quantity(124)
                 .build();
         nestingTrolleyContentRepository.save(nestingTrolleyContent);
 
@@ -295,12 +296,26 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
 
         Candling candling = Candling.builder()
                 .candlingNumber(1)
-                .scheduledAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now())
                 .nesting(nesting)
                 .organisation(organisation)
                 .task(toBeAssigned)
                 .build();
         candlingRepository.save(candling);
+
+        CandlingNestingTrolleyAssignment cnta = CandlingNestingTrolleyAssignment.builder()
+                .candling(candling)
+                .nestingTrolley(nestingTrolley)
+                .build();
+        candlingNestingTrolleyAssignmentRepository.save(cnta);
+
+        Rejection2 rejection2 = Rejection2.builder()
+                .candlingNestingTrolleyAssignment(cnta)
+                .nestingTrolleyContent(nestingTrolleyContent)
+                .cause(RejectionCause.STLUCZKA)
+                .quantity(1)
+                .build();
+        rejection2Repository.save(rejection2);
 
     }
 }

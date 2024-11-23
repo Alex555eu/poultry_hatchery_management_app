@@ -114,39 +114,40 @@ public class TaskService {
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             User user = (User) authentication.getPrincipal();
 
-            Optional<TaskNestingTrolleyAssignment> assignment =
+            Optional<TaskNestingTrolleyAssignment> assignmentOptional =
                     taskNestingTrolleyAssignmentRepository.findByTaskIdAndNestingTrolleyId(request.taskId(), request.nestingTrolleyId());
 
-            if (assignment.isPresent()) {
-                Optional<Task> task = taskRepository.findById(request.taskId());
-                if (task.isPresent()) {
-                    Optional<Integer> countOfTrolleysWithUncompletedTask =
-                            taskNestingTrolleyAssignmentRepository.countAllByTaskIdAndTaskCompletedIsFalse(task.get().getId());
-                    if (request.isTaskCompleted()) {
-                        assignment.get().setIsTaskCompleted(true);
-                        assignment.get().setExecutor(user);
-                        if (countOfTrolleysWithUncompletedTask.isPresent() && countOfTrolleysWithUncompletedTask.get() == 1) {
-                            task.get().setTaskStatus(TaskStatus.COMPLETED);
-                            task.get().setExecutionCompletedAt(LocalDateTime.now());
-                        } else {
-                            task.get().setTaskStatus(TaskStatus.IN_PROGRESS);
-                        }
-                    } else {
-                        assignment.get().setIsTaskCompleted(false);
-                        assignment.get().setExecutor(null);
-                        if (countOfTrolleysWithUncompletedTask.isPresent() && countOfTrolleysWithUncompletedTask.get() == 0) {
-                            task.get().setTaskStatus(TaskStatus.NOT_STARTED);
-                            task.get().setExecutionCompletedAt(null);
-                        } else {
-                            task.get().setTaskStatus(TaskStatus.IN_PROGRESS);
-                        }
-                    }
-                    task.get().setComment(request.comment());
-                    taskRepository.save(task.get());
-                    taskNestingTrolleyAssignmentRepository.save(assignment.get());
+            if (assignmentOptional.isPresent()) {
+                TaskNestingTrolleyAssignment assignment = assignmentOptional.get();
+                Task task = assignment.getTask();
 
-                    return task;
+                Optional<Integer> countOfTrolleysWithUncompletedTask =
+                        taskNestingTrolleyAssignmentRepository.countAllByTaskIdAndTaskCompletedIsFalse(task.getId());
+                if (request.isTaskCompleted()) {
+                    assignment.setIsTaskCompleted(true);
+                    assignment.setExecutor(user);
+                    if (countOfTrolleysWithUncompletedTask.isPresent() && countOfTrolleysWithUncompletedTask.get() <= 1) {
+                        task.setTaskStatus(TaskStatus.COMPLETED);
+                        task.setExecutionCompletedAt(LocalDateTime.now());
+                    } else {
+                        task.setTaskStatus(TaskStatus.IN_PROGRESS);
+                    }
+                } else {
+                    assignment.setIsTaskCompleted(false);
+                    assignment.setExecutor(null);
+                    if (countOfTrolleysWithUncompletedTask.isPresent() && countOfTrolleysWithUncompletedTask.get() <= 1) {
+                        task.setTaskStatus(TaskStatus.NOT_STARTED);
+                        task.setExecutionCompletedAt(null);
+                    } else {
+                        task.setTaskStatus(TaskStatus.IN_PROGRESS);
+                    }
                 }
+                task.setComment(request.comment());
+                taskRepository.save(task);
+                taskNestingTrolleyAssignmentRepository.save(assignment);
+
+                return Optional.of(task);
+
             }
         }
         return Optional.empty();

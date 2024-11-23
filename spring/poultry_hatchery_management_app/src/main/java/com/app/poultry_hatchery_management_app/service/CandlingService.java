@@ -65,7 +65,7 @@ public class CandlingService {
 
             Candling candling = Candling.builder()
                     .candlingNumber(candlingList.size() + 1)
-                    .scheduledAt(LocalDateTime.now())
+                    .createdAt(LocalDateTime.now())
                     .nesting(nesting.get())
                     .task(task.get())
                     .organisation(nesting.get().getOrganisation())
@@ -82,19 +82,17 @@ public class CandlingService {
         return Optional.empty();
     }
 
-    public Optional<Candling> putCandling(PutCandlingRequest request) {
-        Optional<Candling> candling = candlingRepository.findById(request.candlingId());
-        Optional<Nesting> nesting = nestingService.getNesting(request.nestingId());
-
-        if (candling.isPresent() && nesting.isPresent()) {
-            candling.get().setCandlingNumber(request.candlingNumber());
-            candling.get().setNesting(nesting.get());
-
-            candlingRepository.save(candling.get());
-            return candling;
-        }
-        return Optional.empty();
-    }
+//    public Optional<Candling> putCandling(PutCandlingRequest request) {
+//        Optional<Candling> candling = candlingRepository.findById(request.candlingId());
+//
+//        if (candling.isPresent()) {
+//            candling.get().setCandlingNumber(request.candlingNumber());
+//
+//            candlingRepository.save(candling.get());
+//            return candling;
+//        }
+//        return Optional.empty();
+//    }
 
     public void deleteCandling(UUID candlingId) {
         List<CandlingNestingTrolleyAssignment> list = this.getAllCandledTrolleyAssignments(candlingId);
