@@ -61,7 +61,7 @@
         </div>
         <mat-form-field class="example-full-width">
             <mat-label>Podaj ilość</mat-label>
-            <input type="number" min="0" [max]="selectedContent.quantity" matInput [value]="requestedQuantity">
+            <input type="number" min="0" [max]="selectedContent.quantity" matInput [(ngModel)]="requestedQuantity">
         </mat-form-field>
         <div>
             <label>{{ sumOccupiedSpace(selectedTarget) }}/{{ selectedTarget.nestingTrolley.maxCapacity }}</label><br>

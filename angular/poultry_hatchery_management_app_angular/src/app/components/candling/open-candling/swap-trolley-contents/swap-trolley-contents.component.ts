@@ -77,13 +77,13 @@ export class SwapTrolleyContentsComponent implements OnInit {
             horizontalPosition: 'center',
             verticalPosition: 'top'
           });
-          return;
-        }
-        this.nestingTrolleyService.postNestingTrolleyContentTransfer(this.getRequestBody()).subscribe(response => {
-          if (response) {
-            this.dialogRefParent.close(true);
-          }
-        })
+        } else{
+          this.nestingTrolleyService.postNestingTrolleyContentTransfer(this.getRequestBody()).subscribe(response => {
+            if (response) {
+              this.dialogRefParent.close(true);
+            }
+          })
+       }
     }
   }
 
