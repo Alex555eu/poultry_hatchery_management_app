@@ -32,6 +32,7 @@ public class RejectionService {
     private final NestingService nestingService;
 
     private final NestingTrolleyContentRepository nestingTrolleyContentRepository;
+    private final NestingLoadedDeliveriesRepository nestingLoadedDeliveriesRepository;
 
     public List<RejectionCause> getAllPossibleRejectionCauses() {
         return Arrays.stream(RejectionCause.values()).toList();
@@ -93,34 +94,39 @@ public class RejectionService {
 
     @Transactional
     public Optional<Rejection2> postRejection2(PostRejection2Request request) {
-        Optional<NestingTrolleyContent> contentOpt =
-                nestingTrolleyContentRepository.findById(request.nestingTrolleyContentId());
+        Optional<NestingLoadedDeliveries> deliveryOpt =
+                nestingLoadedDeliveriesRepository.findById(request.nestingLoadedDeliveryId());
+
         Optional<CandlingNestingTrolleyAssignment> assignmentOpt =
                 candlingService.getCandledTrolleyAssignment(request.candlingNestingTrolleyAssignmentId());
 
-        if(assignmentOpt.isPresent()
-                && contentOpt.isPresent()
-                && (request.quantity() <= contentOpt.get().getQuantity()))
-        {
-            NestingTrolleyContent content = contentOpt.get();
-            CandlingNestingTrolleyAssignment assignment = assignmentOpt.get();
+        if(assignmentOpt.isPresent() && deliveryOpt.isPresent()){
 
-            Rejection2 rejection2 = Rejection2.builder()
-                    .candlingNestingTrolleyAssignment(assignment)
-                    .nestingLoadedDeliveries(content.getNestingLoadedDeliveries())
-                    .quantity(request.quantity())
-                    .cause(RejectionCause.valueOf(request.cause()).verify(RejectionGroup.REJECTION_2))
-                    .build();
-            rejection2Repository.save(rejection2);
+            Optional<NestingTrolleyContent> contentOpt =
+                    nestingTrolleyContentRepository.findByNestingTrolleyIdAndNestingLoadedDeliveriesId(assignmentOpt.get().getNestingTrolley().getId(), deliveryOpt.get().getId());
 
-            if (request.quantity().equals(contentOpt.get().getQuantity())){
-                nestingTrolleyContentRepository.deleteById(content.getId());
-                nestingTrolleyContentRepository.flush();
-            } else {
-                content.setQuantity(content.getQuantity() - request.quantity());
-                nestingTrolleyContentRepository.save(content);
+            if (contentOpt.isPresent() && (request.quantity() <= contentOpt.get().getQuantity())) {
+
+                NestingTrolleyContent content = contentOpt.get();
+                CandlingNestingTrolleyAssignment assignment = assignmentOpt.get();
+
+                Rejection2 rejection2 = Rejection2.builder()
+                        .candlingNestingTrolleyAssignment(assignment)
+                        .nestingLoadedDeliveries(content.getNestingLoadedDeliveries())
+                        .quantity(request.quantity())
+                        .cause(RejectionCause.valueOf(request.cause()).verify(RejectionGroup.REJECTION_2))
+                        .build();
+                rejection2Repository.save(rejection2);
+
+                if (request.quantity().equals(contentOpt.get().getQuantity())) {
+                    nestingTrolleyContentRepository.deleteById(content.getId());
+                    nestingTrolleyContentRepository.flush();
+                } else {
+                    content.setQuantity(content.getQuantity() - request.quantity());
+                    nestingTrolleyContentRepository.save(content);
+                }
+                return Optional.of(rejection2);
             }
-            return Optional.of(rejection2);
         }
         return Optional.empty();
     }

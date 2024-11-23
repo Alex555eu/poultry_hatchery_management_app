@@ -1,5 +1,5 @@
 import { CandlingNestingTrolleyAssignment } from "./candling-nesting-trolley-assignment.model";
-import { NestingTrolleyContent } from "./nesting-trolley-content.model";
+import { NestingLoadedDeliveries } from "./nesting-loaded-deliveries.model";
 
 export class Rejection2 {
 
@@ -8,7 +8,7 @@ export class Rejection2 {
         private _quantity: number,
         private _cause: string,
         private _candlingNestingTrolleyAssignment: CandlingNestingTrolleyAssignment,
-        private _nestingTrolleyContent: NestingTrolleyContent,
+        private _nestingLoadedDeliveries: NestingLoadedDeliveries,
     ){}
 
     public get id(): string {
@@ -35,11 +35,11 @@ export class Rejection2 {
     public set candlingNestingTrolleyAssignment(value: CandlingNestingTrolleyAssignment) {
         this._candlingNestingTrolleyAssignment = value;
     }
-    public get nestingTrolleyContent(): NestingTrolleyContent {
-        return this._nestingTrolleyContent;
+    public get nestingLoadedDeliveries(): NestingLoadedDeliveries {
+        return this._nestingLoadedDeliveries;
     }
-    public set nestingTrolleyContent(value: NestingTrolleyContent) {
-        this._nestingTrolleyContent = value;
+    public set nestingLoadedDeliveries(value: NestingLoadedDeliveries) {
+        this._nestingLoadedDeliveries = value;
     }
 
     public equals(ob: Rejection2): boolean {
@@ -52,7 +52,7 @@ export class Rejection2 {
         return  this._id === ob._id && 
                 this._quantity === ob._quantity &&
                 this._cause === ob._cause &&
-                this._nestingTrolleyContent.id === ob._nestingTrolleyContent.id;
+                this._nestingLoadedDeliveries.id === ob._nestingLoadedDeliveries.id;
     }
 
 }
