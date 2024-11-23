@@ -78,6 +78,8 @@ public class RejectionController {
     }
 
 
+
+
     @GetMapping("/causes/two")
     public ResponseEntity<String> getPossibleRejection2Causes() throws JsonProcessingException {
         List<RejectionCause> rejections = rejectionService.getPossibleRejection2Causes();
@@ -118,20 +120,23 @@ public class RejectionController {
         return ResponseEntity.notFound().build();
     }
 
-    @PutMapping("/two")
-    public ResponseEntity<String> putRejection2(@RequestBody PutRejectionRequest request) {
-        Optional<Rejection2> rejection = rejectionService.putRejection2(request);
-        if (rejection.isPresent()) {
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.notFound().build();
-    }
+//    @PutMapping("/two")
+//    public ResponseEntity<String> putRejection2(@RequestBody PutRejectionRequest request) {
+//        Optional<Rejection2> rejection = rejectionService.putRejection2(request);
+//        if (rejection.isPresent()) {
+//            return ResponseEntity.ok().build();
+//        }
+//        return ResponseEntity.notFound().build();
+//    }
 
     @DeleteMapping("/two")
     public ResponseEntity<String> deleteRejection2ById(@RequestParam UUID rejectionId) {
         rejectionService.deleteRejection2ById(rejectionId);
         return ResponseEntity.ok().build();
     }
+
+
+
 
     @GetMapping("/causes/three")
     public ResponseEntity<String> getPossibleRejection3Causes() throws JsonProcessingException {

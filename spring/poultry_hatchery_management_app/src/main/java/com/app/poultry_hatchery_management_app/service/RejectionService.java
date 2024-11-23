@@ -98,51 +98,46 @@ public class RejectionService {
         Optional<CandlingNestingTrolleyAssignment> assignmentOpt =
                 candlingService.getCandledTrolleyAssignment(request.candlingNestingTrolleyAssignmentId());
 
-        if(assignmentOpt.isPresent() && contentOpt.isPresent()) {
+        if(assignmentOpt.isPresent()
+                && contentOpt.isPresent()
+                && (request.quantity() <= contentOpt.get().getQuantity()))
+        {
             NestingTrolleyContent content = contentOpt.get();
             CandlingNestingTrolleyAssignment assignment = assignmentOpt.get();
 
             Rejection2 rejection2 = Rejection2.builder()
                     .candlingNestingTrolleyAssignment(assignment)
-                    .nestingTrolleyContent(content)
+                    .nestingLoadedDeliveries(content.getNestingLoadedDeliveries())
                     .quantity(request.quantity())
                     .cause(RejectionCause.valueOf(request.cause()).verify(RejectionGroup.REJECTION_2))
                     .build();
             rejection2Repository.save(rejection2);
 
-            content.setQuantity(content.getQuantity() - request.quantity());
-            nestingTrolleyContentRepository.save(content);
-
+            if (request.quantity().equals(contentOpt.get().getQuantity())){
+                nestingTrolleyContentRepository.deleteById(content.getId());
+                nestingTrolleyContentRepository.flush();
+            } else {
+                content.setQuantity(content.getQuantity() - request.quantity());
+                nestingTrolleyContentRepository.save(content);
+            }
             return Optional.of(rejection2);
         }
         return Optional.empty();
     }
-
-    public Optional<Rejection2> putRejection2(PutRejectionRequest request) {
-        Optional<Rejection2> rejection2 = rejection2Repository.findById(request.rejectionId());
-        if (rejection2.isPresent()) {
-            rejection2.get().setQuantity(request.quantity());
-            rejection2.get().setCause(RejectionCause.valueOf(request.cause()).verify(RejectionGroup.REJECTION_2));
-            rejection2Repository.save(rejection2.get());
-
-            return rejection2;
-        }
-        return Optional.empty();
-    }
-
-    @Transactional
+//    public Optional<Rejection2> putRejection2(PutRejectionRequest request) {
+//        Optional<Rejection2> rejection2 = rejection2Repository.findById(request.rejectionId());
+//        if (rejection2.isPresent()) {
+//            rejection2.get().setQuantity(request.quantity());
+//            rejection2.get().setCause(RejectionCause.valueOf(request.cause()).verify(RejectionGroup.REJECTION_2));
+//            rejection2Repository.save(rejection2.get());
+//
+//            return rejection2;
+//        }
+//        return Optional.empty();
+//    }
     public void deleteRejection2ById(UUID rejectionId) {
-        Optional<Rejection2> rejectionOpt = rejection2Repository.findById(rejectionId);
-        if (rejectionOpt.isPresent()) {
-            Rejection2 rejection = rejectionOpt.get();
-            NestingTrolleyContent content = rejection.getNestingTrolleyContent();
-            content.setQuantity(content.getQuantity() + rejection.getQuantity());
-
-            nestingTrolleyContentRepository.save(content);
-            nestingTrolleyContentRepository.flush();
-            rejection2Repository.deleteById(rejectionId);
-            rejection2Repository.flush();
-        }
+        rejection2Repository.deleteById(rejectionId);
+        rejection2Repository.flush();
     }
 
 
