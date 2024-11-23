@@ -142,8 +142,33 @@ public class RejectionService {
 //        return Optional.empty();
 //    }
     public void deleteRejection2ById(UUID rejectionId) {
-        rejection2Repository.deleteById(rejectionId);
-        rejection2Repository.flush();
+        Optional<Rejection2> rejectionOpt = rejection2Repository.findById(rejectionId);
+
+        if (rejectionOpt.isPresent()) {
+            Rejection2 rejection = rejectionOpt.get();
+
+            NestingTrolley trolley = rejection.getCandlingNestingTrolleyAssignment().getNestingTrolley();
+            NestingLoadedDeliveries delivery = rejection.getNestingLoadedDeliveries();
+            Optional<NestingTrolleyContent> contentOpt =
+                    nestingTrolleyContentRepository.findByNestingTrolleyIdAndNestingLoadedDeliveriesId(trolley.getId(), delivery.getId());
+
+            NestingTrolleyContent content;
+            if (contentOpt.isPresent()) {
+                content = contentOpt.get();
+                content.setQuantity(content.getQuantity() + rejection.getQuantity());
+            } else {
+                content = NestingTrolleyContent.builder()
+                        .nestingTrolley(trolley)
+                        .nestingLoadedDeliveries(delivery)
+                        .quantity(rejection.getQuantity())
+                        .build();
+            }
+            nestingTrolleyContentRepository.save(content);
+            nestingTrolleyContentRepository.flush();
+
+            rejection2Repository.deleteById(rejection.getId());
+            rejection2Repository.flush();
+        }
     }
 
 
