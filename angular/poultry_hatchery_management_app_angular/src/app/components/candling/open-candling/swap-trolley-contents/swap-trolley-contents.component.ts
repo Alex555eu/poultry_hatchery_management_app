@@ -68,26 +68,27 @@ export class SwapTrolleyContentsComponent implements OnInit {
 
 
   submit() {
-    if (this.selectedSource && this.selectedTarget) {
-      if (this.requestedQuantity <= 0 || 
-        this.requestedQuantity > (this.selectedTarget.nestingTrolley.maxCapacity - this.sumOccupiedSpace(this.selectedTarget)))
+    if (this.selectedSource && this.selectedTarget && this.selectedContent) {
+      if (this.requestedQuantity > 0 && 
+        this.requestedQuantity <= (this.selectedTarget.nestingTrolley.maxCapacity - this.sumOccupiedSpace(this.selectedTarget)) &&
+        this.requestedQuantity <= this.selectedContent.quantity)
         {
-          this.snackBar.open('Nieprawidłowa ilość', 'Zamknij', {
-            duration: 5000, // millis
-            horizontalPosition: 'center',
-            verticalPosition: 'top'
-          });
-        } else{
           this.nestingTrolleyService.postNestingTrolleyContentTransfer(this.getRequestBody()).subscribe(response => {
             if (response) {
               this.dialogRefParent.close(true);
             }
+          });
+        } else{
+            this.snackBar.open('Nieprawidłowa ilość', 'Zamknij', {
+            duration: 5000, // millis
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
           })
        }
     }
   }
 
-  
+
   onClose() {
     this.dialogRefParent.close(null);
   }

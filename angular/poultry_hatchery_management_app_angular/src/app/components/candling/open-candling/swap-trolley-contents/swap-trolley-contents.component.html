@@ -37,7 +37,7 @@
                 <mat-label>Wózek docelowy</mat-label>
                 <mat-select [(value)]="selectedTarget">
                     @for(option of data.allAssignments; track option.id) {
-                        <mat-option [value]="option">{{ option.nestingTrolley.humanReadableId }}</mat-option>
+                        <mat-option *ngIf="option.id !== selectedSource?.id" [value]="option">{{ option.nestingTrolley.humanReadableId }}</mat-option>
                     }
                 </mat-select>
             </mat-form-field>
