@@ -47,7 +47,7 @@ export class RejectionPanelTotalComponent implements OnInit, OnChanges {
       this.quantityOfRejectedEggs = filteredRejections.reduce((sum, item) => sum + item.quantity, 0);
       this.eggsRejectedSubject.next(this.quantityOfRejectedEggs);
 
-      if (!this.quantityOfEggsAtTheBeginningOfCandling && this.contentAll){
+      if (this.contentAll){
         const contentTotal = this.contentAll.reduce((sum, item) => sum + item.quantity, 0);
         const quantityOfRejectionsTotal = this.rejectionsAll.reduce((sum, item) => sum + item.quantity, 0);
 
