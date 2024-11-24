@@ -102,8 +102,8 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
 
         Supplier supplier = Supplier.builder()
                 .WNI("wni-example")
-                .surname("surname-example")
-                .name("name-example")
+                .surname("nazwisko1")
+                .name("imie1")
                 .address(address2)
                 .organisation(organisation)
                 .build();
@@ -111,8 +111,8 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
 
         Supplier supplier2 = Supplier.builder()
                 .WNI("wni-example")
-                .surname("surname-example")
-                .name("name-example")
+                .surname("nazwisko2")
+                .name("imie2")
                 .address(address3)
                 .organisation(organisation)
                 .build();
@@ -125,7 +125,7 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
         productTypeRepository.save(type);
 
         Delivery delivery = Delivery.builder()
-                .quantity(111)
+                .quantity(300)
                 .productType(type)
                 .supplier(supplier)
                 .dateTime(LocalDateTime.now())
@@ -199,6 +199,13 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
                 .build();
         nestingTrolleyRepository.save(nestingTrolley2);
 
+        NestingTrolley nestingTrolley3 = NestingTrolley.builder()
+                .humanReadableId("A3")
+                .maxCapacity(128)
+                .organisation(organisation)
+                .build();
+        nestingTrolleyRepository.save(nestingTrolley3);
+
         NestingTrolleyContent nestingTrolleyContent = NestingTrolleyContent.builder()
                 .nestingLoadedDeliveries(nestingLoadedDeliveries)
                 .nestingTrolley(nestingTrolley)
@@ -212,6 +219,13 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
                 .quantity(3)
                 .build();
         nestingTrolleyContentRepository.save(nestingTrolleyContent2);
+
+        NestingTrolleyContent nestingTrolleyContent3 = NestingTrolleyContent.builder()
+                .nestingLoadedDeliveries(nestingLoadedDeliveries2)
+                .nestingTrolley(nestingTrolley3)
+                .quantity(127)
+                .build();
+        nestingTrolleyContentRepository.save(nestingTrolleyContent3);
 
 
         NestingTrolleyIncubatorSpaceAssignment nestingTrolleyIncubatorSpaceAssignment =
@@ -308,6 +322,12 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
                 .nestingTrolley(nestingTrolley)
                 .build();
         candlingNestingTrolleyAssignmentRepository.save(cnta);
+
+        CandlingNestingTrolleyAssignment cnta2 = CandlingNestingTrolleyAssignment.builder()
+                .candling(candling)
+                .nestingTrolley(nestingTrolley3)
+                .build();
+        candlingNestingTrolleyAssignmentRepository.save(cnta2);
 
         Rejection2 rejection2 = Rejection2.builder()
                 .candlingNestingTrolleyAssignment(cnta)

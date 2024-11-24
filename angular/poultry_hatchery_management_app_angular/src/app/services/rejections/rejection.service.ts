@@ -65,12 +65,7 @@ export class RejectionService {
   }
 
   public deleteRejection2(rejectionId: string): Observable<any> {
-    return this.http.delete<any>(`${apiUrl + ApiPaths.RejectionPaths.DELETE_REJECTION_TWO + rejectionId}`).pipe(
-      catchError(error => {
-        console.error(error);
-        return of();
-      })
-    );
+    return this.http.delete<any>(`${apiUrl + ApiPaths.RejectionPaths.DELETE_REJECTION_TWO + rejectionId}`);
   }
 
 

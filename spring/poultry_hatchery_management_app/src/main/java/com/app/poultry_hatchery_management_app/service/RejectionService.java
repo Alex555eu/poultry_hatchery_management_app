@@ -148,27 +148,36 @@ public class RejectionService {
             Rejection2 rejection = rejectionOpt.get();
 
             NestingTrolley trolley = rejection.getCandlingNestingTrolleyAssignment().getNestingTrolley();
+            Integer contentQuantityTotal =
+                    nestingTrolleyContentRepository.findAllByNestingTrolleyId(trolley.getId()).stream().mapToInt(NestingTrolleyContent::getQuantity).reduce(0, Integer::sum);
+
             NestingLoadedDeliveries delivery = rejection.getNestingLoadedDeliveries();
             Optional<NestingTrolleyContent> contentOpt =
                     nestingTrolleyContentRepository.findByNestingTrolleyIdAndNestingLoadedDeliveriesId(trolley.getId(), delivery.getId());
 
-            NestingTrolleyContent content;
-            if (contentOpt.isPresent()) {
-                content = contentOpt.get();
-                content.setQuantity(content.getQuantity() + rejection.getQuantity());
-            } else {
-                content = NestingTrolleyContent.builder()
-                        .nestingTrolley(trolley)
-                        .nestingLoadedDeliveries(delivery)
-                        .quantity(rejection.getQuantity())
-                        .build();
-            }
-            nestingTrolleyContentRepository.save(content);
-            nestingTrolleyContentRepository.flush();
+            if (rejection.getQuantity() <= (trolley.getMaxCapacity() - contentQuantityTotal)) {
+                NestingTrolleyContent content;
+                if (contentOpt.isPresent()) {
+                    content = contentOpt.get();
+                    content.setQuantity(content.getQuantity() + rejection.getQuantity());
+                } else {
+                    content = NestingTrolleyContent.builder()
+                            .nestingTrolley(trolley)
+                            .nestingLoadedDeliveries(delivery)
+                            .quantity(rejection.getQuantity())
+                            .build();
+                }
+                nestingTrolleyContentRepository.save(content);
+                nestingTrolleyContentRepository.flush();
 
-            rejection2Repository.deleteById(rejection.getId());
-            rejection2Repository.flush();
+                rejection2Repository.deleteById(rejection.getId());
+                rejection2Repository.flush();
+
+                return;
+            }
+            throw new IllegalStateException();
         }
+        throw new IllegalArgumentException();
     }
 
 

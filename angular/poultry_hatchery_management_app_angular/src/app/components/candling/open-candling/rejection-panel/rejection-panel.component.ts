@@ -11,6 +11,7 @@ import { BehaviorSubject, tap, Subscription, take, switchMap, of, takeLast } fro
 import { MatInputModule } from '@angular/material/input';
 import { CandlingNestingTrolleyAssignment } from '../../../../models/candling-nesting-trolley-assignment.model';
 import { NestingLoadedDeliveries } from '../../../../models/nesting-loaded-deliveries.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -49,7 +50,8 @@ export class RejectionPanelComponent implements OnChanges, OnInit {
 
 
   constructor(
-    private rejectionService: RejectionService
+    private rejectionService: RejectionService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -90,13 +92,23 @@ export class RejectionPanelComponent implements OnChanges, OnInit {
   }
 
 
- cancelRejection(rejectionId: string) {
+  cancelRejection(rejectionId: string) {
     this.rejectionService.deleteRejection2(rejectionId)
-      .subscribe(() => {
-        this.ngOnInit();
-        this.emit();
+      .subscribe({
+        next: () => {
+          this.ngOnInit();
+          this.emit();
+        },
+        error: (err) => {
+          this.snackBar.open('Brak miejsca na wózku', 'Zamknij', {
+            duration: 5000, // millis
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+          })
+        }
       });
   }
+  
 
 
   emit() {

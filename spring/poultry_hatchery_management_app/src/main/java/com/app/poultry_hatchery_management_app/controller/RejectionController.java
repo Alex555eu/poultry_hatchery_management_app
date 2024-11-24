@@ -7,6 +7,7 @@ import com.app.poultry_hatchery_management_app.service.RejectionService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -129,10 +130,17 @@ public class RejectionController {
 //        return ResponseEntity.notFound().build();
 //    }
 
+
     @DeleteMapping("/two")
     public ResponseEntity<String> deleteRejection2ById(@RequestParam UUID rejectionId) {
-        rejectionService.deleteRejection2ById(rejectionId);
-        return ResponseEntity.ok().build();
+        try {
+            rejectionService.deleteRejection2ById(rejectionId);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (IllegalStateException ex) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
     }
 
 
