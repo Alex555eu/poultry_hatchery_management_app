@@ -23,11 +23,17 @@ public class Candling {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    private LocalDateTime timeStamp;
+    private LocalDateTime createdAt;
 
     private Integer candlingNumber;
 
     @ManyToOne
     private Nesting nesting;
+
+    @OneToOne
+    private Task task;
+
+    @ManyToOne
+    private Organisation organisation;
 
 }

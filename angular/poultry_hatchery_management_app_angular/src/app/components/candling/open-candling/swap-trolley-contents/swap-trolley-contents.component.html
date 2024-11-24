@@ -1,0 +1,76 @@
+<div class="dialog-bg">
+    <div class="dialog-header">
+        <mat-icon>swap_horiz</mat-icon>
+        <label>Przełóż zawartość</label>
+        <button mat-icon-button (click)="onClose()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <div class="main-container">
+        <div class="source">
+            <mat-form-field>
+                <mat-label>Wózek źródłowy</mat-label>
+                <mat-select [(value)]="selectedSource">
+                    @for(option of data.allAssignments; track option.id) {
+                        <mat-option [value]="option">{{ option.nestingTrolley.humanReadableId }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+            <div class="content" *ngIf="selectedSource">
+                @for(content of data.allTrolleyContents.get(selectedSource); track content.id) {
+                    <div class="content-item" [class.active]="selectedContent?.id === content.id" (click)="selectContent(content)">
+                        <label>{{ content.nestingLoadedDeliveries.delivery.supplier.name }}</label>
+                        <label>{{ content.nestingLoadedDeliveries.delivery.supplier.surname }}</label>
+                        <label>{{ content.nestingLoadedDeliveries.delivery.productType.name }}</label>
+                        <label>{{ content.quantity }} szt.</label>
+                    </div>
+                    <mat-divider></mat-divider>
+                }
+            </div>
+        </div>
+
+        <mat-icon id="arrow">arrow_right_alt</mat-icon>
+
+        <div class="source">
+            <mat-form-field>
+                <mat-label>Wózek docelowy</mat-label>
+                <mat-select [(value)]="selectedTarget">
+                    @for(option of data.allAssignments; track option.id) {
+                        <mat-option *ngIf="option.id !== selectedSource?.id" [value]="option">{{ option.nestingTrolley.humanReadableId }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+            <div class="content" *ngIf="selectedTarget">
+                @for(content of data.allTrolleyContents.get(selectedTarget); track content.id) {
+                    <div class="content-item">
+                        <label>{{ content.nestingLoadedDeliveries.delivery.supplier.name }}</label>
+                        <label>{{ content.nestingLoadedDeliveries.delivery.supplier.surname }}</label>
+                        <label>{{ content.nestingLoadedDeliveries.delivery.productType.name }}</label>
+                        <label>{{ content.quantity }} szt.</label>
+                    </div>
+                    <mat-divider></mat-divider>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="input-container" *ngIf="selectedContent && selectedSource && selectedTarget">
+        <div>
+            <label>{{ sumOccupiedSpace(selectedSource) }}/{{ selectedSource.nestingTrolley.maxCapacity }}</label><br>
+            <label>Wolne miejsce: {{ selectedSource.nestingTrolley.maxCapacity-sumOccupiedSpace(selectedSource) }}</label>
+        </div>
+        <mat-form-field class="example-full-width">
+            <mat-label>Podaj ilość</mat-label>
+            <input type="number" min="0" [max]="selectedContent.quantity" matInput [(ngModel)]="requestedQuantity">
+        </mat-form-field>
+        <div>
+            <label>{{ sumOccupiedSpace(selectedTarget) }}/{{ selectedTarget.nestingTrolley.maxCapacity }}</label><br>
+            <label>Wolne miejsce: {{ selectedTarget.nestingTrolley.maxCapacity-sumOccupiedSpace(selectedTarget) }}</label>
+        </div>
+    </div>
+
+    <div class="button-container">
+        <button mat-raised-button color="primary" (click)="submit()">Potwierdź</button>
+    </div>
+    
+</div>

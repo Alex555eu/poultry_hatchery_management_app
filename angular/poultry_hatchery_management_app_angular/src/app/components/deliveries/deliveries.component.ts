@@ -90,14 +90,6 @@ export class DeliveriesComponent implements OnInit {
     this.dialog.open(NewDeliveryComponent);
   }
 
-  // createDeliveryPopupComponent() {
-  //   this.isCreateDeliveryPopupComponentEnabled = true;
-  // }
-
-  // closeCreateDeliveryPopupComponent(delivery: Delivery | null) {
-  //   this.isCreateDeliveryPopupComponentEnabled = false;
-  //   window.location.reload();
-  // }
 
   findSupplier() {
     const dialogRef = this.dialog.open(FindSupplierComponent);

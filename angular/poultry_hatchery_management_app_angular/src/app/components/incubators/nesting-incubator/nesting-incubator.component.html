@@ -1,0 +1,41 @@
+<div class="bg-container">
+    <div class="main-board" *ngIf="incubator">
+        <div class="dialog-header">
+            <mat-icon>egg</mat-icon>
+            <label>{{ incubator.humanReadableId }}</label>
+        </div>
+        <div class="flex-cntr">
+            <mat-grid-list [cols]="incubator.numberOfColumns + 1" gutterSize="10px">
+              @for (item of incubatorSpaces; track item; let i = $index ) {
+                @if (item) {
+                    <mat-grid-tile>
+                        <ng-container>
+                            <div class="tile" #tile [class]="getTileColorClass(item)" (click)="inspectIncubatorSpace(item)">
+                                <label id="space-id">{{ item.humanReadableId }}</label>
+                                @if (findTrolleySpaceAssignment(item)) {
+                                    <label>{{ findTrolleySpaceAssignment(item)?.nestingTrolley?.humanReadableId }}</label>
+                                } @else {
+                                    <mat-icon>add</mat-icon>
+                                }
+                            </div>
+                        </ng-container>
+                    </mat-grid-tile>
+                      
+                } @else {
+                    <mat-grid-tile style="background: transparent;">
+                    </mat-grid-tile>
+                }
+              }
+            </mat-grid-list>
+        </div>
+    </div>
+    <div class="side-board">
+        <app-tasks-section [isToggleable]="true" [tasks]="todaysTasks" [title]="'Dzisiejsze'"
+        (selectTaskEvent)="highlightTrolleysBySelectedTask($event)"
+        ></app-tasks-section>
+
+        <app-tasks-section [isToggleable]="true" [tasks]="uncompletedTasks" [title]="'Niezakończone'"
+        (selectTaskEvent)="highlightTrolleysBySelectedTask($event)"
+        ></app-tasks-section>
+    </div>
+</div>

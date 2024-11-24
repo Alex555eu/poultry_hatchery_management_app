@@ -1,7 +1,9 @@
 package com.app.poultry_hatchery_management_app;
 
+import com.app.poultry_hatchery_management_app.dto.PostCandlingRequest;
 import com.app.poultry_hatchery_management_app.model.*;
 import com.app.poultry_hatchery_management_app.repository.*;
+import com.app.poultry_hatchery_management_app.service.CandlingService;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -17,7 +19,7 @@ import java.util.List;
 public class StartupApplicationListener implements ApplicationListener<ApplicationReadyEvent> {
 
     private final AddressRepository addressRepository;
-    private final Rejection1Repository rejection1Repository;
+    private final Rejection2Repository rejection2Repository;
     private final OrganisationRepository organisationRepository;
     private final SupplierRepository supplierRepository;
     private final DeliveryRepository deliveryRepository;
@@ -33,19 +35,13 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
     private final TaskRepository taskRepository;
     private final TaskNestingTrolleyAssignmentRepository taskNestingTrolleyAssignmentRepository;
     private final NestingTrolleyContentRepository nestingTrolleyContentRepository;
+    private final CandlingRepository candlingRepository;
+    private final CandlingNestingTrolleyAssignmentRepository candlingNestingTrolleyAssignmentRepository;
 
     private final PasswordEncoder passwordEncoder;
 
     @Override
     public void onApplicationEvent(@NonNull ApplicationReadyEvent event) {
-/*        Rejection1 rejection1 = Rejection1.builder()
-                .nestingLoadedDeliveries(null)
-                .quantity(10)
-                .cause(RejectionCause.BRAK.verify(RejectionGroup.REJECTION_1))
-                .build();
-        rejection1Repository.save(rejection1);*/
-
-        //System.out.println(RejectionCause.getAvailableCauses(RejectionGroup.REJECTION_1).toString());
 
         Address address = Address.builder()
                 .city("Krakow")
@@ -106,8 +102,8 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
 
         Supplier supplier = Supplier.builder()
                 .WNI("wni-example")
-                .surname("surname-example")
-                .name("name-example")
+                .surname("nazwisko1")
+                .name("imie1")
                 .address(address2)
                 .organisation(organisation)
                 .build();
@@ -115,8 +111,8 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
 
         Supplier supplier2 = Supplier.builder()
                 .WNI("wni-example")
-                .surname("surname-example")
-                .name("name-example")
+                .surname("nazwisko2")
+                .name("imie2")
                 .address(address3)
                 .organisation(organisation)
                 .build();
@@ -129,8 +125,8 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
         productTypeRepository.save(type);
 
         Delivery delivery = Delivery.builder()
-                .quantity(111)
-                .type(type)
+                .quantity(300)
+                .productType(type)
                 .supplier(supplier)
                 .dateTime(LocalDateTime.now())
                 .build();
@@ -138,7 +134,7 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
 
         Delivery delivery2 = Delivery.builder()
                 .quantity(222)
-                .type(type)
+                .productType(type)
                 .supplier(supplier2)
                 .dateTime(LocalDateTime.now())
                 .build();
@@ -149,6 +145,7 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
                 .title("New Nesting")
                 .description("Lots of new eggs to nest")
                 .dateTime(LocalDateTime.now())
+                .isFinished(false)
                 .build();
         nestingRepository.save(nesting);
 
@@ -172,9 +169,18 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
                 .build();
         nestingIncubatorRepository.save(nestingIncubator);
 
+        for(int i = 1; i < 16; i++) {
+            NestingIncubatorSpace nestingIncubatorSpace = NestingIncubatorSpace.builder()
+                    .nestingIncubator(nestingIncubator)
+                    .isCurrentlyOccupied(true)
+                    .humanReadableId("S" + (i+1))
+                    .build();
+            nestingIncubatorSpaceRepository.save(nestingIncubatorSpace);
+        }
+
         NestingIncubatorSpace nestingIncubatorSpace = NestingIncubatorSpace.builder()
                 .nestingIncubator(nestingIncubator)
-                .isCurrentlyOccupied(true)
+                .isCurrentlyOccupied(false)
                 .humanReadableId("S1")
                 .build();
         nestingIncubatorSpaceRepository.save(nestingIncubatorSpace);
@@ -186,19 +192,41 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
                 .build();
         nestingTrolleyRepository.save(nestingTrolley);
 
+        NestingTrolley nestingTrolley2 = NestingTrolley.builder()
+                .humanReadableId("A2")
+                .maxCapacity(128)
+                .organisation(organisation)
+                .build();
+        nestingTrolleyRepository.save(nestingTrolley2);
+
+        NestingTrolley nestingTrolley3 = NestingTrolley.builder()
+                .humanReadableId("A3")
+                .maxCapacity(128)
+                .organisation(organisation)
+                .build();
+        nestingTrolleyRepository.save(nestingTrolley3);
+
         NestingTrolleyContent nestingTrolleyContent = NestingTrolleyContent.builder()
                 .nestingLoadedDeliveries(nestingLoadedDeliveries)
                 .nestingTrolley(nestingTrolley)
-                .quantity(125)
+                .quantity(124)
                 .build();
         nestingTrolleyContentRepository.save(nestingTrolleyContent);
 
         NestingTrolleyContent nestingTrolleyContent2 = NestingTrolleyContent.builder()
-                .nestingLoadedDeliveries(nestingLoadedDeliveries)
+                .nestingLoadedDeliveries(nestingLoadedDeliveries2)
                 .nestingTrolley(nestingTrolley)
                 .quantity(3)
                 .build();
         nestingTrolleyContentRepository.save(nestingTrolleyContent2);
+
+        NestingTrolleyContent nestingTrolleyContent3 = NestingTrolleyContent.builder()
+                .nestingLoadedDeliveries(nestingLoadedDeliveries2)
+                .nestingTrolley(nestingTrolley3)
+                .quantity(127)
+                .build();
+        nestingTrolleyContentRepository.save(nestingTrolleyContent3);
+
 
         NestingTrolleyIncubatorSpaceAssignment nestingTrolleyIncubatorSpaceAssignment =
                 NestingTrolleyIncubatorSpaceAssignment.builder()
@@ -259,6 +287,55 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
             taskNestingTrolleyAssignmentRepository.save(assignment);
         }
 
+        Task toBeAssigned = Task.builder()
+                .taskStatus(TaskStatus.NOT_STARTED)
+                .executionScheduledAt(LocalDateTime.now())
+                .organisation(organisation)
+                .taskType(taskType4)
+                .nesting(nesting)
+                .comment(nesting.getTitle() + " " + LocalDateTime.now())
+                .build();
+        taskRepository.save(toBeAssigned);
+
+        List<NestingTrolley> trolleys2 = nestingTrolleyRepository.findAllTrolleysByNestingId(nesting.getId());
+        for(NestingTrolley trolley : trolleys2) {
+            TaskNestingTrolleyAssignment assignment = TaskNestingTrolleyAssignment.builder()
+                    .task(toBeAssigned)
+                    .isTaskCompleted(false)
+                    .nestingTrolley(trolley)
+                    .executor(null)
+                    .build();
+            taskNestingTrolleyAssignmentRepository.save(assignment);
+        }
+
+        Candling candling = Candling.builder()
+                .candlingNumber(1)
+                .createdAt(LocalDateTime.now())
+                .nesting(nesting)
+                .organisation(organisation)
+                .task(toBeAssigned)
+                .build();
+        candlingRepository.save(candling);
+
+        CandlingNestingTrolleyAssignment cnta = CandlingNestingTrolleyAssignment.builder()
+                .candling(candling)
+                .nestingTrolley(nestingTrolley)
+                .build();
+        candlingNestingTrolleyAssignmentRepository.save(cnta);
+
+        CandlingNestingTrolleyAssignment cnta2 = CandlingNestingTrolleyAssignment.builder()
+                .candling(candling)
+                .nestingTrolley(nestingTrolley3)
+                .build();
+        candlingNestingTrolleyAssignmentRepository.save(cnta2);
+
+        Rejection2 rejection2 = Rejection2.builder()
+                .candlingNestingTrolleyAssignment(cnta)
+                .nestingLoadedDeliveries(nestingLoadedDeliveries)
+                .cause(RejectionCause.STLUCZKA)
+                .quantity(1)
+                .build();
+        rejection2Repository.save(rejection2);
 
     }
 }

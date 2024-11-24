@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 @Repository
 public interface NestingTrolleyIncubatorSpaceAssignmentRepository extends JpaRepository<NestingTrolleyIncubatorSpaceAssignment, UUID> {
@@ -18,5 +19,8 @@ public interface NestingTrolleyIncubatorSpaceAssignmentRepository extends JpaRep
     where ni.id = :incubatorId
 """, nativeQuery = true)
     List<NestingTrolleyIncubatorSpaceAssignment> findAllByIncubatorId(@Param("incubatorId") UUID incubatorId);
+
+    Optional<NestingTrolleyIncubatorSpaceAssignment> findByNestingTrolleyId(UUID id);
+    Optional<NestingTrolleyIncubatorSpaceAssignment> findByNestingIncubatorSpaceId(UUID id);
 
 }

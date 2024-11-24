@@ -49,6 +49,22 @@ public class TaskService {
         return taskNestingTrolleyAssignmentRepository.findAllByTaskId(taskId);
     }
 
+    public List<Task> getAllActiveTasksByIncubatorId(UUID incubatorId) {
+        return taskRepository.findAllTasksByNestingIncubatorIdAndStatus(incubatorId, List.of(TaskStatus.IN_PROGRESS, TaskStatus.NOT_STARTED));
+    }
+
+    public List<Task> getAllActiveTasksByTrolleyId(UUID trolleyId) {
+        return taskRepository.findAllTasksByNestingTrolleyIdAndStatus(trolleyId, List.of(TaskStatus.IN_PROGRESS, TaskStatus.NOT_STARTED));
+    }
+
+    public List<Task> getAllActiveTasksByTaskTypeName(String taskTypeName) {
+        return taskRepository.findAllByTaskTypeName(taskTypeName, List.of(TaskStatus.IN_PROGRESS, TaskStatus.NOT_STARTED));
+    }
+
+    Optional<Task> getTaskById(UUID taskId) {
+        return taskRepository.findById(taskId);
+    }
+
     @Transactional
     public Optional<Task> postTask(PostTaskRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -62,6 +78,7 @@ public class TaskService {
                         .taskType(taskType.get())
                         .taskStatus(TaskStatus.NOT_STARTED)
                         .executionScheduledAt(request.executionDateTime())
+                        .comment(request.comment())
                         .executionCompletedAt(null)
                         .nesting(null)
                         .organisation(user.getOrganisation())
@@ -97,37 +114,40 @@ public class TaskService {
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             User user = (User) authentication.getPrincipal();
 
-            Optional<TaskNestingTrolleyAssignment> assignment = taskNestingTrolleyAssignmentRepository.findById(request.taskNestingTrolleyAssignmentId());
+            Optional<TaskNestingTrolleyAssignment> assignmentOptional =
+                    taskNestingTrolleyAssignmentRepository.findByTaskIdAndNestingTrolleyId(request.taskId(), request.nestingTrolleyId());
 
-            if (assignment.isPresent()) {
-                Optional<Task> task = taskRepository.findByTaskNestingTrolleyAssignmentId(assignment.get().getId());
-                if (task.isPresent()) {
-                    Optional<Integer> countOfTrolleysWithUncompletedTask =
-                            taskNestingTrolleyAssignmentRepository.countAllByTaskIdAndTaskCompletedIsFalse(task.get().getId());
-                    if (request.isTaskCompleted()) {
-                        assignment.get().setIsTaskCompleted(true);
-                        assignment.get().setExecutor(user);
-                        if (countOfTrolleysWithUncompletedTask.isPresent() && countOfTrolleysWithUncompletedTask.get() == 1) {
-                            task.get().setTaskStatus(TaskStatus.COMPLETED);
-                            task.get().setExecutionCompletedAt(LocalDateTime.now());
-                        } else {
-                            task.get().setTaskStatus(TaskStatus.IN_PROGRESS);
-                        }
+            if (assignmentOptional.isPresent()) {
+                TaskNestingTrolleyAssignment assignment = assignmentOptional.get();
+                Task task = assignment.getTask();
+
+                Optional<Integer> countOfTrolleysWithUncompletedTask =
+                        taskNestingTrolleyAssignmentRepository.countAllByTaskIdAndTaskCompletedIsFalse(task.getId());
+                if (request.isTaskCompleted()) {
+                    assignment.setIsTaskCompleted(true);
+                    assignment.setExecutor(user);
+                    if (countOfTrolleysWithUncompletedTask.isPresent() && countOfTrolleysWithUncompletedTask.get() <= 1) {
+                        task.setTaskStatus(TaskStatus.COMPLETED);
+                        task.setExecutionCompletedAt(LocalDateTime.now());
                     } else {
-                        assignment.get().setIsTaskCompleted(false);
-                        assignment.get().setExecutor(null);
-                        if (countOfTrolleysWithUncompletedTask.isPresent() && countOfTrolleysWithUncompletedTask.get() == 0) {
-                            task.get().setTaskStatus(TaskStatus.NOT_STARTED);
-                            task.get().setExecutionCompletedAt(null);
-                        } else {
-                            task.get().setTaskStatus(TaskStatus.IN_PROGRESS);
-                        }
+                        task.setTaskStatus(TaskStatus.IN_PROGRESS);
                     }
-                    taskRepository.save(task.get());
-                    taskNestingTrolleyAssignmentRepository.save(assignment.get());
-
-                    return task;
+                } else {
+                    assignment.setIsTaskCompleted(false);
+                    assignment.setExecutor(null);
+                    if (countOfTrolleysWithUncompletedTask.isPresent() && countOfTrolleysWithUncompletedTask.get() <= 1) {
+                        task.setTaskStatus(TaskStatus.NOT_STARTED);
+                        task.setExecutionCompletedAt(null);
+                    } else {
+                        task.setTaskStatus(TaskStatus.IN_PROGRESS);
+                    }
                 }
+                task.setComment(request.comment());
+                taskRepository.save(task);
+                taskNestingTrolleyAssignmentRepository.save(assignment);
+
+                return Optional.of(task);
+
             }
         }
         return Optional.empty();
@@ -151,6 +171,17 @@ public class TaskService {
         } catch (IllegalArgumentException ignored) {}
 
         return Optional.empty();
+    }
+
+
+    public List<TaskType> getAllTaskTypes() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            User user = (User) authentication.getPrincipal();
+
+            return taskTypeRepository.findAllByOrganisationId(user.getOrganisation().getId());
+        }
+        return List.of();
     }
 
 }

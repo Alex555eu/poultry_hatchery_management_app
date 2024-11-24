@@ -34,8 +34,30 @@
     font-size: 14px;
 }
 
+.task-item-comment-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    word-break: break-word;
+    overflow-y: auto;
+
+}
+
+mat-list-item {
+    transition: background-color 0.3s ease;
+}
+
+mat-list-item.toggled {
+    background-color: rgb(207,207,207);
+}
+
+mat-list-item.toggled:hover {
+    background-color: rgb(207, 207, 207);
+}
+
 mat-list-item:hover {
-    background-color: whitesmoke;
+    background-color: whitesmoke ;
 }
 
 @media (max-width: 1300px) {

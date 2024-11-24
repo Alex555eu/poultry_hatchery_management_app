@@ -6,6 +6,9 @@ import { apiUrl } from '../../app.config';
 import { ApiPaths } from '../../api/api.paths';
 import { TaskNestingTrolleyAssignment } from '../../models/task-nesting-trolley-assignment.model';
 import { TaskStatus } from '../../models/task-status-enum';
+import { PutTaskRequest } from '../../dto/put-task-request';
+import { TaskType } from '../../models/task-type.model';
+import { PostTaskRequest } from '../../dto/post-task-request';
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +34,33 @@ export class TasksService {
     return this.allTasks;
   }
 
+  getAllActiveTasksByIncubatorId(incubatorId: string): Observable<Task[]> {
+    return this.http.get<Task[]>(`${apiUrl + ApiPaths.TaskPaths.GET_ALL_ACTIVE_TASKS_BY_INCUBATOR_ID + incubatorId}`).pipe(
+      catchError(error => {
+        console.error(error);
+        return of([]);
+      })
+    )
+  }
+
+  getAllActiveTasksByTaskTypeName(taskTypeName: string): Observable<Task[]> {
+    return this.http.get<Task[]>(`${apiUrl + ApiPaths.TaskPaths.GET_ALL_ACTIVE_TASKS_BY_TASK_TYPE_NAME + taskTypeName}`).pipe(
+      catchError(error => {
+        console.error(error);
+        return of([]);
+      })
+    )
+  }
+
+  getAllActiveTasksByTrolleyId(trolleyId: string): Observable<Task[]> {
+    return this.http.get<Task[]>(`${apiUrl + ApiPaths.TaskPaths.GET_ALL_ACTIVE_TASKS_BY_TROLLEY_ID + trolleyId}`).pipe(
+      catchError(error => {
+        console.error(error);
+        return of([]);
+      })
+    )
+  }
+
   getAllTaskNestingTrolleyAssignmentsByTaskId(taskId: string): Observable<TaskNestingTrolleyAssignment[]> {
     if (this.taskAssignmentsCache.has(taskId)) {
         return this.taskAssignmentsCache.get(taskId)!;
@@ -45,6 +75,24 @@ export class TasksService {
     this.taskAssignmentsCache.set(taskId, taskAssignments$);
 
     return taskAssignments$;
+  }
+
+  postTask(body: PostTaskRequest): Observable<Task> {
+    return this.http.post<Task>(`${apiUrl + ApiPaths.TaskPaths.POST_TASK}`, body).pipe(
+      catchError(error => {
+        console.error(error);
+        return of(); 
+      })
+    )
+  }
+ 
+  putTaskProgressOnTrolley(body: PutTaskRequest): Observable<Task> {
+    return this.http.put<any>(`${apiUrl + ApiPaths.TaskPaths.PUT_TASK}`, body).pipe(
+      catchError(error => {
+        console.error(error);
+        return of(); 
+      })
+    )
   }
 
   deleteTask(taskId: string): any {
@@ -67,6 +115,17 @@ export class TasksService {
     );
   }
 
+  getAllTaskTypes(): Observable<TaskType[]> {
+    return this.http.get<TaskType[]>(`${apiUrl}${ApiPaths.TaskPaths.GET_ALL_TASK_TYPES}`).pipe(
+      shareReplay(1),
+      catchError(error => {
+        console.error('Error patching task type', error);
+        return of([]); 
+      })
+    );
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////
   filterTodaysTasks(tasks: Task[]): Task[] {
     const today = new Date();
     const todaysTasks = tasks.filter(task => {
@@ -98,17 +157,13 @@ export class TasksService {
 
   filterOverdueTasks(tasks: Task[]): Task[] {
     const today = new Date();
-    const dayBeforeYesterday = new Date(today);
-    dayBeforeYesterday.setDate(today.getDate() - 2);
-
     const overdueTasks = tasks.filter(task => {
       const taskDate = new Date(task.executionScheduledAt);
       return (
-        taskDate < dayBeforeYesterday &&
-        task.taskStatus != TaskStatus.COMPLETED && 
-        task.taskStatus != TaskStatus.CANCELLED
+        taskDate <= today &&
+        task.taskStatus !== TaskStatus.COMPLETED && 
+        task.taskStatus !== TaskStatus.CANCELLED
     );
-    
     });
     return overdueTasks;
   }

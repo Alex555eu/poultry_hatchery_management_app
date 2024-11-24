@@ -1,0 +1,50 @@
+<mat-dialog-content>
+    <div class="dialog-bg">
+        <div class="dialog-header">
+            <mat-icon>add</mat-icon>
+            <label>Nowe świetlenie</label>
+            <button mat-icon-button (click)="onClose()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+
+        <div class="main-container">
+            <ng-container *ngIf="data; else default">
+                <label>Data planowanego zadania: 
+                    <b>{{ data.task.executionScheduledAt | customDateFormatter: 'full' }}</b>
+                </label>
+                <label>Komentarz:</label>
+                <label>
+                    <b>{{ data.task.comment }}</b>
+                </label>
+                <label>Przekład:</label>
+                <label>
+                    <b>{{ data.task.nesting.title }}</b>
+                </label>
+            </ng-container>
+        </div>
+
+        <div class="button-container">
+            <button mat-flat-button color="primary" [disabled]="!selectedNesting" (click)="onSubmit()">
+                Rozpocznij
+            </button>
+        </div>
+
+    </div>
+</mat-dialog-content>
+
+<ng-template #default>
+    <label>Data planowanego zadania: <b>Teraz</b></label>
+    <mat-form-field appearance="fill" *ngIf="nestings | async as nestingList; else loading">
+        <mat-label>Wybierz nakład</mat-label>
+        <mat-select [(value)]="selectedNesting" placeholder="Wybierz nesting">
+          <mat-option *ngFor="let nesting of nestingList" [value]="nesting">
+            {{ nesting.title }}
+          </mat-option>
+        </mat-select>
+    </mat-form-field>
+</ng-template>
+
+<ng-template #loading>
+    Ładowanie...
+</ng-template>

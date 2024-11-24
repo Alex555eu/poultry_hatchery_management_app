@@ -22,7 +22,6 @@ export class HatchingTrolleyService {
   public getAllHatchingTrolleys(forceReload: boolean = false): Observable<HatchingTrolley[]> {
     if (!this.hatchingTrolleyAll$ || forceReload){
       this.hatchingTrolleyAll$ = this.http.get<any>(`${apiUrl}${ApiPaths.HatchingTrolleyPaths.GET_HATCHING_TROLLEY}`).pipe(
-        map(res => this.parseResponseList(res)),
         shareReplay(1),
         catchError(error => {
           return of();
@@ -36,28 +35,4 @@ export class HatchingTrolleyService {
     return this.http.post<any>(`${apiUrl}${ApiPaths.HatchingTrolleyPaths.POST_HATCHING_TROLLEY}`, body);
   }
 
-  private parseResponseList(list: any[]): HatchingTrolley[] {
-    return list.map(listItem => this.parseResponse(listItem));
-  }
-
-  private parseResponse(json: any): HatchingTrolley {
-    const address = new AddressDetails(
-      json.organisation.address.id,
-      json.organisation.address.city,
-      json.organisation.address.postalCode,
-      json.organisation.address.street,
-      json.organisation.address.number
-    );
-    const organisation = new OrganisationDetails(
-      json.organisation.id,
-      json.organisation.name,
-      json.organisation.regon,
-      address
-    );
-    return new HatchingTrolley(
-      json.id,
-      json.humanReadableId,
-      organisation
-    )
-  }
 }

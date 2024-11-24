@@ -32,4 +32,6 @@ public class Nesting {
 
     private String description;
 
+    private boolean isFinished;
+
 }

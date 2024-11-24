@@ -1,10 +1,7 @@
 package com.app.poultry_hatchery_management_app.controller;
 
 
-import com.app.poultry_hatchery_management_app.dto.PostNestingTrolleyContentRequest;
-import com.app.poultry_hatchery_management_app.dto.PostNestingTrolleyRequest;
-import com.app.poultry_hatchery_management_app.dto.PutNestingTrolleyContentRequest;
-import com.app.poultry_hatchery_management_app.dto.PutNestingTrolleyRequest;
+import com.app.poultry_hatchery_management_app.dto.*;
 import com.app.poultry_hatchery_management_app.model.NestingTrolley;
 import com.app.poultry_hatchery_management_app.model.NestingTrolleyContent;
 import com.app.poultry_hatchery_management_app.service.NestingTrolleyService;
@@ -30,6 +27,36 @@ public class NestingTrolleyController {
     @GetMapping("/")
     public ResponseEntity<String> getAllTrolleys() throws JsonProcessingException {
         List<NestingTrolley> trolleyList = nestingTrolleyService.getAllTrolleys();
+        if (trolleyList == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        } else if (trolleyList.isEmpty()) {
+            return ResponseEntity.notFound().build();
+
+        } else {
+            String response = objectMapper.writeValueAsString(trolleyList);
+            return ResponseEntity.ok(response);
+        }
+    }
+
+    @GetMapping("/by-nesting")
+    public ResponseEntity<String> getAllTrolleysByNestingId(@RequestParam UUID nestingId) throws JsonProcessingException {
+        List<NestingTrolley> trolleyList = nestingTrolleyService.getAllTrolleysByNestingId(nestingId);
+        if (trolleyList == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        } else if (trolleyList.isEmpty()) {
+            return ResponseEntity.notFound().build();
+
+        } else {
+            String response = objectMapper.writeValueAsString(trolleyList);
+            return ResponseEntity.ok(response);
+        }
+    }
+
+    @GetMapping("/from-outside")
+    public ResponseEntity<String> getAllTrolleysFromOutsideOfIncubators() throws JsonProcessingException {
+        List<NestingTrolley> trolleyList = nestingTrolleyService.getAllTrolleysFromOutsideOfIncubators();
         if (trolleyList == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
@@ -85,6 +112,16 @@ public class NestingTrolleyController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/content/transfer")
+    public ResponseEntity<String> postTrolleyContentTransfer(@RequestBody PostNestingTrolleyContentTransferRequest request) throws JsonProcessingException {
+        List<NestingTrolleyContent> trolleyContent = nestingTrolleyService.postTrolleyContentTransfer(request);
+        if (trolleyContent.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        String body = objectMapper.writeValueAsString(trolleyContent);
+        return ResponseEntity.ok(body);
     }
 
     @PutMapping("/content")

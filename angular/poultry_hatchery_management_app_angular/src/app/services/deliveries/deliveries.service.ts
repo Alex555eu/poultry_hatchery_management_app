@@ -24,10 +24,12 @@ export class DeliveriesService {
   public getAllDeliveries(forceReload: boolean = false): Observable<Delivery[]> {
     if (!this.deliveriesAll$ || forceReload){
       this.deliveriesAll$ = this.http.get<any>(`${apiUrl}${ApiPaths.DeliveryPaths.GET_ALL_DELIVERIES}`).pipe(
+        tap(response=> console.log(response)),
         map(res => this.parseResponseList(res)),
         shareReplay(1),
         catchError(error => {
-          return of();
+          console.error(error);
+          return of([]);
         })
       );
     }
@@ -38,7 +40,7 @@ export class DeliveriesService {
     return this.http.get<any>(`${apiUrl}${ApiPaths.DeliveryPaths.GET_ALL_PRODUCT_TYPES}`).pipe(
       shareReplay(1),
       catchError(error => {
-        return of();
+        return of([]);
       })
     );
   }
@@ -87,8 +89,8 @@ export class DeliveriesService {
       organisation
     );
     const type = new ProductType(
-      json.type.id,
-      json.type.name,
+      json.productType.id,
+      json.productType.name,
       organisation
     )
     return new Delivery(

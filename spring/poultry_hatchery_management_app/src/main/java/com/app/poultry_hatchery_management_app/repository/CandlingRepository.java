@@ -9,6 +9,7 @@ import java.util.UUID;
 @Repository
 public interface CandlingRepository extends JpaRepository<Candling, UUID> {
 
+    List<Candling> findAllByOrganisationId(UUID id);
     List<Candling> findAllByNestingId(UUID id);
 
 }

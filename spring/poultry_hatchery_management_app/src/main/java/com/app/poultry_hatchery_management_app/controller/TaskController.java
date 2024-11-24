@@ -5,6 +5,7 @@ import com.app.poultry_hatchery_management_app.dto.PostTaskRequest;
 import com.app.poultry_hatchery_management_app.dto.PutTaskRequest;
 import com.app.poultry_hatchery_management_app.model.Task;
 import com.app.poultry_hatchery_management_app.model.TaskNestingTrolleyAssignment;
+import com.app.poultry_hatchery_management_app.model.TaskType;
 import com.app.poultry_hatchery_management_app.service.TaskService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,6 +36,36 @@ public class TaskController {
         return ResponseEntity.ok(body);
     }
 
+    @GetMapping("/all/active")
+    public ResponseEntity<String> getAllActiveTasksByIncubatorId(@RequestParam UUID incubatorId) throws JsonProcessingException {
+        List<Task> tasks = taskService.getAllActiveTasksByIncubatorId(incubatorId);
+        if (tasks.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        String response = objectMapper.writeValueAsString(tasks);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/all/active/trolley")
+    public ResponseEntity<String> getAllActiveTasksByTrolleyId(@RequestParam UUID trolleyId) throws JsonProcessingException {
+        List<Task> tasks = taskService.getAllActiveTasksByTrolleyId(trolleyId);
+        if (tasks.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        String response = objectMapper.writeValueAsString(tasks);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/all/active/task-type")
+    public ResponseEntity<String> getAllActiveTasksByTaskTypeName(@RequestParam String taskTypeName) throws JsonProcessingException {
+        List<Task> tasks = taskService.getAllActiveTasksByTaskTypeName(taskTypeName);
+        if (tasks.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        String response = objectMapper.writeValueAsString(tasks);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("")
     public ResponseEntity<String> getAllTasksByNestingId(@RequestParam UUID nestingId) throws JsonProcessingException {
         List<Task> tasks = taskService.getAllTasksByNestingId(nestingId);
@@ -56,19 +87,21 @@ public class TaskController {
     }
 
     @PostMapping("")
-    public ResponseEntity<String> postTask(@RequestBody PostTaskRequest request) {
+    public ResponseEntity<String> postTask(@RequestBody PostTaskRequest request) throws JsonProcessingException {
         Optional<Task> tasks = taskService.postTask(request);
         if (tasks.isPresent()) {
-            return ResponseEntity.ok().build();
+            String body = objectMapper.writeValueAsString(tasks.get());
+            return ResponseEntity.ok(body);
         }
         return ResponseEntity.notFound().build();
     }
 
     @PutMapping("")
-    public ResponseEntity<String> putTask(@RequestBody PutTaskRequest request) {
+    public ResponseEntity<String> putTask(@RequestBody PutTaskRequest request) throws JsonProcessingException {
         Optional<Task> tasks = taskService.putTask(request);
         if (tasks.isPresent()) {
-            return ResponseEntity.ok().build();
+            String body = objectMapper.writeValueAsString(tasks.get());
+            return ResponseEntity.ok(body);
         }
         return ResponseEntity.notFound().build();
     }
@@ -87,5 +120,18 @@ public class TaskController {
         }
         return ResponseEntity.badRequest().build();
     }
+
+    ////////////////////////////////////////////////
+
+    @GetMapping("/task-type")
+    public ResponseEntity<String> getAllTaskTypes() throws JsonProcessingException {
+        List<TaskType> assignments = taskService.getAllTaskTypes();
+        if (assignments.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        String response = objectMapper.writeValueAsString(assignments);
+        return ResponseEntity.ok(response);
+    }
+
 
 }

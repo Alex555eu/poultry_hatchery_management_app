@@ -2,22 +2,12 @@ import { AddressDetails } from "./address-details.model";
 
 export class OrganisationDetails {
 
-    private _id: string;
-    private _name: string;
-    private _regon: string;
-    private _address: AddressDetails;
-
     public constructor(
-        id: string,
-        name: string,
-        regon: string,
-        address: AddressDetails 
-    ) {
-        this._id = id;
-        this._name = name;
-        this._regon = regon;
-        this._address = address;
-    }
+       private _id: string,
+       private _name: string,
+       private _regon: string,
+       private _address: AddressDetails 
+    ) {}
 
     public get id(): string {
         return this._id;
