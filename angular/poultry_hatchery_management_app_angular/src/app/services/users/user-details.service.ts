@@ -26,7 +26,6 @@ export class UserDetailsService {
   public getUserDetails(forceReload: boolean = false): Observable<UserDetails>{
     if (!this.userDetails$ || forceReload){
       this.userDetails$ = this.http.get<any>(`${apiUrl}${ApiPaths.UserDataPaths.GET_USER_SELF}`).pipe(
-        map(res => this.parseResponse(res)),
         shareReplay(1),
         catchError(error => {
           return of();
@@ -39,7 +38,6 @@ export class UserDetailsService {
   public getUserDetailsAll(forceReload: boolean = false): Observable<UserDetails[]> {
     if (!this.userDetailsAll$ || forceReload){
       this.userDetailsAll$ = this.http.get<any>(`${apiUrl}${ApiPaths.UserDataPaths.GET_OTHER_USERS}`).pipe(
-        map(res => this.parseResponseList(res)),
         shareReplay(1),
         catchError(error => {
           return of();
@@ -53,33 +51,4 @@ export class UserDetailsService {
     return this.http.post<any>(`${apiUrl}${ApiPaths.UserDataPaths.POST_USER}`, body);
   }
 
-  private parseResponseList(jsonList: any[]): UserDetails[] {
-    return jsonList.map(listItem => this.parseResponse(listItem));
-  }
-
-  private parseResponse(json: any): UserDetails {
-    const address = new AddressDetails(
-      json.organisation.address.id,
-      json.organisation.address.city,
-      json.organisation.address.postalCode,
-      json.organisation.address.street,
-      json.organisation.address.number
-    );
-    const organisation = new OrganisationDetails(
-      json.organisation.id,
-      json.organisation.name,
-      json.organisation.regon,
-      address
-    );
-    return new UserDetails(
-      json.id,
-      json.firstName,
-      json.lastName,
-      json.emailAddress,
-      json.phoneNumber,
-      json.role,
-      json.isEnabled,
-      organisation
-    );
-  }
 }

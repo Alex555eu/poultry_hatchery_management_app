@@ -16,11 +16,18 @@ export namespace ApiPaths {
     }
 
     export enum NestingIncubatorPaths {
-        GET_NESTING_INCUBATOR = '/api/v1/nesting-incubator/',
-        POST_NESTING_INCUBATOR = '/api/v1/nesting-incubator/',
-        PUT_NESTING_INCUBATOR = '/api/v1/nesting-incubator/',
-        DELETE_NESTING_INCUBATOR = '/api/v1/nesting-incubator/',
-        GET_NESTING_TROLLEY_CURR_IN_INCUBATOR_BY_INCUBATOR_ID = '/api/v1/nesting-incubator/occupation?incubatorId='
+        GET_ALL_NESTING_INCUBATORS = '/api/v1/nesting-incubator/all',
+        GET_NESTING_INCUBATOR = '/api/v1/nesting-incubator?incubatorId=',
+        POST_NESTING_INCUBATOR = '/api/v1/nesting-incubator',
+        PUT_NESTING_INCUBATOR = '/api/v1/nesting-incubator',
+        DELETE_NESTING_INCUBATOR = '/api/v1/nesting-incubator',
+
+        GET_ALL_NESTING_INCUBATOR_SPACES = '/api/v1/nesting-incubator/space?incubatorId=',
+
+        GET_NESTING_TROLLEY_CURR_IN_INCUBATOR_BY_INCUBATOR_ID = '/api/v1/nesting-incubator/occupation?incubatorId=',
+        POST_NESTING_TROLLEY_TO_INCUBATOR_SPACE = '/api/v1/nesting-incubator/occupation',
+        PUT_NESTING_TROLLEY_TO_INCUBATOR_SPACE = '/api/v1/nesting-incubator/occupation?assignmentId=',
+        DELETE_NESTING_TROLLEY_FROM_INCUBATOR_SPACE = '/api/v1/nesting-incubator/occupation?assignmentId='
     }
 
     export enum HatchingIncubatorPaths {
@@ -32,9 +39,12 @@ export namespace ApiPaths {
 
     export enum NestingTrolleyPaths {
         GET_NESTING_TROLLEY = '/api/v1/nesting-trolley/',
+        GET_ALL_NESTING_TROLLEYS_FROM_OUTSIDE_OF_INCUBATORS = '/api/v1/nesting-trolley/from-outside',
         POST_NESTING_TROLLEY = '/api/v1/nesting-trolley/',
         PUT_NESTING_TROLLEY = '/api/v1/nesting-trolley/',
         DELETE_NESTING_TROLLEY = '/api/v1/nesting-trolley/',
+
+        GET_NESTING_TROLLEY_CONTENT = '/api/v1/nesting-trolley/content?trolleyId=',
     }
 
     export enum HatchingTrolleyPaths {
@@ -59,6 +69,8 @@ export namespace ApiPaths {
 
     export enum TaskPaths {
         GET_ALL_TASKS = '/api/v1/task/all',
+        GET_ALL_ACTIVE_TASKS_BY_INCUBATOR_ID = '/api/v1/task/all/active?incubatorId=',
+        GET_ALL_ACTIVE_TASKS_BY_TROLLEY_ID = '/api/v1/task/all/active/trolley?trolleyId=',
         GET_ALL_TASK_ASSIGNED_TROLLEYS_BY_TASK_ID = '/api/v1/task/trolley-assignments?taskId=',
         GET_ALL_TASKS_BY_NESTING_ID = '/api/v1/task?nestingId=',
         POST_TASK = '/api/v1/task',

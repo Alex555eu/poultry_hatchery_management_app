@@ -1,5 +1,5 @@
 import { CustomDateFormatterService } from './../../utils/date-format/custom-date-formatter.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TasksService } from '../../services/tasks/tasks.service';
 import { Task } from '../../models/task.model';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -25,6 +25,7 @@ import { MatDialog, MatDialogConfig, MatDialogModule } from '@angular/material/d
 import { MatMenuModule } from '@angular/material/menu';
 import { NewTaskComponent } from './new-task/new-task.component';
 import { FindTaskedTrolleysComponent } from './find-tasked-trolleys/find-tasked-trolleys.component';
+import { Subscription } from 'rxjs';
 
 
 

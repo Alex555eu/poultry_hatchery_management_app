@@ -49,6 +49,14 @@ public class TaskService {
         return taskNestingTrolleyAssignmentRepository.findAllByTaskId(taskId);
     }
 
+    public List<Task> getAllActiveTasksByIncubatorId(UUID incubatorId) {
+        return taskRepository.findAllTasksByNestingIncubatorIdAndStatus(incubatorId, List.of(TaskStatus.IN_PROGRESS, TaskStatus.NOT_STARTED));
+    }
+
+    public List<Task> getAllActiveTasksByTrolleyId(UUID trolleyId) {
+        return taskRepository.findAllTasksByNestingTrolleyIdAndStatus(trolleyId, List.of(TaskStatus.IN_PROGRESS, TaskStatus.NOT_STARTED));
+    }
+
     @Transactional
     public Optional<Task> postTask(PostTaskRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -97,10 +105,11 @@ public class TaskService {
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             User user = (User) authentication.getPrincipal();
 
-            Optional<TaskNestingTrolleyAssignment> assignment = taskNestingTrolleyAssignmentRepository.findById(request.taskNestingTrolleyAssignmentId());
+            Optional<TaskNestingTrolleyAssignment> assignment =
+                    taskNestingTrolleyAssignmentRepository.findByTaskIdAndNestingTrolleyId(request.taskId(), request.nestingTrolleyId());
 
             if (assignment.isPresent()) {
-                Optional<Task> task = taskRepository.findByTaskNestingTrolleyAssignmentId(assignment.get().getId());
+                Optional<Task> task = taskRepository.findById(request.taskId());
                 if (task.isPresent()) {
                     Optional<Integer> countOfTrolleysWithUncompletedTask =
                             taskNestingTrolleyAssignmentRepository.countAllByTaskIdAndTaskCompletedIsFalse(task.get().getId());

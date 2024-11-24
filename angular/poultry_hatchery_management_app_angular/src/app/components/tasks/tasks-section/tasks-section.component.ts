@@ -20,10 +20,35 @@ export class TasksSectionComponent {
 
   @Input() tasks: Task[] | null = null;
   @Input() title: string | null = null;
+  @Input() isToggleable: boolean | null = null;
   @Output() selectTaskEvent = new EventEmitter<string>();
 
+  private isCurrentlyToggled: boolean = false;
+
   selectTask(taskId: string) {
+    if (this.isToggleable) {
+      if (this.isCurrentlyToggled) {
+        this.isCurrentlyToggled = false;
+        this.selectTaskEvent.emit('')
+      } else {
+        this.isCurrentlyToggled = true;
+        this.selectTaskEvent.emit(taskId) 
+      }
+      return; //safety check
+    }
+
     this.selectTaskEvent.emit(taskId);
+  }
+
+  setColorClass(): string {
+    if (this.isToggleable) {
+      if (this.isCurrentlyToggled) {
+        return 'toggled';
+      } else {
+        return '';
+      }
+    }
+    return '';
   }
 
   getStatusColor(status: string): string {

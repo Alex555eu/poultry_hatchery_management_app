@@ -27,7 +27,7 @@ export class DeliveriesService {
         map(res => this.parseResponseList(res)),
         shareReplay(1),
         catchError(error => {
-          return of();
+          return of([]);
         })
       );
     }
@@ -38,7 +38,7 @@ export class DeliveriesService {
     return this.http.get<any>(`${apiUrl}${ApiPaths.DeliveryPaths.GET_ALL_PRODUCT_TYPES}`).pipe(
       shareReplay(1),
       catchError(error => {
-        return of();
+        return of([]);
       })
     );
   }

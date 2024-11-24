@@ -22,7 +22,6 @@ export class SupplierService {
   public getAllSuppliers(forceReload: boolean = false): Observable<Supplier[]> {
     if (!this.deliveriesAll$ || forceReload){
       this.deliveriesAll$ = this.http.get<any>(`${apiUrl}${ApiPaths.DeliveryPaths.GET_ALL_SUPPLIERS}`).pipe(
-        map(res => this.parseResponseList(res)),
         shareReplay(1),
         catchError(error => {
           return of();
@@ -35,45 +34,10 @@ export class SupplierService {
   public postSupplier(request: PostSupplierRequest): Observable<Supplier> {
     const body = JSON.stringify(request);
     return this.http.post<any>(`${apiUrl}${ApiPaths.DeliveryPaths.POST_SUPPLIER}`, body).pipe(
-      map(res => this.parseResponse(res)),
       catchError(error => {
         return of();
       })
     );;
   }
 
-  private parseResponseList(list: any[]): Supplier[] {
-    return list.map(listItem => this.parseResponse(listItem));
-  }
-
-  private parseResponse(json: any): Supplier {
-    const supplierAddress = new AddressDetails(
-      json.address.id,
-      json.address.city,
-      json.address.postalCode,
-      json.address.street,
-      json.address.number
-    );
-    const organisationAddress = new AddressDetails(
-      json.organisation.address.id,
-      json.organisation.address.city,
-      json.organisation.address.postalCode,
-      json.organisation.address.street,
-      json.organisation.address.number
-    );
-    const organisation = new OrganisationDetails(
-      json.organisation.id,
-      json.organisation.name,
-      json.organisation.regon,
-      organisationAddress
-    );
-    return new Supplier(
-      json.id,
-      json.name,
-      json.surname,
-      json.wni,
-      supplierAddress,
-      organisation
-    );
-  }
 }

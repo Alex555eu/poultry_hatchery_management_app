@@ -14,12 +14,14 @@ import java.util.UUID;
 public interface TaskNestingTrolleyAssignmentRepository extends JpaRepository<TaskNestingTrolleyAssignment, UUID> {
 
     @Query(value = """
-    select count(tnta.*) from task_nesting_trolley_assignment tnta
-    join task t on t.id = tnta.tak_id
+    select count(*) from task_nesting_trolley_assignment tnta
+    join task t on t.id = tnta.task_id
     where tnta.is_task_completed = false 
-    and task.id = :taskId
+    and t.id = :taskId
 """, nativeQuery = true)
     Optional<Integer> countAllByTaskIdAndTaskCompletedIsFalse(@Param("taskId") UUID taskId);
+
+    Optional<TaskNestingTrolleyAssignment> findByTaskIdAndNestingTrolleyId(UUID taskId, UUID nestingTrolleyId);
 
     List<TaskNestingTrolleyAssignment> findAllByTaskId(UUID taskId);
 

@@ -1,6 +1,7 @@
 package com.app.poultry_hatchery_management_app.repository;
 
 import com.app.poultry_hatchery_management_app.model.Task;
+import com.app.poultry_hatchery_management_app.model.TaskStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,23 +15,34 @@ import java.util.stream.Stream;
 @Repository
 public interface TaskRepository extends JpaRepository<Task, UUID> {
 
-//    @Query(value = """
-//    select ts.* from task_schedule ts
-//    join nesting_trolley_content ntc on ntc.nesting_trolley_id = ts.nesting_trolley_id
-//    join nesting_loaded_deliveries nld on nld.id = ntc.nesting_loaded_deliveries_id
-//    where nld.nesting_id = :nestingId
-//""", nativeQuery = true)
-//    List<Task> findAllByNestingId(@Param("nestingId") UUID nestingId);
-
     List<Task> findAllByNestingId(UUID nestingId);
 
     @Query(value = """
     select t.* from task t
-    join task_nesting_trolley_assignment tnta on tnta.taskId = t.id
+    join task_nesting_trolley_assignment tnta on tnta.task_id = t.id
     where tnta.id = :assignmentId
 """, nativeQuery = true)
     Optional<Task> findByTaskNestingTrolleyAssignmentId(@Param("assignmentId") UUID assignmentId);
 
-    List<Task> findAllByOrganisationId(UUID id);
+    @Query(value = """
+    select distinct t from Task t
+    join TaskNestingTrolleyAssignment tnta on t = tnta.task
+    join NestingTrolleyIncubatorSpaceAssignment ntisa on ntisa.nestingTrolley = tnta.nestingTrolley
+    join NestingIncubator ni on ni = ntisa.nestingIncubatorSpace.nestingIncubator
+    where t.taskStatus in :allowedStatuses
+    and
+    ni.id = :incubatorId
+""")
+    List<Task> findAllTasksByNestingIncubatorIdAndStatus(@Param("incubatorId") UUID incubatorId, @Param("allowedStatuses") List<TaskStatus> allowedStatuses);
 
+    @Query(value = """
+    select distinct t from Task t
+    join TaskNestingTrolleyAssignment tnta on t = tnta.task
+    where t.taskStatus in :allowedStatuses
+    and
+    tnta.nestingTrolley.id = :trolleyId
+""")
+    List<Task> findAllTasksByNestingTrolleyIdAndStatus(@Param("trolleyId") UUID trolleyId, @Param("allowedStatuses") List<TaskStatus> allowedStatuses);
+
+    List<Task> findAllByOrganisationId(UUID id);
 }

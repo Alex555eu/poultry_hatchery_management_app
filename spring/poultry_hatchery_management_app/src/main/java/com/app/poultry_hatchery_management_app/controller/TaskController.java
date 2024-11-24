@@ -35,6 +35,26 @@ public class TaskController {
         return ResponseEntity.ok(body);
     }
 
+    @GetMapping("/all/active")
+    public ResponseEntity<String> getAllActiveTasksByIncubatorId(@RequestParam UUID incubatorId) throws JsonProcessingException {
+        List<Task> tasks = taskService.getAllActiveTasksByIncubatorId(incubatorId);
+        if (tasks.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        String response = objectMapper.writeValueAsString(tasks);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/all/active/trolley")
+    public ResponseEntity<String> getAllActiveTasksByTrolleyId(@RequestParam UUID trolleyId) throws JsonProcessingException {
+        List<Task> tasks = taskService.getAllActiveTasksByTrolleyId(trolleyId);
+        if (tasks.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        String response = objectMapper.writeValueAsString(tasks);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("")
     public ResponseEntity<String> getAllTasksByNestingId(@RequestParam UUID nestingId) throws JsonProcessingException {
         List<Task> tasks = taskService.getAllTasksByNestingId(nestingId);
@@ -65,10 +85,11 @@ public class TaskController {
     }
 
     @PutMapping("")
-    public ResponseEntity<String> putTask(@RequestBody PutTaskRequest request) {
+    public ResponseEntity<String> putTask(@RequestBody PutTaskRequest request) throws JsonProcessingException {
         Optional<Task> tasks = taskService.putTask(request);
         if (tasks.isPresent()) {
-            return ResponseEntity.ok().build();
+            String body = objectMapper.writeValueAsString(tasks.get());
+            return ResponseEntity.ok(body);
         }
         return ResponseEntity.notFound().build();
     }
