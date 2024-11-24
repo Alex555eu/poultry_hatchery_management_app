@@ -28,7 +28,7 @@ public class Delivery {
     private Integer quantity;
 
     @ManyToOne
-    private ProductType type;
+    private ProductType productType;
 
     @ManyToOne
     private Supplier supplier;

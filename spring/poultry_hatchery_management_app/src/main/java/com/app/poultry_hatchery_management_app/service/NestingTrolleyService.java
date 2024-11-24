@@ -1,9 +1,6 @@
 package com.app.poultry_hatchery_management_app.service;
 
-import com.app.poultry_hatchery_management_app.dto.PostNestingTrolleyContentRequest;
-import com.app.poultry_hatchery_management_app.dto.PostNestingTrolleyRequest;
-import com.app.poultry_hatchery_management_app.dto.PutNestingTrolleyContentRequest;
-import com.app.poultry_hatchery_management_app.dto.PutNestingTrolleyRequest;
+import com.app.poultry_hatchery_management_app.dto.*;
 import com.app.poultry_hatchery_management_app.model.*;
 import com.app.poultry_hatchery_management_app.repository.NestingLoadedDeliveriesRepository;
 import com.app.poultry_hatchery_management_app.repository.NestingTrolleyContentRepository;
@@ -125,6 +122,59 @@ public class NestingTrolleyService {
         return Optional.empty();
     }
 
+    public List<NestingTrolleyContent> postTrolleyContentTransfer(PostNestingTrolleyContentTransferRequest request) {
+        Optional<NestingTrolley> targetTrolleyOpt = nestingTrolleyRepository.findById(request.targetNestingTrolleyId());
+        Optional<NestingTrolleyContent> sourceContentOpt = nestingTrolleyContentRepository.findById(request.sourceNestingTrolleyContentId());
+
+        if (targetTrolleyOpt.isPresent() &&
+                sourceContentOpt.isPresent() &&
+                request.quantity() <= sourceContentOpt.get().getQuantity())
+
+        {
+            NestingTrolleyContent sourceContent = sourceContentOpt.get();
+            NestingTrolley targetTrolley = targetTrolleyOpt.get();
+
+            List<NestingTrolleyContent> targetTrolleyContentList = nestingTrolleyContentRepository.findAllByNestingTrolleyId(targetTrolley.getId());
+
+            Integer currentAmount = targetTrolleyContentList.stream().mapToInt(NestingTrolleyContent::getQuantity).reduce(0, Integer::sum);
+
+            if (request.quantity() <= (targetTrolley.getMaxCapacity() - currentAmount)) {
+                // check, if targeted trolley already contains content from the same delivery
+                Optional<NestingTrolleyContent> existingContentOpt = targetTrolleyContentList
+                        .stream()
+                        .filter(it -> it.getNestingLoadedDeliveries().getId().equals(sourceContent.getNestingLoadedDeliveries().getId()))
+                        .findAny();
+
+                // append existing content
+                NestingTrolleyContent targetContent;
+                if (existingContentOpt.isPresent()) {
+                    targetContent = existingContentOpt.get();
+                    targetContent.setQuantity(targetContent.getQuantity() + request.quantity());
+                    nestingTrolleyContentRepository.save(targetContent);
+                } else {
+                    // create new content
+                    targetContent = NestingTrolleyContent.builder()
+                            .quantity(request.quantity())
+                            .nestingTrolley(targetTrolley)
+                            .nestingLoadedDeliveries(sourceContent.getNestingLoadedDeliveries())
+                            .build();
+                    nestingTrolleyContentRepository.save(targetContent);
+                }
+                // dispose/reduce source(old) content
+                if (request.quantity().equals(sourceContent.getQuantity())) {
+                    nestingTrolleyContentRepository.deleteById(sourceContent.getId());
+                    nestingTrolleyContentRepository.flush();
+                } else {
+                    sourceContent.setQuantity(sourceContent.getQuantity() - request.quantity());
+                    nestingTrolleyContentRepository.save(sourceContent);
+                }
+
+                return List.of(sourceContent, targetContent);
+            }
+        }
+        return List.of();
+    }
+
     public Optional<NestingTrolleyContent> putTrolleyContent(PutNestingTrolleyContentRequest request) {
         Optional<NestingTrolleyContent> content = nestingTrolleyContentRepository.findById(request.contentId());
             if (content.isPresent()) {
@@ -139,7 +189,6 @@ public class NestingTrolleyService {
     public void deleteTrolleyContent(UUID trolleyContentId) {
         nestingTrolleyContentRepository.deleteById(trolleyContentId);
     }
-
 
 
 }

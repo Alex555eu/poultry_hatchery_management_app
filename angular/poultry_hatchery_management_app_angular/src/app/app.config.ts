@@ -33,3 +33,5 @@ export const appConfig: ApplicationConfig = {
 };
 
 export const apiUrl = 'http://localhost:9090';
+
+export const TaskTypeEntityNameValueForCandling = 'SWIETLENIE';

@@ -28,6 +28,8 @@ public class Task {
 
     private LocalDateTime executionCompletedAt;
 
+    private String comment;
+
     @Enumerated(EnumType.STRING)
     private TaskStatus taskStatus;
 

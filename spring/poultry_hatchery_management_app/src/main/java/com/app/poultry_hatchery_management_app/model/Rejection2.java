@@ -31,4 +31,7 @@ public class Rejection2 {
     @ManyToOne
     private CandlingNestingTrolleyAssignment candlingNestingTrolleyAssignment;
 
+    @ManyToOne
+    private NestingLoadedDeliveries nestingLoadedDeliveries;
+
 }

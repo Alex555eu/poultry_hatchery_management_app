@@ -71,7 +71,7 @@ public class DeliveryService {
                         .dateTime(LocalDateTime.now())
                         .supplier(supplier.get())
                         .quantity(request.quantity())
-                        .type(type.get())
+                        .productType(type.get())
                         .build();
                 deliveryRepository.save(newDelivery);
 

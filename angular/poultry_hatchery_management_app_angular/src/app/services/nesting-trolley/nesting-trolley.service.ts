@@ -8,6 +8,7 @@ import { apiUrl } from '../../app.config';
 import { ApiPaths } from '../../api/api.paths';
 import { PostTrolleyRequest } from '../../dto/post-trolley-request';
 import { NestingTrolleyContent } from '../../models/nesting-trolley-content.model';
+import { PostNestingTrolleyContentTransferRequest } from '../../dto/post-nesting-trolley-content-transfer-request';
 
 @Injectable({
   providedIn: 'root'
@@ -52,5 +53,16 @@ export class NestingTrolleyService {
       })
     );
   }
+
+  public postNestingTrolleyContentTransfer(body: PostNestingTrolleyContentTransferRequest): Observable<NestingTrolleyContent[]> {
+    return this.http.post<NestingTrolleyContent[]>(`${apiUrl + ApiPaths.NestingTrolleyPaths.POST_NESTING_TROLLEY_CONTENT_TRANSFER}`, body).pipe(
+      catchError(error => {
+        console.error(error);
+        return of([]);
+      })
+    )
+  }
+
+  
 
 }

@@ -39,6 +39,21 @@ public class NestingController {
         }
     }
 
+    @GetMapping("/unfinished")
+    public ResponseEntity<String> getAllUnfinishedNestings() throws JsonProcessingException {
+        List<Nesting> nesting = nestingService.getAllUnfinishedNestings();
+        if (nesting == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        } else if (nesting.isEmpty()) {
+            return ResponseEntity.notFound().build();
+
+        } else {
+            String response = objectMapper.writeValueAsString(nesting);
+            return ResponseEntity.ok(response);
+        }
+    }
+
     @PostMapping("/")
     public ResponseEntity<String> postNesting(@RequestBody PostNestingRequest request) {
         Optional<Nesting> nesting = nestingService.postNesting(request);

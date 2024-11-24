@@ -1,6 +1,9 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Injectable, Pipe, PipeTransform } from '@angular/core';
 import { CustomDateFormatterService } from './custom-date-formatter.service';
 
+@Injectable({
+  providedIn: 'root'
+})
 @Pipe({
   name: 'customDateFormatter',
   standalone: true

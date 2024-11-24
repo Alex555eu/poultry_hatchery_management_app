@@ -35,4 +35,15 @@ export class NestingTrolleyContent {
         this._nestingLoadedDeliveries = value;
     }
 
+    public equals(ob: NestingTrolleyContent): boolean {
+        if (!(ob instanceof NestingTrolleyContent)) {
+            return false;
+        }  
+        if (ob === this) {
+            return true;
+        }
+        return  this._id === ob._id && 
+                this._quantity === ob._quantity;
+    }
+
 }

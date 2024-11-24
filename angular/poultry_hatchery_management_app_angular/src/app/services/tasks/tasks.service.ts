@@ -7,6 +7,8 @@ import { ApiPaths } from '../../api/api.paths';
 import { TaskNestingTrolleyAssignment } from '../../models/task-nesting-trolley-assignment.model';
 import { TaskStatus } from '../../models/task-status-enum';
 import { PutTaskRequest } from '../../dto/put-task-request';
+import { TaskType } from '../../models/task-type.model';
+import { PostTaskRequest } from '../../dto/post-task-request';
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +43,15 @@ export class TasksService {
     )
   }
 
+  getAllActiveTasksByTaskTypeName(taskTypeName: string): Observable<Task[]> {
+    return this.http.get<Task[]>(`${apiUrl + ApiPaths.TaskPaths.GET_ALL_ACTIVE_TASKS_BY_TASK_TYPE_NAME + taskTypeName}`).pipe(
+      catchError(error => {
+        console.error(error);
+        return of([]);
+      })
+    )
+  }
+
   getAllActiveTasksByTrolleyId(trolleyId: string): Observable<Task[]> {
     return this.http.get<Task[]>(`${apiUrl + ApiPaths.TaskPaths.GET_ALL_ACTIVE_TASKS_BY_TROLLEY_ID + trolleyId}`).pipe(
       catchError(error => {
@@ -66,12 +77,21 @@ export class TasksService {
     return taskAssignments$;
   }
 
+  postTask(body: PostTaskRequest): Observable<Task> {
+    return this.http.post<Task>(`${apiUrl + ApiPaths.TaskPaths.POST_TASK}`, body).pipe(
+      catchError(error => {
+        console.error(error);
+        return of(); 
+      })
+    )
+  }
+ 
   putTaskProgressOnTrolley(body: PutTaskRequest): Observable<Task> {
     return this.http.put<any>(`${apiUrl + ApiPaths.TaskPaths.PUT_TASK}`, body).pipe(
       catchError(error => {
         console.error(error);
         return of(); 
-    })
+      })
     )
   }
 
@@ -95,6 +115,17 @@ export class TasksService {
     );
   }
 
+  getAllTaskTypes(): Observable<TaskType[]> {
+    return this.http.get<TaskType[]>(`${apiUrl}${ApiPaths.TaskPaths.GET_ALL_TASK_TYPES}`).pipe(
+      shareReplay(1),
+      catchError(error => {
+        console.error('Error patching task type', error);
+        return of([]); 
+      })
+    );
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////
   filterTodaysTasks(tasks: Task[]): Task[] {
     const today = new Date();
     const todaysTasks = tasks.filter(task => {

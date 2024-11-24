@@ -2,10 +2,13 @@ package com.app.poultry_hatchery_management_app.controller;
 
 import com.app.poultry_hatchery_management_app.model.NestingLoadedDeliveries;
 import com.app.poultry_hatchery_management_app.service.NestingLoadedDeliveriesService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -15,8 +18,30 @@ import java.util.UUID;
 public class NestingLoadedDeliveriesController {
 
     private final NestingLoadedDeliveriesService nestingLoadedDeliveriesService;
+    private final ObjectMapper objectMapper;
 
-    @PostMapping
+
+    @GetMapping("")
+    public ResponseEntity<String> getAllNestingLoadedDeliveries() throws JsonProcessingException {
+        List<NestingLoadedDeliveries> nld = nestingLoadedDeliveriesService.getAllNestingLoadedDeliveries();
+        if (nld.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        String body = objectMapper.writeValueAsString(nld);
+        return ResponseEntity.ok(body);
+    }
+
+    @GetMapping("/nesting")
+    public ResponseEntity<String> getAllNestingLoadedDeliveriesByNestingId(@RequestParam UUID nestingId) throws JsonProcessingException {
+        List<NestingLoadedDeliveries> nld = nestingLoadedDeliveriesService.getAllNestingLoadedDeliveriesByNestingId(nestingId);
+        if (nld.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        String body = objectMapper.writeValueAsString(nld);
+        return ResponseEntity.ok(body);
+    }
+
+    @PostMapping("")
     public ResponseEntity<String> postNestingLoadedDelivery(@RequestParam UUID nestingId, UUID deliveryId) {
         Optional<NestingLoadedDeliveries> nld = nestingLoadedDeliveriesService.postNestingLoadedDelivery(nestingId, deliveryId);
         if (nld.isPresent()) {
@@ -25,7 +50,7 @@ public class NestingLoadedDeliveriesController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping
+    @DeleteMapping("")
     public ResponseEntity<String> deleteNestingLoadedDelivery(@RequestParam UUID nestingLoadedDeliveryId) {
         nestingLoadedDeliveriesService.deleteNestingLoadedDelivery(nestingLoadedDeliveryId);
         return ResponseEntity.ok().build();
