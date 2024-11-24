@@ -208,7 +208,25 @@ export class TasksComponent implements OnInit {
   }
 
   reactivateTask(task: Task) {
-    let $task = this.tasksService.patchTaskStatus(task.id, TaskStatus.NOT_STARTED);
+    let newTaskStatus;
+    const progress: number = this.taskToTaskNestingTrolleyAssignmentMapping.get(task)?.reduce((sum, item) => item.isTaskCompleted ? sum + 1 : sum, 0) ?? 0;
+
+    switch (progress) {
+      case 0: {
+        newTaskStatus = TaskStatus.NOT_STARTED;
+        break;
+      }
+      case this.taskToTaskNestingTrolleyAssignmentMapping.get(task)?.length: {
+        newTaskStatus = TaskStatus.COMPLETED;
+        break;
+      }
+      default: {
+        newTaskStatus = TaskStatus.IN_PROGRESS;
+        break;
+      }
+    }
+
+    let $task = this.tasksService.patchTaskStatus(task.id, newTaskStatus);
     $task.subscribe({
       next: (task: Task) => {
         window.location.reload();
