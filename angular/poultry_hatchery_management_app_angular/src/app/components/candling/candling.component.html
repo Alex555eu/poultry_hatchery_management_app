@@ -103,9 +103,8 @@
                     <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
                     <div class="task-element-detail"
                         [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-                        <div>
-                            
-                        </div>
+                        <label id="healthy">Zdrowe: <span>{{ element.initialEggsQuantity - getCandlingRejectionsTotal(element) }}</span> / {{ element.initialEggsQuantity }}</label>
+                        <label id="rejected">Odrzucone: <span>{{ getCandlingRejectionsTotal(element) }}</span> / {{ element.initialEggsQuantity }}</label>
                         <div id="buttons-cntr">
                             <button mat-flat-button color="primary" (click)="goToCandling(element)">
                                 Przejdź do świetlenia

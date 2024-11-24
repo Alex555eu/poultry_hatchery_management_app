@@ -35,6 +35,8 @@ public class CandlingService {
     private final NestingService nestingService;
     private final NestingTrolleyService nestingTrolleyService;
     private final TaskService taskService;
+    private final RejectionService rejectionService;
+    private final NestingLoadedDeliveriesService nestingLoadedDeliveriesService;
 
     public List<Candling> getAllCandlings() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -63,10 +65,49 @@ public class CandlingService {
 
             List<Candling> candlingList = candlingRepository.findAllByNestingId(request.nestingId());
 
+            int initialEggsQuantity;
+            // if it's 'NOT the first candling'
+            if (!candlingList.isEmpty()) {
+                Candling item = candlingList.getLast();
+                // rejections occurring in the previous candling
+                int tmp = rejectionService.getAllRejections2ByCandlingId(item.getId()).stream()
+                        .mapToInt(Rejection2::getQuantity)
+                        .sum();
+                // unexpected rejections - occurred between (after)the previous candling and now
+                int tmp2 = rejectionService.getAllUnexpectedRejectionsByNestingId(item.getNesting().getId()).stream()
+                        .filter(it -> it.getTimeStamp().isAfter(item.getCreatedAt()))
+                        .mapToInt(RejectionUnexpected::getQuantity)
+                        .sum();
+                // assign result
+                initialEggsQuantity = item.getInitialEggsQuantity() - tmp - tmp2;
+
+            } else { // if it 'IS the first candling'
+                // initial amount - by delivered amount
+                List<NestingLoadedDeliveries> nldList = nestingLoadedDeliveriesService.getAllNestingLoadedDeliveriesByNestingId(nesting.get().getId());
+                int initial = nldList.stream()
+                        .mapToInt(NestingLoadedDeliveries::getQuantity)
+                        .sum();
+                // first rejections - during nesting-loading the deliveries
+                int tmp = 0;
+                for(NestingLoadedDeliveries nld : nldList) {
+                    tmp += rejectionService.getAllRejections1ByNestingId(nesting.get().getId()).stream()
+                            .mapToInt(Rejection1::getQuantity)
+                            .sum();
+                }
+                // unexpected rejections - occurred between nesting-loading and first(current) candling
+                int tmp2 = rejectionService.getAllUnexpectedRejectionsByNestingId(nesting.get().getId()).stream()
+                        .filter(it -> it.getTimeStamp().isAfter(nesting.get().getDateTime()))
+                        .mapToInt(RejectionUnexpected::getQuantity)
+                        .sum();
+                // assign result
+                initialEggsQuantity = initial - tmp - tmp2;
+            }
+
             Candling candling = Candling.builder()
                     .candlingNumber(candlingList.size() + 1)
                     .createdAt(LocalDateTime.now())
                     .nesting(nesting.get())
+                    .initialEggsQuantity(initialEggsQuantity)
                     .task(task.get())
                     .organisation(nesting.get().getOrganisation())
                     .build();

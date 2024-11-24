@@ -152,12 +152,14 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
         NestingLoadedDeliveries nestingLoadedDeliveries = NestingLoadedDeliveries.builder()
                 .nesting(nesting)
                 .delivery(delivery)
+                .quantity(125)
                 .build();
         nestingLoadedDeliveriesRepository.save(nestingLoadedDeliveries);
 
         NestingLoadedDeliveries nestingLoadedDeliveries2 = NestingLoadedDeliveries.builder()
                 .nesting(nesting)
                 .delivery(delivery2)
+                .quantity(130)
                 .build();
         nestingLoadedDeliveriesRepository.save(nestingLoadedDeliveries2);
 
@@ -311,6 +313,7 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
         Candling candling = Candling.builder()
                 .candlingNumber(1)
                 .createdAt(LocalDateTime.now())
+                .initialEggsQuantity(nestingLoadedDeliveries.getQuantity() + nestingLoadedDeliveries2.getQuantity())
                 .nesting(nesting)
                 .organisation(organisation)
                 .task(toBeAssigned)

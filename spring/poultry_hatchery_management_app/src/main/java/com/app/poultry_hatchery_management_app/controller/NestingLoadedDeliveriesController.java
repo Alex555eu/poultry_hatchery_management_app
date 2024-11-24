@@ -42,8 +42,8 @@ public class NestingLoadedDeliveriesController {
     }
 
     @PostMapping("")
-    public ResponseEntity<String> postNestingLoadedDelivery(@RequestParam UUID nestingId, UUID deliveryId) {
-        Optional<NestingLoadedDeliveries> nld = nestingLoadedDeliveriesService.postNestingLoadedDelivery(nestingId, deliveryId);
+    public ResponseEntity<String> postNestingLoadedDelivery(@RequestParam UUID nestingId, UUID deliveryId, Integer quantity) {
+        Optional<NestingLoadedDeliveries> nld = nestingLoadedDeliveriesService.postNestingLoadedDelivery(nestingId, deliveryId, quantity);
         if (nld.isPresent()) {
             return ResponseEntity.ok().build();
         }

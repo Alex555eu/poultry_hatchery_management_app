@@ -100,16 +100,16 @@
         </div>
     </div>
 
-    <div class="total-rejections-container" *ngIf="trolleyRejection && trolleyContent">
+    <div class="total-rejections-container" *ngIf="trolleyRejection && candling|async as candlingAsync">
         <app-rejection-panel-total 
             *ngFor="let cause of rejectionCauses;"
-            [contentAll]="getAllNestingTrolleyContent()" 
+            [initialEggsQuantity]="candlingAsync.initialEggsQuantity" 
             [rejectionCause]="cause" 
             [rejectionsAll]="getAllRejections()"
         >
         </app-rejection-panel-total>
         <app-rejection-panel-total 
-            [contentAll]="getAllNestingTrolleyContent()" 
+            [initialEggsQuantity]="candlingAsync.initialEggsQuantity" 
             [rejectionsAll]="getAllRejections()"
         >
         </app-rejection-panel-total>

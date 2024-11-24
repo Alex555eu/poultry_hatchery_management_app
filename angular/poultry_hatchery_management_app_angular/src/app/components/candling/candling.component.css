@@ -135,6 +135,23 @@ tr.example-element-row:not(.example-expanded-row):active {
     --mdc-circular-progress-active-indicator-color: #44fd6cc5; 
 }
 
+.task-element-detail {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#healthy span {
+    font-weight: bold;
+    color: var(--status-color-completed);
+}
+
+#rejected span {
+    font-weight: bold;
+    color: var(--status-color-cancelled);
+}
+
 
 @media (max-width: 1300px) {
     .filter-cntr {

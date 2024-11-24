@@ -6,7 +6,8 @@ export class NestingLoadedDeliveries {
     constructor(
         private _id: string,
         private _nesting: Nesting,
-        private _delivery: Delivery
+        private _delivery: Delivery,
+        private _quantity: number
     ){}
 
     public get id(): string {
@@ -26,5 +27,11 @@ export class NestingLoadedDeliveries {
     }
     public set delivery(value: Delivery) {
         this._delivery = value;
+    }
+    public get quantity(): number {
+        return this._quantity;
+    }
+    public set quantity(value: number) {
+        this._quantity = value;
     }
 }
