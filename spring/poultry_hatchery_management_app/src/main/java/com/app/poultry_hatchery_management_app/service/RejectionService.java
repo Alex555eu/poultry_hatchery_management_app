@@ -27,12 +27,13 @@ public class RejectionService {
     private final RejectionUnexpectedRepository rejectionUnexpectedRepository;
 
     private final NestingLoadedDeliveriesService nestingLoadedDeliveriesService;
-    private final CandlingService candlingService;
     private final HatchingService hatchingService;
     private final NestingService nestingService;
 
     private final NestingTrolleyContentRepository nestingTrolleyContentRepository;
     private final NestingLoadedDeliveriesRepository nestingLoadedDeliveriesRepository;
+    private final CandlingNestingTrolleyAssignmentRepository candlingNestingTrolleyAssignmentRepository;
+
 
     public List<RejectionCause> getAllPossibleRejectionCauses() {
         return Arrays.stream(RejectionCause.values()).toList();
@@ -98,7 +99,7 @@ public class RejectionService {
                 nestingLoadedDeliveriesRepository.findById(request.nestingLoadedDeliveryId());
 
         Optional<CandlingNestingTrolleyAssignment> assignmentOpt =
-                candlingService.getCandledTrolleyAssignment(request.candlingNestingTrolleyAssignmentId());
+                candlingNestingTrolleyAssignmentRepository.findById(request.candlingNestingTrolleyAssignmentId());
 
         if(assignmentOpt.isPresent() && deliveryOpt.isPresent()){
 

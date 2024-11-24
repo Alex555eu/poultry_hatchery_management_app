@@ -22,6 +22,8 @@ public class NestingLoadedDeliveries {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
+    Integer quantity;
+
     @ManyToOne
     private Nesting nesting;
 

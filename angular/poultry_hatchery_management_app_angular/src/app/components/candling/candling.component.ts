@@ -1,6 +1,7 @@
+import { Rejection2 } from './../../models/rejection2.model';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TasksSectionComponent } from "../tasks/tasks-section/tasks-section.component";
-import { BehaviorSubject, from, mergeMap, Observable, of, switchMap, tap } from 'rxjs';
+import { mergeMap, Observable, of, switchMap, tap, map, from } from 'rxjs';
 import { Task } from '../../models/task.model';
 import { TasksService } from '../../services/tasks/tasks.service';
 import { Candling } from '../../models/candling.model';
@@ -28,6 +29,9 @@ import { TaskUtilsPipe } from '../../utils/task/task-utils.pipe';
 import { ConfirmActionDialogComponent } from '../../utils/confirm-action-dialog/confirm-action-dialog.component';
 import { NewCandlingComponent } from './new-candling/new-candling.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NestingLoadedDeliveries } from '../../models/nesting-loaded-deliveries.model';
+import { RejectionService } from '../../services/rejections/rejection.service';
+import { NestingLoadedDeliveriesService } from '../../services/nesting-loaded-deliveries/nesting-loaded-deliveries.service';
 
 @Component({
   selector: 'app-candling',
@@ -78,12 +82,16 @@ export class CandlingComponent implements OnInit {
   dataSource = new MatTableDataSource<Candling>();
   candlingsAll: Candling[] | null = null;
 
+  candlingRejections = new Map<Candling, Rejection2[]>();
+
   startDate: Date | null = null;
   endDate: Date | null = null;
 
   constructor(
     private taskService: TasksService,
     private candlingService: CandlingService,
+    private rejectionService: RejectionService,
+    private nldService: NestingLoadedDeliveriesService,
     private dialog: MatDialog,
     private router: Router
   ){}
@@ -180,6 +188,9 @@ export class CandlingComponent implements OnInit {
   getNumberOfCompletedTaskTrolleyAssignments(assignments: TaskNestingTrolleyAssignment[] | null) {
     return this.taskService.getNumberOfCompletedTaskTrolleyAssignments(assignments);
   }
+  getCandlingRejectionsTotal(candling: Candling): number {
+    return this.candlingRejections.get(candling)?.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
+  }
 
   private initCandlings() {
     this.candlingService.getAllCandlings().pipe(
@@ -191,7 +202,8 @@ export class CandlingComponent implements OnInit {
           this.dataSource.sort = this.sort;
         }
       }),
-      switchMap(response => this.initCandlingTaskDetails(response))
+      switchMap(response => this.initCandlingTaskDetails(response).pipe(map(() => response))),
+      switchMap(response => this.initCandlingRejections(response))
     ).subscribe();
   }
 
@@ -216,7 +228,24 @@ export class CandlingComponent implements OnInit {
     });
   }
 
-  
+  private initCandlingRejections(candlings: Candling[]): Observable<any> {
+    return from(candlings).pipe(
+      mergeMap(candling => {
+        return this.rejectionService.getAllRejection2(candling.id).pipe(
+          tap(response => {
+            if (response) {
+              if (this.candlingRejections.has(candling)) {
+                this.candlingRejections.set(candling, this.candlingRejections.get(candling)?.concat(response) ?? []);
+              } else {
+                this.candlingRejections.set(candling, response);
+              }
+            }
+          })
+        )
+      })
+    )
+  }
+
 
 
 }

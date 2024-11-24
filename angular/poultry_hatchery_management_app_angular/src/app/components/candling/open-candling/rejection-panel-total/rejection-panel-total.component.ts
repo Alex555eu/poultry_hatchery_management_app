@@ -20,7 +20,7 @@ import { CommonModule } from '@angular/common';
 export class RejectionPanelTotalComponent implements OnInit, OnChanges {
 
   @Input() rejectionsAll: Rejection2[] | null = [];
-  @Input() contentAll: NestingTrolleyContent[] | null = [];
+  @Input() initialEggsQuantity: number | null = null;
   @Input() rejectionCause: string | null = null;
 
   private quantityOfEggsAtTheBeginningOfCandling: number|null = null;
@@ -37,7 +37,7 @@ export class RejectionPanelTotalComponent implements OnInit, OnChanges {
 
 
   ngOnInit(): void {
-    if (this.rejectionsAll){
+    if (this.rejectionsAll && this.initialEggsQuantity){
       let filteredRejections = this.rejectionsAll;
 
       if (this.rejectionCause){
@@ -47,13 +47,8 @@ export class RejectionPanelTotalComponent implements OnInit, OnChanges {
       this.quantityOfRejectedEggs = filteredRejections.reduce((sum, item) => sum + item.quantity, 0);
       this.eggsRejectedSubject.next(this.quantityOfRejectedEggs);
 
-      if (this.contentAll){
-        const contentTotal = this.contentAll.reduce((sum, item) => sum + item.quantity, 0);
-        const quantityOfRejectionsTotal = this.rejectionsAll.reduce((sum, item) => sum + item.quantity, 0);
-
-        this.quantityOfEggsAtTheBeginningOfCandling = contentTotal + quantityOfRejectionsTotal;
-        this.eggsTotalSubject.next(this.quantityOfEggsAtTheBeginningOfCandling);
-      }
+      this.quantityOfEggsAtTheBeginningOfCandling = this.initialEggsQuantity;
+      this.eggsTotalSubject.next(this.quantityOfEggsAtTheBeginningOfCandling);
 
       if (this.quantityOfEggsAtTheBeginningOfCandling){
         const percentage = Math.floor((this.quantityOfRejectedEggs*100)/this.quantityOfEggsAtTheBeginningOfCandling);

@@ -8,6 +8,7 @@ export class Candling {
         private _id: string,
         private _createdAt: Date,
         private _candlingNumber: number,
+        private _initialEggsQuantity: number,
         private _nesting: Nesting,
         private _task: Task,
         private _organisationDetails: OrganisationDetails,
@@ -30,6 +31,12 @@ export class Candling {
     }
     public set candlingNumber(value: number) {
         this._candlingNumber = value;
+    }
+    public get initialEggsQuantity(): number {
+        return this._initialEggsQuantity;
+    }
+    public set initialEggsQuantity(value: number) {
+        this._initialEggsQuantity = value;
     }
     public get nesting(): Nesting {
         return this._nesting;

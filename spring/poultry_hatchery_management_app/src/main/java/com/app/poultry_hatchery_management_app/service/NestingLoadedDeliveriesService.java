@@ -47,13 +47,14 @@ public class NestingLoadedDeliveriesService {
         return List.of();
     }
 
-    public Optional<NestingLoadedDeliveries> postNestingLoadedDelivery(UUID nestingId, UUID deliveryId) {
+    public Optional<NestingLoadedDeliveries> postNestingLoadedDelivery(UUID nestingId, UUID deliveryId, Integer quantity) {
         Optional<Nesting> nesting = nestingRepository.findById(nestingId);
         Optional<Delivery> delivery = deliveryRepository.findById(deliveryId);
         if (delivery.isPresent() && nesting.isPresent()) {
             NestingLoadedDeliveries nld = NestingLoadedDeliveries.builder()
                     .nesting(nesting.get())
                     .delivery(delivery.get())
+                    .quantity(quantity)
                     .build();
             nestingLoadedDeliveriesRepository.save(nld);
             return Optional.of(nld);
