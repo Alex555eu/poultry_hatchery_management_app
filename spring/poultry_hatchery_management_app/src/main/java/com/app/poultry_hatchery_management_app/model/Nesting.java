@@ -1,5 +1,6 @@
 package com.app.poultry_hatchery_management_app.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -32,6 +33,7 @@ public class Nesting {
 
     private String description;
 
-    private boolean isFinished;
+    @JsonProperty(value="isFinished")
+    private boolean isFinished; // referring to the whole development cycle
 
 }
