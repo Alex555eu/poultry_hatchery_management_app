@@ -22,6 +22,15 @@ export class NestingService {
       })
     )
   }
+
+  public getAllNestings(): Observable<Nesting[]> {
+    return this.http.get<Nesting[]>(`${apiUrl + ApiPaths.NestingPaths.GET_ALL_NESTINGS}`).pipe(
+      catchError(error => {
+        console.error(error);
+        return of([]);
+      })
+    )
+  }
   
 
 }

@@ -16,7 +16,8 @@ export namespace ApiPaths {
     }
 
     export enum NestingPaths {
-        GET_ALL_UNFINISHED_NESTINGS = '/api/v1/nesting/unfinished'
+        GET_ALL_UNFINISHED_NESTINGS = '/api/v1/nesting/unfinished',
+        GET_ALL_NESTINGS = '/api/v1/nesting'
     }
 
     export enum NestingIncubatorPaths {

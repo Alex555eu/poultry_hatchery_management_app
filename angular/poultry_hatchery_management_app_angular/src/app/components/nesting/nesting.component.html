@@ -1,1 +1,110 @@
-<p>nesting works!</p>
+<div class="bg-cntr">
+    <div class="filter-cntr">
+        <div class="dialog-header">
+            <mat-icon>filter_list</mat-icon>
+            <label>Filtruj</label>
+            <button mat-raised-button color="primary" (click)="newNesting()">Nowy nakład</button>
+        </div>
+        <div class="filter-body">
+            <mat-form-field>
+                <mat-label>Wyszukaj</mat-label>
+                <input matInput (keyup)="filterData($event)" #input>
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Status</mat-label>
+                <mat-select [(value)]="searchForUnfinishedNestingsOnly" placeholder="Status" (valueChange)="filterData(null)">
+                        <mat-option [value]="true">Wszystkie</mat-option>
+                        <mat-option [value]="false">Nie zakończone</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Podaj zakres</mat-label>
+                <mat-date-range-input [rangePicker]="picker">
+                  <input matInput [(ngModel)]="startDate" matStartDate placeholder="data od" (dateChange)="onDateRangeChange($event, 'start')">
+                  <input matInput [(ngModel)]="endDate" matEndDate placeholder="data do" (dateChange)="onDateRangeChange($event, 'end')">
+                </mat-date-range-input>
+                <!-- <mat-hint>DD/MM/YYYY – DD/MM/YYYY</mat-hint> -->
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+            
+            <button mat-raised-button (click)="findSupplier()">Znajdź dostawcę</button>
+        </div>
+    </div>
+  
+    <div class="deliveries-cntr">
+        <div class="dialog-header">
+            <mat-icon>keyboard_arrow_right</mat-icon>
+            <label>Nakłady</label>
+        </div>
+        <div class="supplier-cntr" *ngIf="selectedSupplier">
+            <div class="supplier-data-cntr">
+                <div class="supplier-data">
+                    <label>Wyniki wyszukiwania dla: </label>
+                    <label class="supplier-name">{{ selectedSupplier.name }} {{ selectedSupplier.surname }}</label>
+                </div>
+            </div>
+            <button mat-mini-fab color="warn" (click)="discardSupplier()">
+                <mat-icon>clear</mat-icon>
+            </button>
+        </div>
+
+      <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows>
+        <!-- Supplier Column -->
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Tytuł </th>
+          <td mat-cell *matCellDef="let item">{{ item.title }} </td>
+        </ng-container>
+
+        <!-- Supplier Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+          <td mat-cell *matCellDef="let item">{{ item.isFinished }} </td>
+        </ng-container>
+  
+        <!-- DateTime Column -->
+        <ng-container matColumnDef="dateTime">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Data </th>
+          <td mat-cell *matCellDef="let item"> {{ item.dateTime | customDateFormatter }} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="expandedDetail">
+            <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+            <div class="task-element-detail"
+                [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                <label>{{ element.description }}</label>
+                <div id="buttons-cntr">
+                    <button mat-flat-button color="primary" (click)="goToNesting(element)">
+                        Przejdź do nakładu
+                        <mat-icon>arrow_right_alt</mat-icon>
+                    </button>
+                </div>
+            </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let element; columns: displayedColumns;"
+            class="example-element-row"
+            [class.example-expanded-row]="expandedElement === element"
+            (click)="expandedElement = expandedElement === element ? null : element">
+        </tr>
+        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+
+
+        <!-- Row shown when there is no matching data. -->
+        <tr class="mat-row-no-data" *matNoDataRow>
+          <td class="mat-cell" colspan="4">Brak danych "{{input.value}}"</td>
+        </tr>
+
+
+      </table>
+      <div class="paginator-cntr">
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of nestings"></mat-paginator>
+      </div>
+    </div>
+
+  </div>
+  
