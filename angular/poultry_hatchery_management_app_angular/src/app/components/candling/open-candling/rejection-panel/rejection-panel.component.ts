@@ -56,10 +56,15 @@ export class RejectionPanelComponent implements OnChanges, OnInit {
 
   ngOnInit(): void {
     if (this.delivery && this.rejectionCause && this.assignment && this.assignment.length > 0) {
-      this.rejectionService.getAllRejection2(this.assignment[0].candling.id)
+      const candlingAssignment = this.assignment[0];
+      this.rejectionService.getAllRejection2(candlingAssignment.candling.id)
         .subscribe(response => {
           if (response){
-            let filteredRejections = response.filter(it => it.nestingLoadedDeliveries.id === this.delivery?.id && it.cause === this.rejectionCause);
+            let filteredRejections = response.filter(it => { 
+              return it.nestingLoadedDeliveries.id === this.delivery?.id && 
+                      it.cause === this.rejectionCause &&
+                      it.candlingNestingTrolleyAssignment.id === candlingAssignment.id
+                    });
             let total = filteredRejections.reduce((sum, item) => sum + item.quantity, 0);
 
             this.rejectionsSubject.next(filteredRejections);
