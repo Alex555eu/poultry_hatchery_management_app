@@ -31,6 +31,16 @@ export class NestingService {
       })
     )
   }
+
+  public postNewNesting(title: string, description: string): Observable<Nesting> {
+    const body = {title: title, description: description};
+    return this.http.post<Nesting>(`${apiUrl + ApiPaths.NestingPaths.POST_NEW_NESTING}`, body).pipe(
+      catchError(error => {
+        console.error(error);
+        return of();
+      })
+    )
+  }
   
 
 }

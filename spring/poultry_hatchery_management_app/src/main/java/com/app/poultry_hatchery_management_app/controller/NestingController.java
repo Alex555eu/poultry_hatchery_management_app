@@ -55,10 +55,11 @@ public class NestingController {
     }
 
     @PostMapping("")
-    public ResponseEntity<String> postNesting(@RequestBody PostNestingRequest request) {
+    public ResponseEntity<String> postNesting(@RequestBody PostNestingRequest request) throws JsonProcessingException {
         Optional<Nesting> nesting = nestingService.postNesting(request);
         if (nesting.isPresent()) {
-            return ResponseEntity.ok().build();
+            String body = objectMapper.writeValueAsString(nesting.get());
+            return ResponseEntity.ok(body);
         }
         return ResponseEntity.internalServerError().build();
     }
