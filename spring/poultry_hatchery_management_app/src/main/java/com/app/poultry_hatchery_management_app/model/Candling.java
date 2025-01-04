@@ -27,6 +27,8 @@ public class Candling {
 
     private Integer candlingNumber;
 
+    private Integer initialEggsQuantity;
+
     @ManyToOne
     private Nesting nesting;
 

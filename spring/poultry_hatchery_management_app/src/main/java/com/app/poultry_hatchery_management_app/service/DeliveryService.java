@@ -38,7 +38,17 @@ public class DeliveryService {
         if ((authentication != null && authentication.getPrincipal() instanceof UserDetails)) {
             User user = (User) authentication.getPrincipal();
 
-            return deliveryRepository.findByUserId(user.getId());
+            return deliveryRepository.findByOrganisationId(user.getOrganisation().getId());
+        }
+        return null;
+    }
+
+    public List<Delivery> getAllLeftOverDeliveries() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if ((authentication != null && authentication.getPrincipal() instanceof UserDetails)) {
+            User user = (User) authentication.getPrincipal();
+
+            return deliveryRepository.findAllLeftOvers(user.getOrganisation().getId());
         }
         return null;
     }

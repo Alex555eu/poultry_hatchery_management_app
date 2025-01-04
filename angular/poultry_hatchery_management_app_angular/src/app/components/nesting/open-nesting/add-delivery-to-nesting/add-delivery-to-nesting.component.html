@@ -1,0 +1,33 @@
+<mat-dialog-content>
+    <div class="dialog-bg">
+        <div class="dialog-header">
+            <mat-icon>local_shipping</mat-icon>
+            <label>Dostawy</label>
+            <button mat-icon-button (click)="onClose()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+        <mat-accordion>
+        <mat-expansion-panel *ngFor="let delivery of deliveries">
+            <mat-expansion-panel-header>
+            <mat-panel-title>
+                {{ delivery.productType.name }} <!-- Możesz dostosować nazwę do odpowiedniego pola w Delivery -->
+            </mat-panel-title>
+            <mat-panel-description>
+                {{ delivery.dateTime | customDateFormatter: 'full' }} <!-- Data dostawy, możesz dostosować format -->
+            </mat-panel-description>
+            </mat-expansion-panel-header>
+    
+            <!-- Szczegóły dostawy widoczne po rozwinieciu -->
+            <div class="delivery-details">
+            <p><strong>Dostawca:</strong> {{ delivery.supplier.name }} {{ delivery.supplier.surname }}</p>
+            <p><strong>Produkt:</strong> {{ delivery.productType.name }}</p>
+            <p><strong>Ilość:</strong> {{ delivery.quantity }} szt.</p>
+            <p><strong>WNI:</strong> {{ delivery.supplier.wni }}</p>
+            <button mat-button color="primary" (click)="addDeliveryToNesting(delivery)">Dodaj do nakładu</button>
+            </div>
+        </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+</mat-dialog-content>
+  

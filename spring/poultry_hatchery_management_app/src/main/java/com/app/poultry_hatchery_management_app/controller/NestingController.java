@@ -24,7 +24,7 @@ public class NestingController {
     private final NestingService nestingService;
     private final ObjectMapper objectMapper;
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<String> getAllNestings() throws JsonProcessingException {
         List<Nesting> nesting = nestingService.getAllNestings();
         if (nesting == null) {
@@ -54,16 +54,27 @@ public class NestingController {
         }
     }
 
-    @PostMapping("/")
-    public ResponseEntity<String> postNesting(@RequestBody PostNestingRequest request) {
-        Optional<Nesting> nesting = nestingService.postNesting(request);
+    @GetMapping("/by-id")
+    public ResponseEntity<String> getNestingById(@RequestParam UUID nestingId) throws JsonProcessingException {
+        Optional<Nesting> nesting = nestingService.getNesting(nestingId);
         if (nesting.isPresent()) {
-            return ResponseEntity.ok().build();
+            String body = objectMapper.writeValueAsString(nesting.get());
+            return ResponseEntity.ok(body);
         }
         return ResponseEntity.internalServerError().build();
     }
 
-    @PutMapping("/")
+    @PostMapping("")
+    public ResponseEntity<String> postNesting(@RequestBody PostNestingRequest request) throws JsonProcessingException {
+        Optional<Nesting> nesting = nestingService.postNesting(request);
+        if (nesting.isPresent()) {
+            String body = objectMapper.writeValueAsString(nesting.get());
+            return ResponseEntity.ok(body);
+        }
+        return ResponseEntity.internalServerError().build();
+    }
+
+    @PutMapping("")
     public ResponseEntity<String> putNesting(@RequestBody PutNestingRequest request) {
         Optional<Nesting> nesting = nestingService.putNesting(request);
         if (nesting.isPresent()) {
@@ -72,7 +83,7 @@ public class NestingController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping("")
     public ResponseEntity<String> deleteNesting(@RequestParam UUID nestingId) {
         nestingService.deleteNesting(nestingId);
         return ResponseEntity.ok().build();

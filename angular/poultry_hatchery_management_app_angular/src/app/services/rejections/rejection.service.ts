@@ -5,6 +5,8 @@ import { apiUrl } from '../../app.config';
 import { ApiPaths } from '../../api/api.paths';
 import { Rejection2 } from '../../models/rejection2.model';
 import { PostRejection2Request } from '../../dto/post-rejection2-request';
+import { Rejection1 } from '../../models/rejection1.model';
+import { PostRejection1Request } from '../../dto/post-rejection1-request';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +35,29 @@ export class RejectionService {
         return of([]);
       })
     );
+  }
+
+  public getAllRejection1(nestingId: string): Observable<Rejection1[]> {
+    return this.http.get<Rejection1[]>(`${apiUrl + ApiPaths.RejectionPaths.GET_ALL_REJECTION_ONE_BY_NESTING_ID + nestingId}`).pipe(
+      shareReplay(1),
+      catchError(error => {
+        console.error(error);
+        return of([]);
+      })
+    );
+  }
+
+  public postRejection1(body: PostRejection1Request): Observable<Rejection1> {
+    return this.http.post<Rejection1>(`${apiUrl + ApiPaths.RejectionPaths.POST_REJECTION_ONE}`, body).pipe(
+      catchError(error => {
+        console.error(error);
+        return of();
+      })
+    );
+  }
+
+  public deleteRejection1(rejectionId: string): Observable<any> {
+    return this.http.delete<any>(`${apiUrl + ApiPaths.RejectionPaths.DELETE_REJECTION_ONE + rejectionId}`);
   }
 
   public getPossibleRejection2Causes(): Observable<string[]> {

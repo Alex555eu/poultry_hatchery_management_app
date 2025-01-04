@@ -1,0 +1,65 @@
+<div class="bg-container">
+    <div class="nld-container">
+        <div class="dialog-header">
+            <mat-icon>select_all</mat-icon>
+            <label>Nakładane dostawy</label>
+            <button mat-icon-button (click)="addDeliveryToNesting()">
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
+        <mat-selection-list [hideSingleSelectionIndicator]="true" [(ngModel)]="selectedNLD" [multiple]="false">
+            <ng-container *ngFor="let data of nld">
+                <mat-list-option 
+                    (click)="selectNLD(nldListOptionContainers)" 
+                    [value]="data"
+                >
+                    <div class="card-content" #nldListOptionContainers>
+                        <span>{{ data.delivery.supplier.name }} {{ data.delivery.supplier.surname }}</span>
+                        <span>{{ data.delivery.productType.name }} | {{ data.quantity }}/{{ data.delivery.quantity }}</span>
+                    </div>
+                </mat-list-option>
+            </ng-container>
+        </mat-selection-list>
+    </div>
+
+    <div class="trolley-container">
+        <div class="dialog-header">
+            <mat-icon>select_all</mat-icon>
+            <label>Wózki lęgowe</label>
+            <button mat-icon-button (click)="addNestingTrolleyToNesting()">
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
+        <mat-selection-list [hideSingleSelectionIndicator]="true" [(ngModel)]="selectedNestingTrolley" [multiple]="false">
+            <ng-container *ngFor="let data of nestingTrolleys">
+                <mat-list-option 
+                    (click)="selectNestingTrolley(data)"
+                    [value]="data"
+                >
+                    <div class="card-trolley-content">
+                        <span>{{ data.humanReadableId }}</span>
+                        <span>| {{ countTrolleyCapacity(data) }}/{{ data.maxCapacity }}</span>
+                    </div>
+                </mat-list-option>
+            </ng-container>
+        </mat-selection-list>
+    </div>
+
+    <div class="rejection-container">
+        <div class="dialog-header">
+            <mat-icon>delete_forever</mat-icon>
+            <label>Odrzuty</label>
+        </div>
+        <ng-container *ngIf="selectedNLD">
+            <app-rejection1-panel 
+                *ngFor="let cause of rejectionCauses;"
+                [nld]="selectedNLD[0]"
+                [rejectionCause]="cause" 
+                (refresh)="updateAfterRejection($event)"
+            >
+        </app-rejection1-panel>
+        </ng-container>
+    </div>
+
+
+</div>

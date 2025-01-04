@@ -43,6 +43,19 @@ public class DeliveryController {
         }
     }
 
+    @GetMapping("/left-over")
+    public ResponseEntity<String> getAllLeftOverDeliveries() throws JsonProcessingException {
+        List<Delivery> deliveries = deliveryService.getAllLeftOverDeliveries();
+        if (deliveries == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } else if (deliveries.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            String response = objectMapper.writeValueAsString(deliveries);
+            return ResponseEntity.ok(response);
+        }
+    }
+
 
     @GetMapping("/by-id")
     public ResponseEntity<String> getDeliveryById(@RequestParam("id") UUID deliveryId) throws JsonProcessingException {

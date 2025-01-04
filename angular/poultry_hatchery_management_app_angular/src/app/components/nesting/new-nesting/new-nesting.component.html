@@ -1,0 +1,28 @@
+<mat-dialog-content>
+    <div class="dialog-bg">
+        <div class="dialog-header">
+            <mat-icon>keyboard_arrow_right</mat-icon>
+            <label>Nowy nakład</label>
+            <button mat-icon-button (click)="onClose(null)">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+        <div class="data-cntr">
+            <form #form="ngForm" (ngSubmit)="onSubmit(form)">
+                <mat-form-field>
+                    <mat-label>Tytuł</mat-label>
+                    <input matInput [(ngModel)]="title" name="title" required />
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Opis</mat-label>
+                    <textarea matInput [(ngModel)]="description" name="description" required></textarea>
+                </mat-form-field>
+
+                <mat-dialog-actions>
+                    <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid">Zatwierdź</button>
+                </mat-dialog-actions>
+            </form>
+        </div>
+    </div>
+</mat-dialog-content>

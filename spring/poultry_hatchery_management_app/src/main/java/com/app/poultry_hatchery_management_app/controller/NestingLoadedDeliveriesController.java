@@ -1,5 +1,6 @@
 package com.app.poultry_hatchery_management_app.controller;
 
+import com.app.poultry_hatchery_management_app.dto.PostNestingLoadedDeliveryRequest;
 import com.app.poultry_hatchery_management_app.model.NestingLoadedDeliveries;
 import com.app.poultry_hatchery_management_app.service.NestingLoadedDeliveriesService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -42,10 +43,11 @@ public class NestingLoadedDeliveriesController {
     }
 
     @PostMapping("")
-    public ResponseEntity<String> postNestingLoadedDelivery(@RequestParam UUID nestingId, UUID deliveryId) {
-        Optional<NestingLoadedDeliveries> nld = nestingLoadedDeliveriesService.postNestingLoadedDelivery(nestingId, deliveryId);
+    public ResponseEntity<String> postNestingLoadedDelivery(@RequestBody PostNestingLoadedDeliveryRequest request) throws JsonProcessingException {
+        Optional<NestingLoadedDeliveries> nld = nestingLoadedDeliveriesService.postNestingLoadedDelivery(request);
         if (nld.isPresent()) {
-            return ResponseEntity.ok().build();
+            String body = objectMapper.writeValueAsString(nld.get());
+            return ResponseEntity.ok(body);
         }
         return ResponseEntity.notFound().build();
     }

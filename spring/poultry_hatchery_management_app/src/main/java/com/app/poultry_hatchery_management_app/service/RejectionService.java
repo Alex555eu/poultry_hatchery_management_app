@@ -27,12 +27,13 @@ public class RejectionService {
     private final RejectionUnexpectedRepository rejectionUnexpectedRepository;
 
     private final NestingLoadedDeliveriesService nestingLoadedDeliveriesService;
-    private final CandlingService candlingService;
     private final HatchingService hatchingService;
     private final NestingService nestingService;
 
     private final NestingTrolleyContentRepository nestingTrolleyContentRepository;
     private final NestingLoadedDeliveriesRepository nestingLoadedDeliveriesRepository;
+    private final CandlingNestingTrolleyAssignmentRepository candlingNestingTrolleyAssignmentRepository;
+
 
     public List<RejectionCause> getAllPossibleRejectionCauses() {
         return Arrays.stream(RejectionCause.values()).toList();
@@ -46,36 +47,55 @@ public class RejectionService {
         return rejection1Repository.findAllByNestingId(nestingId);
     }
 
+    @Transactional
     public Optional<Rejection1> postRejection1(PostRejection1Request request) {
-        Optional<NestingLoadedDeliveries> nld =
-                nestingLoadedDeliveriesService.getNestingLoadedDeliveryById(request.nestingLoadedDeliveriesId());
-        if(nld.isPresent()) {
+        Optional<NestingLoadedDeliveries> deliveryOpt =
+                nestingLoadedDeliveriesRepository.findById(request.nestingLoadedDeliveriesId());
+
+        if(deliveryOpt.isPresent()){
+            NestingLoadedDeliveries nld = deliveryOpt.get();
             Rejection1 rejection1 = Rejection1.builder()
-                    .nestingLoadedDeliveries(nld.get())
+                    .nestingLoadedDeliveries(nld)
                     .quantity(request.quantity())
                     .cause(RejectionCause.valueOf(request.cause()).verify(RejectionGroup.REJECTION_1))
                     .build();
             rejection1Repository.save(rejection1);
+
+            nld.setQuantity(nld.getQuantity() + request.quantity());
+            nestingLoadedDeliveriesRepository.save(nld);
 
             return Optional.of(rejection1);
         }
         return Optional.empty();
     }
 
-    public Optional<Rejection1> putRejection1(PutRejectionRequest request) {
-        Optional<Rejection1> rejection1 = rejection1Repository.findById(request.rejectionId());
-        if (rejection1.isPresent()) {
-            rejection1.get().setQuantity(request.quantity());
-            rejection1.get().setCause(RejectionCause.valueOf(request.cause()).verify(RejectionGroup.REJECTION_1));
-            rejection1Repository.save(rejection1.get());
+//    public Optional<Rejection1> putRejection1(PutRejectionRequest request) {
+//        Optional<Rejection1> rejection1 = rejection1Repository.findById(request.rejectionId());
+//        if (rejection1.isPresent()) {
+//            rejection1.get().setQuantity(request.quantity());
+//            rejection1.get().setCause(RejectionCause.valueOf(request.cause()).verify(RejectionGroup.REJECTION_1));
+//            rejection1Repository.save(rejection1.get());
+//
+//            return rejection1;
+//        }
+//        return Optional.empty();
+//    }
 
-            return rejection1;
-        }
-        return Optional.empty();
-    }
-
+    @Transactional
     public void deleteRejection1ById(UUID rejectionId) {
-        rejection1Repository.deleteById(rejectionId);
+        Optional<Rejection1> rejection1Opt =
+                rejection1Repository.findById(rejectionId);
+        if(rejection1Opt.isPresent()){
+            Rejection1 rejection = rejection1Opt.get();
+            NestingLoadedDeliveries nld = rejection.getNestingLoadedDeliveries();
+
+            nld.setQuantity(nld.getQuantity() - rejection.getQuantity());
+            nestingLoadedDeliveriesRepository.save(nld);
+
+            rejection1Repository.deleteById(rejectionId);
+            rejection1Repository.flush();
+
+        }
     }
 
 
@@ -98,7 +118,7 @@ public class RejectionService {
                 nestingLoadedDeliveriesRepository.findById(request.nestingLoadedDeliveryId());
 
         Optional<CandlingNestingTrolleyAssignment> assignmentOpt =
-                candlingService.getCandledTrolleyAssignment(request.candlingNestingTrolleyAssignmentId());
+                candlingNestingTrolleyAssignmentRepository.findById(request.candlingNestingTrolleyAssignmentId());
 
         if(assignmentOpt.isPresent() && deliveryOpt.isPresent()){
 

@@ -31,5 +31,13 @@ public interface NestingTrolleyRepository extends JpaRepository<NestingTrolley, 
 """)
     List<NestingTrolley> findAllTrolleysOutsideOfIncubators(@Param("organisationId") UUID organisationId);
 
+    @Query(value = """
+    SELECT nt.*
+    FROM nesting_trolley nt
+    LEFT JOIN nesting_trolley_content ntc ON ntc.nesting_trolley_id = nt.id
+    WHERE nt.organisation_id = :orgId
+    AND ntc.id IS NULL
+""", nativeQuery = true)
+    List<NestingTrolley> findAllUnusedTrolleys(@Param("orgId") UUID orgId);
 
 }

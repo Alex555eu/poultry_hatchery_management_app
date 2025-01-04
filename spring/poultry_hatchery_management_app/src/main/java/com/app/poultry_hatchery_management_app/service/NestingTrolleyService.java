@@ -46,6 +46,17 @@ public class NestingTrolleyService {
         return null;
     }
 
+    public List<NestingTrolley> getAllUnusedTrolleys() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if ((authentication != null && authentication.getPrincipal() instanceof UserDetails)) {
+            User user = (User) authentication.getPrincipal();
+            Organisation organisation = user.getOrganisation();
+
+            return nestingTrolleyRepository.findAllUnusedTrolleys(organisation.getId());
+        }
+        return null;
+    }
+
     public Optional<NestingTrolley> getTrolleyById(UUID nestingTrolleyId) {
         return nestingTrolleyRepository.findById(nestingTrolleyId);
     }
@@ -94,6 +105,10 @@ public class NestingTrolleyService {
 
     public List<NestingTrolleyContent> getNestingTrolleyContent(UUID nestingTrolleyId) {
         return nestingTrolleyContentRepository.findAllByNestingTrolleyId(nestingTrolleyId);
+    }
+
+    public List<NestingTrolleyContent> getNestingTrolleyContentByNestingId(UUID nestingId) {
+        return nestingTrolleyContentRepository.findAllByNestingId(nestingId);
     }
 
     public Optional<NestingTrolleyContent> postTrolleyContent(PostNestingTrolleyContentRequest request) {
