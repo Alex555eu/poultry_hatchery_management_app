@@ -105,6 +105,17 @@ public class NestingTrolleyController {
         }
     }
 
+    @GetMapping("/content/by-nesting-id")
+    public ResponseEntity<String> getNestingTrolleyContentByNestingId(@RequestParam UUID nestingId) throws JsonProcessingException {
+        List<NestingTrolleyContent> trolleyContent = nestingTrolleyService.getNestingTrolleyContentByNestingId(nestingId);
+        if (trolleyContent.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            String response = objectMapper.writeValueAsString(trolleyContent);
+            return ResponseEntity.ok(response);
+        }
+    }
+
     @PostMapping("/content")
     public ResponseEntity<String> postTrolleyContent(@RequestBody PostNestingTrolleyContentRequest request){
         Optional<NestingTrolleyContent> trolleyContent = nestingTrolleyService.postTrolleyContent(request);

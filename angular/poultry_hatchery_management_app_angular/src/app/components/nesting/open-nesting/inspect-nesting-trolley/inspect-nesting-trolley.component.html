@@ -1,0 +1,76 @@
+<mat-dialog-content>
+    <div class="dialog-bg">
+
+        <div class="dialog-header">
+            <mat-icon>swap_horiz</mat-icon>
+            <label>Wózek {{ trolley?.humanReadableId || 'Brak ID' }}</label>
+        </div>
+
+        <div class="trolley-content">
+            <ng-container *ngFor="let content of trolleyContent">
+                <div class="content-item">
+                    <span class="item-title">{{ content?.nestingLoadedDeliveries?.nesting?.title || 'Brak tytułu' }}</span>
+                    <div class="supplier-info">
+                        <label class="supplier-name">
+                            {{ content?.nestingLoadedDeliveries?.delivery?.supplier?.name || 'Brak nazwy dostawcy' }} 
+                            {{ content?.nestingLoadedDeliveries?.delivery?.supplier?.surname || 'Brak nazwiska dostawcy' }}
+                        </label>
+                        <label class="quantity">: {{ content?.quantity || 0 }} szt.</label>
+                    </div>
+                    <label>  </label>
+                </div>
+            </ng-container>
+
+            <div class="total-quantity">
+                <strong>Łączna ilość: </strong>
+                <span>{{ totalQuantity || 0 }} / {{ trolley?.maxCapacity || 0 }} szt.</span>
+            </div>
+        </div>
+
+        <div class="operation-container">
+            <!-- Dane o dostawcy -->
+            <div class="operation-item" *ngIf="selectedNLD">
+                <span class="label">Dostawa:</span>
+                <span class="supplier-info">
+                    {{ selectedNLD.delivery.supplier.name || 'Brak imienia dostawcy' }}
+                    {{ selectedNLD.delivery.supplier.surname || 'Brak nazwiska dostawcy' }}
+                </span>
+                <span class="supplier-info">{{ selectedNLD.delivery.supplier.wni }}</span>
+                <span class="supplier-info">{{ selectedNLD.delivery.dateTime | customDateFormatter: 'full'}}</span>
+                <span class="supplier-info">{{ selectedNLD.delivery.productType.name }}</span>
+            </div>
+          
+            <!-- Ilość -->
+            <div class="operation-item">
+                <mat-label>Pozostała ilość w dostawie: {{ nestingAvailableQuantity }}</mat-label>
+                <mat-form-field class="example-full-width" *ngIf="trolley">
+                    <mat-label>Podaj ilość</mat-label>
+                    <input type="number" min="1" [max]="trolley.maxCapacity ? trolley.maxCapacity - totalQuantity : 0"
+                    matInput [(ngModel)]="quantity">
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Operacja</mat-label>
+                    <mat-select [(ngModel)]="operationType">
+                        <mat-option value="add">Nałóż na wózek</mat-option>
+                        <mat-option value="remove">Wyjmij z wózka</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+          
+            <!-- Przycisk do potwierdzenia operacji -->
+            <div class="operation-item">
+              <button
+                mat-raised-button
+                color="primary"
+                [disabled]="quantity <= 0 || !selectedNLD"
+                (click)="confirmOperation()"
+              >
+                Wykonaj
+              </button>
+            </div>
+          </div>
+          
+
+    </div>
+</mat-dialog-content>

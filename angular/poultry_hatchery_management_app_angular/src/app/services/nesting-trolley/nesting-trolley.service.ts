@@ -54,6 +54,14 @@ export class NestingTrolleyService {
     );
   }
 
+  public getNestingTrolleyContentByNestingId(nestingId: string): Observable<NestingTrolleyContent[]> {
+    return this.http.get<NestingTrolleyContent[]>(`${apiUrl + ApiPaths.NestingTrolleyPaths.GET_NESTING_TROLLEY_CONTENT_BY_NESTING_ID + nestingId}`).pipe(
+      catchError(error => {
+        return of([]);
+      })
+    );
+  } 
+
   public postNestingTrolleyContentTransfer(body: PostNestingTrolleyContentTransferRequest): Observable<NestingTrolleyContent[]> {
     return this.http.post<NestingTrolleyContent[]>(`${apiUrl + ApiPaths.NestingTrolleyPaths.POST_NESTING_TROLLEY_CONTENT_TRANSFER}`, body).pipe(
       catchError(error => {

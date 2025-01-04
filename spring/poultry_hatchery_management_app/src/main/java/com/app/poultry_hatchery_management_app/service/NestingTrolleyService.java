@@ -96,6 +96,10 @@ public class NestingTrolleyService {
         return nestingTrolleyContentRepository.findAllByNestingTrolleyId(nestingTrolleyId);
     }
 
+    public List<NestingTrolleyContent> getNestingTrolleyContentByNestingId(UUID nestingId) {
+        return nestingTrolleyContentRepository.findAllByNestingId(nestingId);
+    }
+
     public Optional<NestingTrolleyContent> postTrolleyContent(PostNestingTrolleyContentRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if ((authentication != null && authentication.getPrincipal() instanceof UserDetails)) {
