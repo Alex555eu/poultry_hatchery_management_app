@@ -29,7 +29,7 @@
 
         <div class="operation-container">
             <!-- Dane o dostawcy -->
-            <div class="operation-item" *ngIf="selectedNLD">
+            <div class="operation-item" *ngIf="selectedNLD != null; else loading">
                 <span class="label">Dostawa:</span>
                 <span class="supplier-info">
                     {{ selectedNLD.delivery.supplier.name || 'Brak imienia dostawcy' }}
@@ -39,13 +39,14 @@
                 <span class="supplier-info">{{ selectedNLD.delivery.dateTime | customDateFormatter: 'full'}}</span>
                 <span class="supplier-info">{{ selectedNLD.delivery.productType.name }}</span>
             </div>
+            <ng-template #loading>Nie wybrano dostawy...</ng-template>
           
             <!-- Ilość -->
             <div class="operation-item">
                 <mat-label>Pozostała ilość w dostawie: {{ nestingAvailableQuantity }}</mat-label>
                 <mat-form-field class="example-full-width" *ngIf="trolley">
                     <mat-label>Podaj ilość</mat-label>
-                    <input type="number" min="1" [max]="trolley.maxCapacity ? trolley.maxCapacity - totalQuantity : 0"
+                    <input type="number" min="1"
                     matInput [(ngModel)]="quantity">
                 </mat-form-field>
 

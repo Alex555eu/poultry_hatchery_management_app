@@ -83,7 +83,7 @@ ngOnInit(): void {
 
     // init rejections
     switchMap(nesting => this.initRejections1(nesting.id))
-    
+
   ).subscribe();
 }
 
@@ -112,7 +112,12 @@ selectNestingTrolley(trolley: NestingTrolley) {
     trolleyContent: Array.from(this.nestingTrolleysContentAssignment.get(trolley.id)?.values() || []),
     selectedNLD: this.selectedNLD?.[0]
   }
-  this.dialog.open(InspectNestingTrolleyComponent, config);
+  let ref = this.dialog.open(InspectNestingTrolleyComponent, config);
+  ref.afterClosed().subscribe(result => {
+    if (result) {
+      this.ngOnInit();
+    }
+  });
 }
 
 

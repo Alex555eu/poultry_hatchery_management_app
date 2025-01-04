@@ -9,6 +9,8 @@ import { ApiPaths } from '../../api/api.paths';
 import { PostTrolleyRequest } from '../../dto/post-trolley-request';
 import { NestingTrolleyContent } from '../../models/nesting-trolley-content.model';
 import { PostNestingTrolleyContentTransferRequest } from '../../dto/post-nesting-trolley-content-transfer-request';
+import { PostNestingTrolleyContentRequest } from '../../dto/post-nesting-trolley-content-request';
+import { PutNestingTrolleyContentRequest } from '../../dto/put-nesting-trolley-content-request';
 
 @Injectable({
   providedIn: 'root'
@@ -62,6 +64,15 @@ export class NestingTrolleyService {
     );
   } 
 
+  public postNestingTrolleyContent(body: PostNestingTrolleyContentRequest): Observable<NestingTrolleyContent> {
+    return this.http.post<NestingTrolleyContent>(`${apiUrl + ApiPaths.NestingTrolleyPaths.POST_NESTING_TROLLEY_CONTENT}`, body).pipe(
+      catchError(error => {
+        console.error(error);
+        return of();
+      })
+    )
+  }
+
   public postNestingTrolleyContentTransfer(body: PostNestingTrolleyContentTransferRequest): Observable<NestingTrolleyContent[]> {
     return this.http.post<NestingTrolleyContent[]>(`${apiUrl + ApiPaths.NestingTrolleyPaths.POST_NESTING_TROLLEY_CONTENT_TRANSFER}`, body).pipe(
       catchError(error => {
@@ -71,6 +82,22 @@ export class NestingTrolleyService {
     )
   }
 
-  
+  public putNestingTrolleyContent(body: PutNestingTrolleyContentRequest): Observable<NestingTrolleyContent> {
+    return this.http.put<NestingTrolleyContent>(`${apiUrl + ApiPaths.NestingTrolleyPaths.PUT_NESTING_TROLLEY_CONTENT}`, body).pipe(
+      catchError(error => {
+        console.error(error);
+        return of();
+      })
+    )
+  }
+
+  public deleteNestingTrolleyContent(trolleyContentId: string): Observable<NestingTrolleyContent> {
+    return this.http.delete<NestingTrolleyContent>(`${apiUrl + ApiPaths.NestingTrolleyPaths.DELETE_NESTING_TROLLEY_CONTENT + trolleyContentId}`).pipe(
+      catchError(error => {
+        console.error(error);
+        return of();
+      })
+    )
+  }
 
 }

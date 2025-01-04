@@ -53,7 +53,10 @@ export namespace ApiPaths {
 
         GET_NESTING_TROLLEY_CONTENT = '/api/v1/nesting-trolley/content?trolleyId=',
         GET_NESTING_TROLLEY_CONTENT_BY_NESTING_ID = '/api/v1/nesting-trolley/content/by-nesting-id?nestingId=',
-        POST_NESTING_TROLLEY_CONTENT_TRANSFER = '/api/v1/nesting-trolley/content/transfer'
+        POST_NESTING_TROLLEY_CONTENT = '/api/v1/nesting-trolley/content',
+        PUT_NESTING_TROLLEY_CONTENT = '/api/v1/nesting-trolley/content',
+        DELETE_NESTING_TROLLEY_CONTENT = '/api/v1/nesting-trolley/content?trolleyContentId=',
+        POST_NESTING_TROLLEY_CONTENT_TRANSFER = '/api/v1/nesting-trolley/content/transfer',
     }
 
     export enum HatchingTrolleyPaths {
