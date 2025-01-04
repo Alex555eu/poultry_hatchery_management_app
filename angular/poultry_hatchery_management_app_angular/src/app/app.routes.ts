@@ -11,6 +11,7 @@ import { HatchingIncubatorComponent } from './components/incubators/hatching-inc
 import { CandlingComponent } from './components/candling/candling.component';
 import { OpenCandlingComponent } from './components/candling/open-candling/open-candling.component';
 import { NestingComponent } from './components/nesting/nesting.component';
+import { OpenNestingComponent } from './components/nesting/open-nesting/open-nesting.component';
 
 export const routes: Routes = [
     { path: '', component: NavbarComponent,
@@ -26,7 +27,8 @@ export const routes: Routes = [
             { path: 'candling', component: CandlingComponent},
             { path: 'candling/open', component: OpenCandlingComponent},
             
-            { path: 'nesting', component: NestingComponent}
+            { path: 'nesting', component: NestingComponent},
+            { path: 'nesting/open', component: OpenNestingComponent}
         ],
     },
     { path: 'login', component: LoginComponent},
