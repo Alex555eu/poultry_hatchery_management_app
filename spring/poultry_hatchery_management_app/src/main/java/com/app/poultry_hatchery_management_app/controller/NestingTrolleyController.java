@@ -69,6 +69,21 @@ public class NestingTrolleyController {
         }
     }
 
+    @GetMapping("/unused")
+    public ResponseEntity<String> getAllUnusedTrolleys() throws JsonProcessingException {
+        List<NestingTrolley> trolleyList = nestingTrolleyService.getAllUnusedTrolleys();
+        if (trolleyList == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        } else if (trolleyList.isEmpty()) {
+            return ResponseEntity.notFound().build();
+
+        } else {
+            String response = objectMapper.writeValueAsString(trolleyList);
+            return ResponseEntity.ok(response);
+        }
+    }
+
     @PostMapping("/")
     public ResponseEntity<String> postTrolley(@RequestBody PostNestingTrolleyRequest request) {
         Optional<NestingTrolley> trolley = nestingTrolleyService.postTrolley(request);

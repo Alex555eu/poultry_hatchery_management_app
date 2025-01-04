@@ -47,6 +47,7 @@ export namespace ApiPaths {
     export enum NestingTrolleyPaths {
         GET_NESTING_TROLLEY = '/api/v1/nesting-trolley/',
         GET_ALL_NESTING_TROLLEYS_FROM_OUTSIDE_OF_INCUBATORS = '/api/v1/nesting-trolley/from-outside',
+        GET_ALL_UNUSED_NESTING_TROLLEYS = '/api/v1/nesting-trolley/unused',
         POST_NESTING_TROLLEY = '/api/v1/nesting-trolley/',
         PUT_NESTING_TROLLEY = '/api/v1/nesting-trolley/',
         DELETE_NESTING_TROLLEY = '/api/v1/nesting-trolley/',

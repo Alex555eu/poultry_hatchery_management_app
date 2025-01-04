@@ -44,6 +44,14 @@ export class NestingTrolleyService {
     );
   }
 
+  public getAllUnusedNestingTrolleys(): Observable<NestingTrolley[]> {
+    return this.http.get<NestingTrolley[]>(`${apiUrl}${ApiPaths.NestingTrolleyPaths.GET_ALL_UNUSED_NESTING_TROLLEYS}`).pipe(
+      catchError(error => {
+        return of([]);
+      })
+    );
+  }
+
   public postNestingTrolley(body: PostTrolleyRequest): Observable<any> {
     return this.http.post<any>(`${apiUrl}${ApiPaths.NestingTrolleyPaths.POST_NESTING_TROLLEY}`, body);
   }
