@@ -6,7 +6,7 @@ import { Hatching } from '../../models/hatching.model';
 import { TasksService } from '../../services/tasks/tasks.service';
 import { RejectionService } from '../../services/rejections/rejection.service';
 import { NestingLoadedDeliveriesService } from '../../services/nesting-loaded-deliveries/nesting-loaded-deliveries.service';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig, MatDialogModule } from '@angular/material/dialog';
 import { HatchingService } from '../../services/hatching/hatching.service';
 import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
@@ -27,6 +27,8 @@ import { TaskNestingTrolleyAssignment } from '../../models/task-nesting-trolley-
 import { from, mergeMap, Observable, tap } from 'rxjs';
 import { Rejection3 } from '../../models/rejection3.model';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { NewHatchingComponent } from './new-hatching/new-hatching.component';
+import { ConfirmActionDialogComponent } from '../../utils/confirm-action-dialog/confirm-action-dialog.component';
 
 @Component({
   selector: 'app-hatching',
@@ -120,7 +122,28 @@ export class HatchingComponent implements OnInit {
   }
 
   newHatching() {
-    
+    if (!this.selectedTask){
+      let config = new MatDialogConfig();
+      config.data = { 
+        title: 'Uwaga',
+        question: 'Nie wybrano zaplanowanego zadania. Czy chcesz rozpocząć nowy przekład poza harmonogramem ?',
+        negativeResponse: 'Wróć',
+        positiveResponse: 'Kontynuuj'
+      }
+      const dialogRef = this.dialog.open(ConfirmActionDialogComponent, config);
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.dialog.open(NewHatchingComponent);
+        }
+      })
+    } else {
+      let config = new MatDialogConfig();
+      const task = this.todayHatchings?.find(it => it.id === this.selectedTask);
+      config.data = { 
+        task: task,
+      }
+      this.dialog.open(NewHatchingComponent, config);
+    }
   }
 
   goToCandling(element: Hatching) {

@@ -4,6 +4,7 @@ import { catchError, Observable, of } from 'rxjs';
 import { apiUrl } from '../../app.config';
 import { ApiPaths } from '../../api/api.paths';
 import { Hatching } from '../../models/hatching.model';
+import { PostHatchingRequest } from '../../dto/post-hatching-request';
 
 @Injectable({
   providedIn: 'root'
@@ -24,5 +25,13 @@ export class HatchingService {
     );
   }
 
+  postHatching(body: PostHatchingRequest): Observable<Hatching> {
+    return this.http.post<Hatching>(`${apiUrl + ApiPaths.HatchingPaths.POST_HATCHING}`, body).pipe(
+      catchError(error => {
+        console.error(error);
+        return of();
+      })
+    );
+  }
 
 }

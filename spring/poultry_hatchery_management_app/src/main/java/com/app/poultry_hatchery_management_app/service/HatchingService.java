@@ -30,6 +30,7 @@ public class HatchingService {
 
     private final NestingService nestingService;
     private final DeliveryService deliveryService;
+    private final TaskService taskService;
 
     public Optional<Hatching> getHatchingByNestingId(UUID nestingId) {
         return hatchingRepository.findByNestingId(nestingId);
@@ -50,10 +51,12 @@ public class HatchingService {
 
     public Optional<Hatching> postHatching(PostHatchingRequest request) {
         Optional<Nesting> nesting = nestingService.getNesting(request.nestingId());
-        if (nesting.isPresent()){
+        Optional<Task> task = taskService.getTaskById(request.taskId());
+        if (nesting.isPresent() && task.isPresent()){
             Hatching hatching = Hatching.builder()
                     .dateTime(LocalDateTime.now())
                     .nesting(nesting.get())
+                    .task(task.get())
                     .build();
         hatchingRepository.save(hatching);
 

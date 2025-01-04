@@ -38,7 +38,8 @@ export namespace ApiPaths {
     }
 
     export enum HatchingPaths {
-        GET_ALL_HATCHINGS = '/api/v1/hatching/all'
+        GET_ALL_HATCHINGS = '/api/v1/hatching/all',
+        POST_HATCHING = '/api/v1/hatching',
     }
 
     export enum HatchingIncubatorPaths {

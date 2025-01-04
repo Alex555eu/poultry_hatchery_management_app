@@ -52,10 +52,11 @@ public class HatchingController {
     }
 
     @PostMapping("")
-    public ResponseEntity<String> postHatching(@RequestBody PostHatchingRequest request) {
+    public ResponseEntity<String> postHatching(@RequestBody PostHatchingRequest request) throws JsonProcessingException {
         Optional<Hatching> hatching = hatchingService.postHatching(request);
         if(hatching.isPresent()) {
-            return ResponseEntity.ok().build();
+            String body = objectMapper.writeValueAsString(hatching.get());
+            return ResponseEntity.ok(body);
         }
         return ResponseEntity.notFound().build();
     }
