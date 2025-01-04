@@ -18,6 +18,7 @@ export namespace ApiPaths {
     export enum NestingPaths {
         GET_ALL_UNFINISHED_NESTINGS = '/api/v1/nesting/unfinished',
         GET_ALL_NESTINGS = '/api/v1/nesting',
+        GET_NESTING_BY_ID = '/api/v1/nesting/by-id?nestingId=',
         POST_NEW_NESTING = '/api/v1/nesting'
     }
 
@@ -51,6 +52,7 @@ export namespace ApiPaths {
         DELETE_NESTING_TROLLEY = '/api/v1/nesting-trolley/',
 
         GET_NESTING_TROLLEY_CONTENT = '/api/v1/nesting-trolley/content?trolleyId=',
+        GET_NESTING_TROLLEY_CONTENT_BY_NESTING_ID = '/api/v1/nesting-trolley/content/by-nesting-id?nestingId=',
         POST_NESTING_TROLLEY_CONTENT_TRANSFER = '/api/v1/nesting-trolley/content/transfer'
     }
 
@@ -107,6 +109,10 @@ export namespace ApiPaths {
         REJECTION_CAUSES_TWO = '/api/v1/rejection/causes/two',
         REJECTION_CAUSES_THREE = '/api/v1/rejection/causes/three',
         REJECTION_CAUSES_FOUR = '/api/v1/rejection/causes/four',
+
+        GET_ALL_REJECTION_ONE_BY_NESTING_ID = '/api/v1/rejection/one?nestingId=',
+        POST_REJECTION_ONE = '/api/v1/rejection/one',
+        DELETE_REJECTION_ONE = '/api/v1/rejection/one?rejectionId=',
 
         GET_ALL_REJECTION_TWO_BY_CANDLING_ID = '/api/v1/rejection/two/candling?candlingId=',
         POST_REJECTION_TWO = '/api/v1/rejection/two',
