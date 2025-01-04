@@ -157,9 +157,19 @@ public class RejectionController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/three")
+    @GetMapping("/three/by-nesting")
     public ResponseEntity<String> getAllRejections3ByNestingId(@RequestParam UUID nestingId) throws JsonProcessingException {
         List<Rejection3> rejections = rejectionService.getAllRejections3ByNestingId(nestingId);
+        if (rejections.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        String response = objectMapper.writeValueAsString(rejections);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/three/by-hatching")
+    public ResponseEntity<String> getAllRejections3ByHatchingId(@RequestParam UUID hatchingId) throws JsonProcessingException {
+        List<Rejection3> rejections = rejectionService.getAllRejections3ByHatchingId(hatchingId);
         if (rejections.isEmpty()) {
             return ResponseEntity.notFound().build();
         }

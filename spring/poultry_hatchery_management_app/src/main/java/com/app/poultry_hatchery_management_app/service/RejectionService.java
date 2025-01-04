@@ -206,6 +206,10 @@ public class RejectionService {
         return rejection3Repository.findAllByNestingId(nestingId);
     }
 
+    public List<Rejection3> getAllRejections3ByHatchingId(UUID hatchingId) {
+        return rejection3Repository.findAllByHatchingId(hatchingId);
+    }
+
     public List<RejectionCause> getPossibleRejection3Causes() {
         return RejectionCause.getAvailableCauses(RejectionGroup.REJECTION_3);
     }
@@ -215,7 +219,6 @@ public class RejectionService {
                 hatchingService.getHatchingLoadedDeliveryById(request.hatchingLoadedDeliveryId());
         if(hld.isPresent()) {
             Rejection3 rejection3 = Rejection3.builder()
-                    .hatchingLoadedDeliveries(hld.get())
                     .quantity(request.quantity())
                     .cause(RejectionCause.valueOf(request.cause()).verify(RejectionGroup.REJECTION_3))
                     .build();

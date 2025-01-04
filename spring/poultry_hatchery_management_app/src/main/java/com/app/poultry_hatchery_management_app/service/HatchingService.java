@@ -10,6 +10,9 @@ import com.app.poultry_hatchery_management_app.repository.HatchingLoadedDeliveri
 import com.app.poultry_hatchery_management_app.repository.HatchingRepository;
 import com.app.poultry_hatchery_management_app.repository.HatchingResultRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,6 +33,19 @@ public class HatchingService {
 
     public Optional<Hatching> getHatchingByNestingId(UUID nestingId) {
         return hatchingRepository.findByNestingId(nestingId);
+    }
+
+    public List<Hatching> getAllHatchings() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if ((authentication != null && authentication.getPrincipal() instanceof UserDetails)) {
+            User user = (User) authentication.getPrincipal();
+
+            List<Nesting> nestings = this.nestingService.getAllNestings();
+
+            if (!nestings.isEmpty())
+                return hatchingRepository.findAllByNestings(nestings);
+        }
+        return null;
     }
 
     public Optional<Hatching> postHatching(PostHatchingRequest request) {

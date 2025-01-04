@@ -31,7 +31,8 @@ public class TaskType {
 
 //    NAWILZANIE,
 //    WIETRZENIE,
-//    PRZECHYLANIE,
-//    SWIETLENIE
+//    PRZEKLAD,
+//    SWIETLENIE,
+//    WYLEG
 
 }

@@ -37,6 +37,10 @@ export namespace ApiPaths {
         DELETE_NESTING_TROLLEY_FROM_INCUBATOR_SPACE = '/api/v1/nesting-incubator/occupation?assignmentId='
     }
 
+    export enum HatchingPaths {
+        GET_ALL_HATCHINGS = '/api/v1/hatching/all'
+    }
+
     export enum HatchingIncubatorPaths {
         GET_HATCHING_INCUBATOR = '/api/v1/hatching-incubator/',
         POST_HATCHING_INCUBATOR = '/api/v1/hatching-incubator/',
@@ -121,7 +125,10 @@ export namespace ApiPaths {
 
         GET_ALL_REJECTION_TWO_BY_CANDLING_ID = '/api/v1/rejection/two/candling?candlingId=',
         POST_REJECTION_TWO = '/api/v1/rejection/two',
-        DELETE_REJECTION_TWO = '/api/v1/rejection/two?rejectionId='
+        DELETE_REJECTION_TWO = '/api/v1/rejection/two?rejectionId=',
+
+        GET_ALL_REJECTION_THREE_BY_NESTING_ID = '/api/v1/rejection/three/by-nesting?nestingId=',
+        GET_ALL_REJECTION_THREE_BY_HATCHING_ID = '/api/v1/rejection/three/by-hatching?hatchingId=',
     }
 
     export enum NestingLoadedDeliveries {

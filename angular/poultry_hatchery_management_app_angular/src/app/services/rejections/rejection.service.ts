@@ -7,6 +7,7 @@ import { Rejection2 } from '../../models/rejection2.model';
 import { PostRejection2Request } from '../../dto/post-rejection2-request';
 import { Rejection1 } from '../../models/rejection1.model';
 import { PostRejection1Request } from '../../dto/post-rejection1-request';
+import { Rejection3 } from '../../models/rejection3.model';
 
 @Injectable({
   providedIn: 'root'
@@ -94,6 +95,14 @@ export class RejectionService {
   }
 
 
+  public getAllRejection3ByHatching(hatchingId: string): Observable<Rejection3[]> {
+    return this.http.get<Rejection3[]>(`${apiUrl + ApiPaths.RejectionPaths.GET_ALL_REJECTION_THREE_BY_HATCHING_ID + hatchingId}`).pipe(
+      catchError(error => {
+        console.error(error);
+        return of([]);
+      })
+    );
+  }
 
 
 }
