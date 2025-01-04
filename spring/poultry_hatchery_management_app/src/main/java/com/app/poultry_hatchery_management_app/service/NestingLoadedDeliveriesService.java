@@ -1,5 +1,6 @@
 package com.app.poultry_hatchery_management_app.service;
 
+import com.app.poultry_hatchery_management_app.dto.PostNestingLoadedDeliveryRequest;
 import com.app.poultry_hatchery_management_app.model.*;
 import com.app.poultry_hatchery_management_app.repository.DeliveryRepository;
 import com.app.poultry_hatchery_management_app.repository.NestingLoadedDeliveriesRepository;
@@ -47,14 +48,14 @@ public class NestingLoadedDeliveriesService {
         return List.of();
     }
 
-    public Optional<NestingLoadedDeliveries> postNestingLoadedDelivery(UUID nestingId, UUID deliveryId, Integer quantity) {
-        Optional<Nesting> nesting = nestingRepository.findById(nestingId);
-        Optional<Delivery> delivery = deliveryRepository.findById(deliveryId);
+    public Optional<NestingLoadedDeliveries> postNestingLoadedDelivery(PostNestingLoadedDeliveryRequest request) {
+        Optional<Nesting> nesting = nestingRepository.findById(request.nestingId());
+        Optional<Delivery> delivery = deliveryRepository.findById(request.deliveryId());
         if (delivery.isPresent() && nesting.isPresent()) {
             NestingLoadedDeliveries nld = NestingLoadedDeliveries.builder()
                     .nesting(nesting.get())
                     .delivery(delivery.get())
-                    .quantity(quantity)
+                    .quantity(request.quantity())
                     .build();
             nestingLoadedDeliveriesRepository.save(nld);
             return Optional.of(nld);

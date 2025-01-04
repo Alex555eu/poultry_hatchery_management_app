@@ -9,6 +9,8 @@ import { ApiPaths } from '../../api/api.paths';
 import { PostTrolleyRequest } from '../../dto/post-trolley-request';
 import { NestingTrolleyContent } from '../../models/nesting-trolley-content.model';
 import { PostNestingTrolleyContentTransferRequest } from '../../dto/post-nesting-trolley-content-transfer-request';
+import { PostNestingTrolleyContentRequest } from '../../dto/post-nesting-trolley-content-request';
+import { PutNestingTrolleyContentRequest } from '../../dto/put-nesting-trolley-content-request';
 
 @Injectable({
   providedIn: 'root'
@@ -42,6 +44,14 @@ export class NestingTrolleyService {
     );
   }
 
+  public getAllUnusedNestingTrolleys(): Observable<NestingTrolley[]> {
+    return this.http.get<NestingTrolley[]>(`${apiUrl}${ApiPaths.NestingTrolleyPaths.GET_ALL_UNUSED_NESTING_TROLLEYS}`).pipe(
+      catchError(error => {
+        return of([]);
+      })
+    );
+  }
+
   public postNestingTrolley(body: PostTrolleyRequest): Observable<any> {
     return this.http.post<any>(`${apiUrl}${ApiPaths.NestingTrolleyPaths.POST_NESTING_TROLLEY}`, body);
   }
@@ -54,6 +64,23 @@ export class NestingTrolleyService {
     );
   }
 
+  public getNestingTrolleyContentByNestingId(nestingId: string): Observable<NestingTrolleyContent[]> {
+    return this.http.get<NestingTrolleyContent[]>(`${apiUrl + ApiPaths.NestingTrolleyPaths.GET_NESTING_TROLLEY_CONTENT_BY_NESTING_ID + nestingId}`).pipe(
+      catchError(error => {
+        return of([]);
+      })
+    );
+  } 
+
+  public postNestingTrolleyContent(body: PostNestingTrolleyContentRequest): Observable<NestingTrolleyContent> {
+    return this.http.post<NestingTrolleyContent>(`${apiUrl + ApiPaths.NestingTrolleyPaths.POST_NESTING_TROLLEY_CONTENT}`, body).pipe(
+      catchError(error => {
+        console.error(error);
+        return of();
+      })
+    )
+  }
+
   public postNestingTrolleyContentTransfer(body: PostNestingTrolleyContentTransferRequest): Observable<NestingTrolleyContent[]> {
     return this.http.post<NestingTrolleyContent[]>(`${apiUrl + ApiPaths.NestingTrolleyPaths.POST_NESTING_TROLLEY_CONTENT_TRANSFER}`, body).pipe(
       catchError(error => {
@@ -63,6 +90,22 @@ export class NestingTrolleyService {
     )
   }
 
-  
+  public putNestingTrolleyContent(body: PutNestingTrolleyContentRequest): Observable<NestingTrolleyContent> {
+    return this.http.put<NestingTrolleyContent>(`${apiUrl + ApiPaths.NestingTrolleyPaths.PUT_NESTING_TROLLEY_CONTENT}`, body).pipe(
+      catchError(error => {
+        console.error(error);
+        return of();
+      })
+    )
+  }
+
+  public deleteNestingTrolleyContent(trolleyContentId: string): Observable<NestingTrolleyContent> {
+    return this.http.delete<NestingTrolleyContent>(`${apiUrl + ApiPaths.NestingTrolleyPaths.DELETE_NESTING_TROLLEY_CONTENT + trolleyContentId}`).pipe(
+      catchError(error => {
+        console.error(error);
+        return of();
+      })
+    )
+  }
 
 }

@@ -10,6 +10,8 @@ import { NestingIncubatorComponent } from './components/incubators/nesting-incub
 import { HatchingIncubatorComponent } from './components/incubators/hatching-incubator/hatching-incubator.component';
 import { CandlingComponent } from './components/candling/candling.component';
 import { OpenCandlingComponent } from './components/candling/open-candling/open-candling.component';
+import { NestingComponent } from './components/nesting/nesting.component';
+import { OpenNestingComponent } from './components/nesting/open-nesting/open-nesting.component';
 
 export const routes: Routes = [
     { path: '', component: NavbarComponent,
@@ -18,10 +20,15 @@ export const routes: Routes = [
             { path: 'deliveries', component: DeliveriesComponent},
             { path: 'tasks', component: TasksComponent},
             { path: 'incubators', component: IncubatorsComponent},
+
             { path: 'incubators/nesting', component: NestingIncubatorComponent},
             { path: 'incubators/hatching', component: HatchingIncubatorComponent},
+
             { path: 'candling', component: CandlingComponent},
-            { path: 'candling/open', component: OpenCandlingComponent}
+            { path: 'candling/open', component: OpenCandlingComponent},
+            
+            { path: 'nesting', component: NestingComponent},
+            { path: 'nesting/open', component: OpenNestingComponent}
         ],
     },
     { path: 'login', component: LoginComponent},

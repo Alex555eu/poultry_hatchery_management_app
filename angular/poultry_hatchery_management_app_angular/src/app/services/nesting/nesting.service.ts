@@ -22,6 +22,34 @@ export class NestingService {
       })
     )
   }
+
+  public getAllNestings(): Observable<Nesting[]> {
+    return this.http.get<Nesting[]>(`${apiUrl + ApiPaths.NestingPaths.GET_ALL_NESTINGS}`).pipe(
+      catchError(error => {
+        console.error(error);
+        return of([]);
+      })
+    )
+  }
+
+  public getNestingById(nestingId: string): Observable<Nesting> {
+    return this.http.get<Nesting>(`${apiUrl + ApiPaths.NestingPaths.GET_NESTING_BY_ID + nestingId}`).pipe(
+      catchError(error => {
+        console.error(error);
+        return of();
+      })
+    )
+  }
+
+  public postNewNesting(title: string, description: string): Observable<Nesting> {
+    const body = {title: title, description: description};
+    return this.http.post<Nesting>(`${apiUrl + ApiPaths.NestingPaths.POST_NEW_NESTING}`, body).pipe(
+      catchError(error => {
+        console.error(error);
+        return of();
+      })
+    )
+  }
   
 
 }

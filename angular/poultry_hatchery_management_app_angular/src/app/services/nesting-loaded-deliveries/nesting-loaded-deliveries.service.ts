@@ -4,6 +4,7 @@ import { catchError, Observable, of } from 'rxjs';
 import { NestingLoadedDeliveries } from '../../models/nesting-loaded-deliveries.model';
 import { apiUrl } from '../../app.config';
 import { ApiPaths } from '../../api/api.paths';
+import { PostNestingLoadedDeliveryRequest } from '../../dto/post-nesting-loaded-delivery-request';
 
 @Injectable({
   providedIn: 'root'
@@ -31,4 +32,13 @@ export class NestingLoadedDeliveriesService {
       })
     )
   }
+
+  public postNestingLoadedDelivery(body: PostNestingLoadedDeliveryRequest): Observable<NestingLoadedDeliveries> {
+    return this.http.post<NestingLoadedDeliveries>(`${apiUrl + ApiPaths.NestingLoadedDeliveries.POST_NESTING_LOADED_DELIVERY}`, body).pipe(
+      catchError(error => {
+        return of()
+      })
+    )
+  }
+
 }

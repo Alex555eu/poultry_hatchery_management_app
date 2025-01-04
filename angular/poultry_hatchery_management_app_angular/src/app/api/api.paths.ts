@@ -16,7 +16,10 @@ export namespace ApiPaths {
     }
 
     export enum NestingPaths {
-        GET_ALL_UNFINISHED_NESTINGS = '/api/v1/nesting/unfinished'
+        GET_ALL_UNFINISHED_NESTINGS = '/api/v1/nesting/unfinished',
+        GET_ALL_NESTINGS = '/api/v1/nesting',
+        GET_NESTING_BY_ID = '/api/v1/nesting/by-id?nestingId=',
+        POST_NEW_NESTING = '/api/v1/nesting'
     }
 
     export enum NestingIncubatorPaths {
@@ -44,12 +47,17 @@ export namespace ApiPaths {
     export enum NestingTrolleyPaths {
         GET_NESTING_TROLLEY = '/api/v1/nesting-trolley/',
         GET_ALL_NESTING_TROLLEYS_FROM_OUTSIDE_OF_INCUBATORS = '/api/v1/nesting-trolley/from-outside',
+        GET_ALL_UNUSED_NESTING_TROLLEYS = '/api/v1/nesting-trolley/unused',
         POST_NESTING_TROLLEY = '/api/v1/nesting-trolley/',
         PUT_NESTING_TROLLEY = '/api/v1/nesting-trolley/',
         DELETE_NESTING_TROLLEY = '/api/v1/nesting-trolley/',
 
         GET_NESTING_TROLLEY_CONTENT = '/api/v1/nesting-trolley/content?trolleyId=',
-        POST_NESTING_TROLLEY_CONTENT_TRANSFER = '/api/v1/nesting-trolley/content/transfer'
+        GET_NESTING_TROLLEY_CONTENT_BY_NESTING_ID = '/api/v1/nesting-trolley/content/by-nesting-id?nestingId=',
+        POST_NESTING_TROLLEY_CONTENT = '/api/v1/nesting-trolley/content',
+        PUT_NESTING_TROLLEY_CONTENT = '/api/v1/nesting-trolley/content',
+        DELETE_NESTING_TROLLEY_CONTENT = '/api/v1/nesting-trolley/content?trolleyContentId=',
+        POST_NESTING_TROLLEY_CONTENT_TRANSFER = '/api/v1/nesting-trolley/content/transfer',
     }
 
     export enum HatchingTrolleyPaths {
@@ -61,6 +69,7 @@ export namespace ApiPaths {
 
     export enum DeliveryPaths {
         GET_ALL_DELIVERIES = '/api/v1/deliveries/',
+        GET_ALL_LEFT_OVER_DELIVERIES = '/api/v1/deliveries/left-over',
         GET_DELIVERIES_BY_ID = '/api/v1/deliveries/by-id',
         GET_DELIVERIES_BY_SUPPLIER_ID = '/api/v1/deliveries/by-supplier',
         GET_ALL_PRODUCT_TYPES = '/api/v1/deliveries/product-types-all',
@@ -106,6 +115,10 @@ export namespace ApiPaths {
         REJECTION_CAUSES_THREE = '/api/v1/rejection/causes/three',
         REJECTION_CAUSES_FOUR = '/api/v1/rejection/causes/four',
 
+        GET_ALL_REJECTION_ONE_BY_NESTING_ID = '/api/v1/rejection/one?nestingId=',
+        POST_REJECTION_ONE = '/api/v1/rejection/one',
+        DELETE_REJECTION_ONE = '/api/v1/rejection/one?rejectionId=',
+
         GET_ALL_REJECTION_TWO_BY_CANDLING_ID = '/api/v1/rejection/two/candling?candlingId=',
         POST_REJECTION_TWO = '/api/v1/rejection/two',
         DELETE_REJECTION_TWO = '/api/v1/rejection/two?rejectionId='
@@ -113,7 +126,8 @@ export namespace ApiPaths {
 
     export enum NestingLoadedDeliveries {
         GET_ALL_NESTING_LOADED_DELIVERIES = '/api/v1/nesting-loaded-deliveries',
-        GET_ALL_NESTING_LOADED_DELIVERIES_BY_NESTING_ID = '/api/v1/nesting-loaded-deliveries/nesting?nestingId='
+        GET_ALL_NESTING_LOADED_DELIVERIES_BY_NESTING_ID = '/api/v1/nesting-loaded-deliveries/nesting?nestingId=',
+        POST_NESTING_LOADED_DELIVERY = '/api/v1/nesting-loaded-deliveries'
     }
 
 }

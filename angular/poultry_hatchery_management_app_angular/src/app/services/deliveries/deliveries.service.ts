@@ -36,6 +36,15 @@ export class DeliveriesService {
     return this.deliveriesAll$;
   }
 
+  public getAllLeftOverDeliveries(): Observable<Delivery[]> {
+    return this.http.get<Delivery[]>(`${apiUrl + ApiPaths.DeliveryPaths.GET_ALL_LEFT_OVER_DELIVERIES}`).pipe(
+      catchError(error => {
+        console.error(error);
+        return of([]);
+      })
+    );
+  }
+
   public getAllProductTypes(): Observable<string[]> {
     return this.http.get<any>(`${apiUrl}${ApiPaths.DeliveryPaths.GET_ALL_PRODUCT_TYPES}`).pipe(
       shareReplay(1),

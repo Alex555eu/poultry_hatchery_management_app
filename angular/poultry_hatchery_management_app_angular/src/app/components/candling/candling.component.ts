@@ -32,6 +32,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NestingLoadedDeliveries } from '../../models/nesting-loaded-deliveries.model';
 import { RejectionService } from '../../services/rejections/rejection.service';
 import { NestingLoadedDeliveriesService } from '../../services/nesting-loaded-deliveries/nesting-loaded-deliveries.service';
+import { TaskTypeEntityNameValueForCandling } from '../../app.config';
 
 @Component({
   selector: 'app-candling',
@@ -66,7 +67,7 @@ import { NestingLoadedDeliveriesService } from '../../services/nesting-loaded-de
 })
 export class CandlingComponent implements OnInit {
 
-  private candlingTaskTypeName = 'SWIETLENIE';
+  private candlingTaskTypeName = TaskTypeEntityNameValueForCandling; // config
 
   todayCandlings: Task[] | null = null;
   selectedCandlingTask: string = '';
@@ -175,7 +176,6 @@ export class CandlingComponent implements OnInit {
   goToCandling(element: Candling) {
     this.router.navigate(['candling/open'], { queryParams: { id: element.id } });
   }
-
   getStatusColor(status: string) {
     return this.taskService.getStatusColor(status);
   }
