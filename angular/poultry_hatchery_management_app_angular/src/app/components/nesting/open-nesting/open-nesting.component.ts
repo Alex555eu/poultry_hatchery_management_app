@@ -20,6 +20,7 @@ import { InspectNestingTrolleyComponent } from './inspect-nesting-trolley/inspec
 import { Rejection1 } from '../../../models/rejection1.model';
 import { RejectionService } from '../../../services/rejections/rejection.service';
 import { Rejection1PanelComponent } from './rejection1-panel/rejection1-panel.component';
+import { AddDeliveryToNestingComponent } from './add-delivery-to-nesting/add-delivery-to-nesting.component';
 
 @Component({
   selector: 'app-open-nesting',
@@ -98,7 +99,16 @@ selectNLD(element: HTMLDivElement) {
 }
 
 addDeliveryToNesting() {
-
+  let config = new MatDialogConfig();
+  config.data = {
+    nestingId: this.nesting?.id
+  }
+  let ref = this.dialog.open(AddDeliveryToNestingComponent, config);
+  ref.afterClosed().subscribe(result => {
+    if (result) {
+      this.ngOnInit();
+    }
+  });
 }
 
 addNestingTrolleyToNesting() {

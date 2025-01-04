@@ -68,6 +68,7 @@ export namespace ApiPaths {
 
     export enum DeliveryPaths {
         GET_ALL_DELIVERIES = '/api/v1/deliveries/',
+        GET_ALL_LEFT_OVER_DELIVERIES = '/api/v1/deliveries/left-over',
         GET_DELIVERIES_BY_ID = '/api/v1/deliveries/by-id',
         GET_DELIVERIES_BY_SUPPLIER_ID = '/api/v1/deliveries/by-supplier',
         GET_ALL_PRODUCT_TYPES = '/api/v1/deliveries/product-types-all',
@@ -124,7 +125,8 @@ export namespace ApiPaths {
 
     export enum NestingLoadedDeliveries {
         GET_ALL_NESTING_LOADED_DELIVERIES = '/api/v1/nesting-loaded-deliveries',
-        GET_ALL_NESTING_LOADED_DELIVERIES_BY_NESTING_ID = '/api/v1/nesting-loaded-deliveries/nesting?nestingId='
+        GET_ALL_NESTING_LOADED_DELIVERIES_BY_NESTING_ID = '/api/v1/nesting-loaded-deliveries/nesting?nestingId=',
+        POST_NESTING_LOADED_DELIVERY = '/api/v1/nesting-loaded-deliveries'
     }
 
 }

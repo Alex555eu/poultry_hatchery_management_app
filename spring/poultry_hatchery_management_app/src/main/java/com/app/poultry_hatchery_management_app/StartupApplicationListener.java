@@ -140,6 +140,14 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
                 .build();
         deliveryRepository.save(delivery2);
 
+        Delivery delivery3 = Delivery.builder()
+                .quantity(150)
+                .productType(type)
+                .supplier(supplier2)
+                .dateTime(LocalDateTime.now())
+                .build();
+        deliveryRepository.save(delivery3);
+
         Nesting nesting = Nesting.builder()
                 .organisation(organisation)
                 .title("New Nesting")
