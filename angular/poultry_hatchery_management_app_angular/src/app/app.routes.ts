@@ -13,6 +13,7 @@ import { OpenCandlingComponent } from './components/candling/open-candling/open-
 import { NestingComponent } from './components/nesting/nesting.component';
 import { OpenNestingComponent } from './components/nesting/open-nesting/open-nesting.component';
 import { HatchingComponent } from './components/hatching/hatching.component';
+import { OpenHatchingComponent } from './components/hatching/open-hatching/open-hatching.component';
 
 export const routes: Routes = [
     { path: '', component: NavbarComponent,
@@ -32,6 +33,7 @@ export const routes: Routes = [
             { path: 'nesting/open', component: OpenNestingComponent},
 
             { path: 'hatching', component: HatchingComponent},
+            { path: 'hatching/open', component: OpenHatchingComponent},
         ],
     },
     { path: 'login', component: LoginComponent},

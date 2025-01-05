@@ -39,7 +39,11 @@ export namespace ApiPaths {
 
     export enum HatchingPaths {
         GET_ALL_HATCHINGS = '/api/v1/hatching/all',
+        GET_HATCHING_BY_ID = '/api/v1/hatching/by-id?hatchingId=',
         POST_HATCHING = '/api/v1/hatching',
+
+        GET_HATCHING_LOADED_DELIVERY = '/api/v1/hatching/loaded-deliveries',
+        GET_HATCHING_LOADED_DELIVERIES_BY_HATCHING_ID = '/api/v1/hatching/loaded-deliveries?hatchingId=',
     }
 
     export enum HatchingIncubatorPaths {
@@ -66,10 +70,15 @@ export namespace ApiPaths {
     }
 
     export enum HatchingTrolleyPaths {
-        GET_HATCHING_TROLLEY = '/api/v1/hatching-trolley/',
-        POST_HATCHING_TROLLEY = '/api/v1/hatching-trolley/',
-        PUT_HATCHING_TROLLEY = '/api/v1/hatching-trolley/',
-        DELETE_HATCHING_TROLLEY = '/api/v1/hatching-trolley/',
+        GET_HATCHING_TROLLEY = '/api/v1/hatching-trolley',
+        POST_HATCHING_TROLLEY = '/api/v1/hatching-trolley',
+        PUT_HATCHING_TROLLEY = '/api/v1/hatching-trolley',
+        DELETE_HATCHING_TROLLEY = '/api/v1/hatching-trolley',
+
+        GET_HATCHING_CONTENT_BY_HATCHING_ID = '/api/v1/hatching-trolley/content/by-hatching?hatchingId=',
+        POST_HATCHING_TROLLEY_CONTENT = '/api/v1/hatching-trolley/content',
+        PUT_HATCHING_TROLLEY_CONTENT = '/api/v1/hatching-trolley/content',
+        DELETE_HATCHING_TROLLEY_CONTENT = '/api/v1/hatching-trolley/content',
     }
 
     export enum DeliveryPaths {

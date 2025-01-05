@@ -21,13 +21,13 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("api/v1/hatching-trolley")
+@RequestMapping("/api/v1/hatching-trolley")
 public class HatchingTrolleyController {
 
     private final ObjectMapper objectMapper;
     private final HatchingTrolleyService hatchingTrolleyService;
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<String> getAllHatchingTrolleys() throws JsonProcessingException {
         List<HatchingTrolley> trolleys = hatchingTrolleyService.getAllHatchingTrolleys();
         if (trolleys == null) {
@@ -40,7 +40,7 @@ public class HatchingTrolleyController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<String> postHatchingTrolley(@RequestBody PostHatchingTrolleyRequest request) {
         Optional<HatchingTrolley> trolley = hatchingTrolleyService.postHatchingTrolley(request);
         if (trolley.isPresent()) {
@@ -49,7 +49,7 @@ public class HatchingTrolleyController {
         return ResponseEntity.notFound().build();
     }
 
-    @PutMapping("/")
+    @PutMapping("")
     public ResponseEntity<String> putHatchingTrolley(@RequestBody PutHatchingTrolleyRequest request) {
         Optional<HatchingTrolley> trolley = hatchingTrolleyService.putHatchingTrolley(request);
         if (trolley.isPresent()) {
@@ -58,7 +58,7 @@ public class HatchingTrolleyController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping("")
     public ResponseEntity<String> deleteHatchingTrolley(@RequestParam UUID hatchingTrolleyId) {
         hatchingTrolleyService.deleteHatchingTrolley(hatchingTrolleyId);
         return ResponseEntity.ok().build();
@@ -70,6 +70,16 @@ public class HatchingTrolleyController {
         Optional<HatchingTrolleyContent> content = hatchingTrolleyService.getHatchingTrolleysContent(hatchingTrolleyId);
         if (content.isPresent()) {
             String response = objectMapper.writeValueAsString(content.get());
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/content/by-hatching")
+    public ResponseEntity<String> getHatchingTrolleysContentByHatchingId(@RequestParam UUID hatchingId) throws JsonProcessingException {
+        List<HatchingTrolleyContent> content = hatchingTrolleyService.getHatchingTrolleysContentByHatchingId(hatchingId);
+        if (!content.isEmpty()) {
+            String response = objectMapper.writeValueAsString(content);
             return ResponseEntity.ok(response);
         }
         return ResponseEntity.noContent().build();

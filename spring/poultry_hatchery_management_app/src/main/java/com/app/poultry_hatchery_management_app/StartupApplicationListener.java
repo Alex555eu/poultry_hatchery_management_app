@@ -38,6 +38,9 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
     private final CandlingRepository candlingRepository;
     private final CandlingNestingTrolleyAssignmentRepository candlingNestingTrolleyAssignmentRepository;
     private final HatchingRepository hatchingRepository;
+    private final HatchingTrolleyRepository hatchingTrolleyRepository;
+    private final HatchingTrolleyContentRepository hatchingTrolleyContentRepository;
+    private final HatchingLoadedDeliveriesRepository hatchingLoadedDeliveriesRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -383,5 +386,42 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
                 .task(toBeAssignedToHatching)
                 .build();
         hatchingRepository.save(hatching);
+
+        HatchingLoadedDeliveries hatchingLoadedDeliveries = HatchingLoadedDeliveries.builder()
+                .delivery(delivery)
+                .hatching(hatching)
+                .build();
+        hatchingLoadedDeliveriesRepository.save(hatchingLoadedDeliveries);
+
+        HatchingLoadedDeliveries hatchingLoadedDeliveries2 = HatchingLoadedDeliveries.builder()
+                .delivery(delivery2)
+                .hatching(hatching)
+                .build();
+        hatchingLoadedDeliveriesRepository.save(hatchingLoadedDeliveries2);
+
+        HatchingTrolley hatchingTrolley = HatchingTrolley.builder()
+                .humanReadableId("K1")
+                .organisation(organisation)
+                .build();
+        hatchingTrolleyRepository.save(hatchingTrolley);
+
+        HatchingTrolley hatchingTrolley2 = HatchingTrolley.builder()
+                .humanReadableId("K2")
+                .organisation(organisation)
+                .build();
+        hatchingTrolleyRepository.save(hatchingTrolley2);
+
+        HatchingTrolley hatchingTrolley3 = HatchingTrolley.builder()
+                .humanReadableId("K3")
+                .organisation(organisation)
+                .build();
+        hatchingTrolleyRepository.save(hatchingTrolley3);
+
+        HatchingTrolleyContent hatchingTrolleyContent = HatchingTrolleyContent.builder()
+                .hatchingTrolley(hatchingTrolley)
+                .hatchingLoadedDeliveries(hatchingLoadedDeliveries)
+                .quantity(20)
+                .build();
+        hatchingTrolleyContentRepository.save(hatchingTrolleyContent);
     }
 }

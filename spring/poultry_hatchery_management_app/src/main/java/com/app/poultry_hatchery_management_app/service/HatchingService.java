@@ -49,6 +49,10 @@ public class HatchingService {
         return null;
     }
 
+    public Optional<Hatching> getHatchingById(UUID hatchingId) {
+        return hatchingRepository.findById(hatchingId);
+    }
+
     public Optional<Hatching> postHatching(PostHatchingRequest request) {
         Optional<Nesting> nesting = nestingService.getNesting(request.nestingId());
         Optional<Task> task = taskService.getTaskById(request.taskId());
@@ -59,6 +63,8 @@ public class HatchingService {
                     .task(task.get())
                     .build();
         hatchingRepository.save(hatching);
+
+        //todo: create hatching loaded deliveries from nesting loaded deliveries
 
         return Optional.of(hatching);
         }

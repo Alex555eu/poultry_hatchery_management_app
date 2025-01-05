@@ -76,6 +76,10 @@ public class HatchingTrolleyService {
         return hatchingTrolleyContentRepository.findByHatchingTrolleyId(hatchingTrolleyId);
     }
 
+
+    public List<HatchingTrolleyContent> getHatchingTrolleysContentByHatchingId(UUID hatchingId) {
+        return hatchingTrolleyContentRepository.findByHatchingId(hatchingId);
+    }
     public Optional<HatchingTrolleyContent> postHatchingTrolleyContent(PostHatchingTrolleyContentRequest request) {
         Optional<HatchingTrolley> trolley = hatchingTrolleyRepository.findById(request.hatchingTrolleyId());
         Optional<HatchingLoadedDeliveries> hld = hatchingService.getHatchingLoadedDeliveryById(request.hatchingLoadedDeliveriesId());

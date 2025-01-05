@@ -22,7 +22,7 @@ import java.util.UUID;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("api/v1/hatching")
+@RequestMapping("/api/v1/hatching")
 public class HatchingController {
 
     private final ObjectMapper objectMapper;
@@ -31,6 +31,16 @@ public class HatchingController {
     @GetMapping("")
     public ResponseEntity<String> getHatchingByNestingId(@RequestParam UUID nestingId) throws JsonProcessingException {
         Optional<Hatching> hatching = hatchingService.getHatchingByNestingId(nestingId);
+        if(hatching.isPresent()) {
+            String response = objectMapper.writeValueAsString(hatching.get());
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/by-id")
+    public ResponseEntity<String> getHatchingById(@RequestParam UUID hatchingId) throws JsonProcessingException {
+        Optional<Hatching> hatching = hatchingService.getHatchingById(hatchingId);
         if(hatching.isPresent()) {
             String response = objectMapper.writeValueAsString(hatching.get());
             return ResponseEntity.ok(response);

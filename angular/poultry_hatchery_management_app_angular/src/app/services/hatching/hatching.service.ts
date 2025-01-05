@@ -5,6 +5,7 @@ import { apiUrl } from '../../app.config';
 import { ApiPaths } from '../../api/api.paths';
 import { Hatching } from '../../models/hatching.model';
 import { PostHatchingRequest } from '../../dto/post-hatching-request';
+import { HatchingLoadedDeliveries } from '../../models/hatching-loaded-deliveries.model';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,15 @@ export class HatchingService {
     );
   }
 
+  getHatchingById(hatchingId: string): Observable<Hatching> {
+    return this.http.get<Hatching>(`${apiUrl + ApiPaths.HatchingPaths.GET_HATCHING_BY_ID + hatchingId}`).pipe(
+      catchError(error => {
+        console.error(error);
+        return of();
+      })
+    );
+  }
+
   postHatching(body: PostHatchingRequest): Observable<Hatching> {
     return this.http.post<Hatching>(`${apiUrl + ApiPaths.HatchingPaths.POST_HATCHING}`, body).pipe(
       catchError(error => {
@@ -32,6 +42,10 @@ export class HatchingService {
         return of();
       })
     );
+  }
+
+  getHatchingLoadedDeliveriesByHatchingId(hatchingId: string): Observable<HatchingLoadedDeliveries[]> {
+    return this.http.get<HatchingLoadedDeliveries[]>(`${apiUrl + ApiPaths.HatchingPaths.GET_HATCHING_LOADED_DELIVERIES_BY_HATCHING_ID + hatchingId}`)
   }
 
 }
