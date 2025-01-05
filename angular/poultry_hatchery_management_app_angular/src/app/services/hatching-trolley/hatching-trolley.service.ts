@@ -34,6 +34,14 @@ export class HatchingTrolleyService {
     return this.hatchingTrolleyAll$;
   }
 
+  
+  public getAllUnusedHatchingTrolleys(): Observable<HatchingTrolley[]> {
+    return this.http.get<HatchingTrolley[]>(`${apiUrl + ApiPaths.HatchingTrolleyPaths.GET_UNUSED_HATCHING_TROLLEYS}`).pipe(
+      catchError(error => {
+        return of([]);
+      })
+    );
+  }
   public postHatchingTrolley(body: PostTrolleyRequest): Observable<any> {
     return this.http.post<any>(`${apiUrl}${ApiPaths.HatchingTrolleyPaths.POST_HATCHING_TROLLEY}`, body);
   }

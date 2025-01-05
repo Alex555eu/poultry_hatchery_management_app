@@ -71,6 +71,7 @@ export namespace ApiPaths {
 
     export enum HatchingTrolleyPaths {
         GET_HATCHING_TROLLEY = '/api/v1/hatching-trolley',
+        GET_UNUSED_HATCHING_TROLLEYS = '/api/v1/hatching-trolley/unused',
         POST_HATCHING_TROLLEY = '/api/v1/hatching-trolley',
         PUT_HATCHING_TROLLEY = '/api/v1/hatching-trolley',
         DELETE_HATCHING_TROLLEY = '/api/v1/hatching-trolley',
