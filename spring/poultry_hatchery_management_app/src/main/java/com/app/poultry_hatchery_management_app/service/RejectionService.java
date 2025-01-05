@@ -219,6 +219,7 @@ public class RejectionService {
                 hatchingService.getHatchingLoadedDeliveryById(request.hatchingLoadedDeliveryId());
         if(hld.isPresent()) {
             Rejection3 rejection3 = Rejection3.builder()
+                    .hatchingLoadedDeliveries(hld.get())
                     .quantity(request.quantity())
                     .cause(RejectionCause.valueOf(request.cause()).verify(RejectionGroup.REJECTION_3))
                     .build();

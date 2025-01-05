@@ -140,6 +140,8 @@ export namespace ApiPaths {
 
         GET_ALL_REJECTION_THREE_BY_NESTING_ID = '/api/v1/rejection/three/by-nesting?nestingId=',
         GET_ALL_REJECTION_THREE_BY_HATCHING_ID = '/api/v1/rejection/three/by-hatching?hatchingId=',
+        POST_REJECTION_THREE = '/api/v1/rejection/three',
+        DELETE_REJECTION_THREE = '/api/v1/rejection/three?rejectionId=',
     }
 
     export enum NestingLoadedDeliveries {

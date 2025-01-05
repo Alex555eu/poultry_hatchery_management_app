@@ -8,6 +8,7 @@ import { PostRejection2Request } from '../../dto/post-rejection2-request';
 import { Rejection1 } from '../../models/rejection1.model';
 import { PostRejection1Request } from '../../dto/post-rejection1-request';
 import { Rejection3 } from '../../models/rejection3.model';
+import { PostRejection3Request } from '../../dto/post-rejection3-request';
 
 @Injectable({
   providedIn: 'root'
@@ -104,5 +105,36 @@ export class RejectionService {
     );
   }
 
+  public getAllRejection3(hatchingId: string): Observable<Rejection3[]> {
+    return this.http.get<Rejection3[]>(`${apiUrl + ApiPaths.RejectionPaths.GET_ALL_REJECTION_THREE_BY_HATCHING_ID + hatchingId}`).pipe(
+      catchError(error => {
+        console.error(error);
+        return of([]);
+      })
+    );
+  }
+
+  public getPossibleRejection3Causes(): Observable<string[]> {
+    return this.http.get<string[]>(`${apiUrl + ApiPaths.RejectionPaths.REJECTION_CAUSES_THREE}`).pipe(
+      shareReplay(1),
+      catchError(error => {
+        console.error(error);
+        return of([]);
+      })
+    );
+  }
+
+  public postRejection3(body: PostRejection3Request): Observable<Rejection3> {
+    return this.http.post<Rejection3>(`${apiUrl + ApiPaths.RejectionPaths.POST_REJECTION_THREE}`, body).pipe(
+      catchError(error => {
+        console.error(error);
+        return of();
+      })
+    );
+  }  
+
+  public deleteRejection3(rejectionId: string): Observable<any> {
+    return this.http.delete<any>(`${apiUrl + ApiPaths.RejectionPaths.DELETE_REJECTION_THREE + rejectionId}`);
+  }
 
 }
