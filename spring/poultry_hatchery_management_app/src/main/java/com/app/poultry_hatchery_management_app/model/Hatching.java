@@ -29,4 +29,6 @@ public class Hatching {
     @ManyToOne
     private Nesting nesting;
 
+    @OneToOne
+    private Task task;
 }

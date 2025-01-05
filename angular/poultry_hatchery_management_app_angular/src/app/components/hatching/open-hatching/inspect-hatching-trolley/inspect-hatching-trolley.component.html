@@ -1,0 +1,81 @@
+<mat-dialog-content>
+    <div class="dialog-bg">
+
+        <div class="dialog-header">
+            <mat-icon>swap_horiz</mat-icon>
+            <label>Wózek {{ hatchingTrolley?.humanReadableId || 'Brak ID' }}</label>
+        </div>
+
+        <div class="trolley-content">
+            <ng-container *ngFor="let content of hatchingTrolleyContent">
+                <div class="content-item">
+                    <span class="item-title">{{ content?.hatchingLoadedDeliveries?.hatching?.nesting?.title || 'Brak tytułu' }}</span>
+                    <div class="supplier-info">
+                        <label class="supplier-name">
+                            {{ content?.hatchingLoadedDeliveries?.delivery?.supplier?.name || 'Brak nazwy dostawcy' }} 
+                            {{ content?.hatchingLoadedDeliveries?.delivery?.supplier?.surname || 'Brak nazwiska dostawcy' }}
+                        </label>
+                        <label class="quantity">: {{ content?.quantity || 0 }} szt.</label>
+                    </div>
+                    <label>  </label>
+                </div>
+            </ng-container>
+
+            <div class="total-quantity">
+                <strong>Łączna ilość: </strong>
+                <span>{{ totalQuantityHatching || 0 }} szt.</span>
+            </div>
+        </div>
+
+
+        <div class="operation-container">
+            <!-- Dane o dostawcy -->
+            <div class="operation-item" *ngIf="nestingTrolley != null; else loading">
+                <span class="label">Wózek lęgowy:{{ nestingTrolley.humanReadableId || 'Brak id wózka lęgowego' }}</span>
+                <span class="supplier-info">
+                  {{ totalQuantityNesting }} szt.
+                </span>
+                <div class="content-selection">
+                  <mat-form-field appearance="fill">
+                    <mat-label>Wybierz:</mat-label>
+                    <mat-select [(ngModel)]="selectedNestingTrolleyContent">
+                      <mat-option *ngFor="let content of nestingTrolleyContent" [value]="content">
+                        <label class="supplier-name">
+                            {{ content?.nestingLoadedDeliveries?.delivery?.supplier?.name || 'Brak nazwy dostawcy' }} 
+                            {{ content?.nestingLoadedDeliveries?.delivery?.supplier?.surname || 'Brak nazwiska dostawcy' }}
+                            <br>{{ content?.quantity }} szt.
+                        </label>
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <ng-template #loading>Nie wybrano wózka lęgowego...</ng-template>
+              
+          
+            <!-- Ilość -->
+            <div class="operation-item">
+                <!-- <mat-label>Pozostała ilość na wózku: {{ nestingAvailableQuantity }}</mat-label> -->
+                <mat-form-field class="example-full-width">
+                    <mat-label>Podaj ilość</mat-label>
+                    <input type="number" min="1"
+                    matInput [(ngModel)]="quantity">
+                </mat-form-field>
+            </div>
+          
+            <!-- Przycisk do potwierdzenia operacji-->
+            <div class="operation-item">
+              <button
+                mat-raised-button
+                color="primary"
+                [disabled]="!isFormValid()"
+                (click)="confirmOperation()"
+              >
+                Wykonaj
+              </button>
+            </div>
+          </div>
+          
+
+    </div>
+</mat-dialog-content>

@@ -206,6 +206,10 @@ public class RejectionService {
         return rejection3Repository.findAllByNestingId(nestingId);
     }
 
+    public List<Rejection3> getAllRejections3ByHatchingId(UUID hatchingId) {
+        return rejection3Repository.findAllByHatchingId(hatchingId);
+    }
+
     public List<RejectionCause> getPossibleRejection3Causes() {
         return RejectionCause.getAvailableCauses(RejectionGroup.REJECTION_3);
     }

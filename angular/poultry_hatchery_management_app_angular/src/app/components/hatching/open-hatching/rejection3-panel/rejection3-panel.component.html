@@ -1,0 +1,36 @@
+<div class="main-container">
+
+    <div class="dialog-header">
+        <mat-icon>delete_forever</mat-icon>
+        <label>{{ rejectionCause }}</label>
+    </div>
+
+    <div class="list-wrapper" #scrollMe>
+      @for(element of rejections$ | async; track element.id) {
+            <div
+              class="list-container"
+              [class.active]="element.id === selectedRejectionId"
+              
+            >
+              <label> - {{ element.quantity }} szt.</label>
+              <button mat-icon-button (click)="cancelRejection(element.id)">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+      }
+    </div>
+
+    <div class="add-to-list-container">
+        <input [(ngModel)]="inputValue" type="number" placeholder="podaj ilość">
+        <button mat-icon-button (click)="reject()">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+
+
+    <div class="summary-container">
+        <label>W sumie:</label>
+        <span><b>- {{ total$ | async }}</b></span>
+      </div>
+
+</div>

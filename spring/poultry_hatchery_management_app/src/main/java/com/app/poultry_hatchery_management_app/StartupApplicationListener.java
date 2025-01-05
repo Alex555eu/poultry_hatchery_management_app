@@ -37,6 +37,10 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
     private final NestingTrolleyContentRepository nestingTrolleyContentRepository;
     private final CandlingRepository candlingRepository;
     private final CandlingNestingTrolleyAssignmentRepository candlingNestingTrolleyAssignmentRepository;
+    private final HatchingRepository hatchingRepository;
+    private final HatchingTrolleyRepository hatchingTrolleyRepository;
+    private final HatchingTrolleyContentRepository hatchingTrolleyContentRepository;
+    private final HatchingLoadedDeliveriesRepository hatchingLoadedDeliveriesRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -263,7 +267,7 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
         taskTypeRepository.save(taskType2);
 
         TaskType taskType3 = TaskType.builder()
-                .name("PRZECHYLANIE")
+                .name("PRZEKLAD")
                 .description("BRAK")
                 .organisation(organisation)
                 .build();
@@ -275,6 +279,13 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
                 .organisation(organisation)
                 .build();
         taskTypeRepository.save(taskType4);
+
+        TaskType taskType5 = TaskType.builder()
+                .name("WYLEG")
+                .description("BRAK")
+                .organisation(organisation)
+                .build();
+        taskTypeRepository.save(taskType5);
 
         Task task = Task.builder()
                 .taskType(taskType)
@@ -318,6 +329,27 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
             taskNestingTrolleyAssignmentRepository.save(assignment);
         }
 
+        Task toBeAssignedToHatching = Task.builder()
+                .taskStatus(TaskStatus.NOT_STARTED)
+                .executionScheduledAt(LocalDateTime.now())
+                .organisation(organisation)
+                .taskType(taskType3)
+                .nesting(nesting)
+                .comment(nesting.getTitle() + " " + LocalDateTime.now())
+                .build();
+        taskRepository.save(toBeAssignedToHatching);
+
+        List<NestingTrolley> trolleys3 = nestingTrolleyRepository.findAllTrolleysByNestingId(nesting.getId());
+        for(NestingTrolley trolley : trolleys3) {
+            TaskNestingTrolleyAssignment assignment = TaskNestingTrolleyAssignment.builder()
+                    .task(toBeAssignedToHatching)
+                    .isTaskCompleted(false)
+                    .nestingTrolley(trolley)
+                    .executor(null)
+                    .build();
+            taskNestingTrolleyAssignmentRepository.save(assignment);
+        }
+
         Candling candling = Candling.builder()
                 .candlingNumber(1)
                 .createdAt(LocalDateTime.now())
@@ -348,5 +380,48 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
                 .build();
         rejection2Repository.save(rejection2);
 
+        Hatching hatching = Hatching.builder()
+                .nesting(nesting)
+                .dateTime(LocalDateTime.now())
+                .task(toBeAssignedToHatching)
+                .build();
+        hatchingRepository.save(hatching);
+
+        HatchingLoadedDeliveries hatchingLoadedDeliveries = HatchingLoadedDeliveries.builder()
+                .delivery(delivery)
+                .hatching(hatching)
+                .build();
+        hatchingLoadedDeliveriesRepository.save(hatchingLoadedDeliveries);
+
+        HatchingLoadedDeliveries hatchingLoadedDeliveries2 = HatchingLoadedDeliveries.builder()
+                .delivery(delivery2)
+                .hatching(hatching)
+                .build();
+        hatchingLoadedDeliveriesRepository.save(hatchingLoadedDeliveries2);
+
+        HatchingTrolley hatchingTrolley = HatchingTrolley.builder()
+                .humanReadableId("K1")
+                .organisation(organisation)
+                .build();
+        hatchingTrolleyRepository.save(hatchingTrolley);
+
+        HatchingTrolley hatchingTrolley2 = HatchingTrolley.builder()
+                .humanReadableId("K2")
+                .organisation(organisation)
+                .build();
+        hatchingTrolleyRepository.save(hatchingTrolley2);
+
+        HatchingTrolley hatchingTrolley3 = HatchingTrolley.builder()
+                .humanReadableId("K3")
+                .organisation(organisation)
+                .build();
+        hatchingTrolleyRepository.save(hatchingTrolley3);
+
+        HatchingTrolleyContent hatchingTrolleyContent = HatchingTrolleyContent.builder()
+                .hatchingTrolley(hatchingTrolley)
+                .hatchingLoadedDeliveries(hatchingLoadedDeliveries)
+                .quantity(20)
+                .build();
+        hatchingTrolleyContentRepository.save(hatchingTrolleyContent);
     }
 }
