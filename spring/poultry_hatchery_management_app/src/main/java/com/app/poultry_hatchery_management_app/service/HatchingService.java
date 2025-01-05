@@ -10,6 +10,9 @@ import com.app.poultry_hatchery_management_app.repository.HatchingLoadedDeliveri
 import com.app.poultry_hatchery_management_app.repository.HatchingRepository;
 import com.app.poultry_hatchery_management_app.repository.HatchingResultRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,19 +30,41 @@ public class HatchingService {
 
     private final NestingService nestingService;
     private final DeliveryService deliveryService;
+    private final TaskService taskService;
 
     public Optional<Hatching> getHatchingByNestingId(UUID nestingId) {
         return hatchingRepository.findByNestingId(nestingId);
     }
 
+    public List<Hatching> getAllHatchings() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if ((authentication != null && authentication.getPrincipal() instanceof UserDetails)) {
+            User user = (User) authentication.getPrincipal();
+
+            List<Nesting> nestings = this.nestingService.getAllNestings();
+
+            if (!nestings.isEmpty())
+                return hatchingRepository.findAllByNestings(nestings);
+        }
+        return null;
+    }
+
+    public Optional<Hatching> getHatchingById(UUID hatchingId) {
+        return hatchingRepository.findById(hatchingId);
+    }
+
     public Optional<Hatching> postHatching(PostHatchingRequest request) {
         Optional<Nesting> nesting = nestingService.getNesting(request.nestingId());
-        if (nesting.isPresent()){
+        Optional<Task> task = taskService.getTaskById(request.taskId());
+        if (nesting.isPresent() && task.isPresent()){
             Hatching hatching = Hatching.builder()
                     .dateTime(LocalDateTime.now())
                     .nesting(nesting.get())
+                    .task(task.get())
                     .build();
         hatchingRepository.save(hatching);
+
+        //todo: create hatching loaded deliveries from nesting loaded deliveries
 
         return Optional.of(hatching);
         }

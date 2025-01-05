@@ -38,6 +38,14 @@ public class HatchingTrolleyService {
         return null;
     }
 
+    public List<HatchingTrolley> getAllUnusedHatchingTrolleys() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            User user = (User) authentication.getPrincipal();
+            return hatchingTrolleyRepository.findAllUnusedHatchingTrolleys(user.getOrganisation().getId());
+        }
+        return null;
+    }
     public Optional<HatchingTrolley> getHatchingTrolleyById(UUID hatchingTrolleyId) {
         return hatchingTrolleyRepository.findById(hatchingTrolleyId);
     }
@@ -76,6 +84,10 @@ public class HatchingTrolleyService {
         return hatchingTrolleyContentRepository.findByHatchingTrolleyId(hatchingTrolleyId);
     }
 
+
+    public List<HatchingTrolleyContent> getHatchingTrolleysContentByHatchingId(UUID hatchingId) {
+        return hatchingTrolleyContentRepository.findByHatchingId(hatchingId);
+    }
     public Optional<HatchingTrolleyContent> postHatchingTrolleyContent(PostHatchingTrolleyContentRequest request) {
         Optional<HatchingTrolley> trolley = hatchingTrolleyRepository.findById(request.hatchingTrolleyId());
         Optional<HatchingLoadedDeliveries> hld = hatchingService.getHatchingLoadedDeliveryById(request.hatchingLoadedDeliveriesId());

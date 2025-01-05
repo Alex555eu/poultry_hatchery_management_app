@@ -20,4 +20,11 @@ public interface Rejection3Repository extends JpaRepository<Rejection3, UUID> {
 """, nativeQuery = true)
     List<Rejection3> findAllByNestingId(@Param("nestingId") UUID nestingId);
 
+    @Query(value = """
+    select r3.* from rejection3 r3 
+    join hatching_loaded_deliveries hld on hld.id = r3.hatching_loaded_deliveries_id 
+    where hld.hatching_id = :hatchingId
+""", nativeQuery = true)
+    List<Rejection3> findAllByHatchingId(@Param("hatchingId") UUID hatchingId);
+
 }

@@ -12,6 +12,7 @@ import com.app.poultry_hatchery_management_app.service.HatchingService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,13 +22,13 @@ import java.util.UUID;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("api/v1/hatching")
+@RequestMapping("/api/v1/hatching")
 public class HatchingController {
 
     private final ObjectMapper objectMapper;
     private final HatchingService hatchingService;
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<String> getHatchingByNestingId(@RequestParam UUID nestingId) throws JsonProcessingException {
         Optional<Hatching> hatching = hatchingService.getHatchingByNestingId(nestingId);
         if(hatching.isPresent()) {
@@ -37,17 +38,41 @@ public class HatchingController {
         return ResponseEntity.notFound().build();
     }
 
-    @PostMapping("/")
-    public ResponseEntity<String> postHatching(@RequestBody PostHatchingRequest request) {
+    @GetMapping("/by-id")
+    public ResponseEntity<String> getHatchingById(@RequestParam UUID hatchingId) throws JsonProcessingException {
+        Optional<Hatching> hatching = hatchingService.getHatchingById(hatchingId);
+        if(hatching.isPresent()) {
+            String response = objectMapper.writeValueAsString(hatching.get());
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<String> getAllHatchings() throws JsonProcessingException {
+        List<Hatching> hatchings = hatchingService.getAllHatchings();
+        if (hatchings == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if(!hatchings.isEmpty()) {
+            String response = objectMapper.writeValueAsString(hatchings);
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("")
+    public ResponseEntity<String> postHatching(@RequestBody PostHatchingRequest request) throws JsonProcessingException {
         Optional<Hatching> hatching = hatchingService.postHatching(request);
         if(hatching.isPresent()) {
-            return ResponseEntity.ok().build();
+            String body = objectMapper.writeValueAsString(hatching.get());
+            return ResponseEntity.ok(body);
         }
         return ResponseEntity.notFound().build();
     }
 
 
-    @DeleteMapping("/")
+    @DeleteMapping("")
     public ResponseEntity<String> deleteHatching(@RequestParam UUID hatchingId) {
         hatchingService.deleteHatching(hatchingId);
         return ResponseEntity.ok().build();

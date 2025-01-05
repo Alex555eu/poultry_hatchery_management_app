@@ -37,6 +37,15 @@ export namespace ApiPaths {
         DELETE_NESTING_TROLLEY_FROM_INCUBATOR_SPACE = '/api/v1/nesting-incubator/occupation?assignmentId='
     }
 
+    export enum HatchingPaths {
+        GET_ALL_HATCHINGS = '/api/v1/hatching/all',
+        GET_HATCHING_BY_ID = '/api/v1/hatching/by-id?hatchingId=',
+        POST_HATCHING = '/api/v1/hatching',
+
+        GET_HATCHING_LOADED_DELIVERY = '/api/v1/hatching/loaded-deliveries',
+        GET_HATCHING_LOADED_DELIVERIES_BY_HATCHING_ID = '/api/v1/hatching/loaded-deliveries?hatchingId=',
+    }
+
     export enum HatchingIncubatorPaths {
         GET_HATCHING_INCUBATOR = '/api/v1/hatching-incubator/',
         POST_HATCHING_INCUBATOR = '/api/v1/hatching-incubator/',
@@ -61,10 +70,16 @@ export namespace ApiPaths {
     }
 
     export enum HatchingTrolleyPaths {
-        GET_HATCHING_TROLLEY = '/api/v1/hatching-trolley/',
-        POST_HATCHING_TROLLEY = '/api/v1/hatching-trolley/',
-        PUT_HATCHING_TROLLEY = '/api/v1/hatching-trolley/',
-        DELETE_HATCHING_TROLLEY = '/api/v1/hatching-trolley/',
+        GET_HATCHING_TROLLEY = '/api/v1/hatching-trolley',
+        GET_UNUSED_HATCHING_TROLLEYS = '/api/v1/hatching-trolley/unused',
+        POST_HATCHING_TROLLEY = '/api/v1/hatching-trolley',
+        PUT_HATCHING_TROLLEY = '/api/v1/hatching-trolley',
+        DELETE_HATCHING_TROLLEY = '/api/v1/hatching-trolley',
+
+        GET_HATCHING_CONTENT_BY_HATCHING_ID = '/api/v1/hatching-trolley/content/by-hatching?hatchingId=',
+        POST_HATCHING_TROLLEY_CONTENT = '/api/v1/hatching-trolley/content',
+        PUT_HATCHING_TROLLEY_CONTENT = '/api/v1/hatching-trolley/content',
+        DELETE_HATCHING_TROLLEY_CONTENT = '/api/v1/hatching-trolley/content',
     }
 
     export enum DeliveryPaths {
@@ -121,7 +136,12 @@ export namespace ApiPaths {
 
         GET_ALL_REJECTION_TWO_BY_CANDLING_ID = '/api/v1/rejection/two/candling?candlingId=',
         POST_REJECTION_TWO = '/api/v1/rejection/two',
-        DELETE_REJECTION_TWO = '/api/v1/rejection/two?rejectionId='
+        DELETE_REJECTION_TWO = '/api/v1/rejection/two?rejectionId=',
+
+        GET_ALL_REJECTION_THREE_BY_NESTING_ID = '/api/v1/rejection/three/by-nesting?nestingId=',
+        GET_ALL_REJECTION_THREE_BY_HATCHING_ID = '/api/v1/rejection/three/by-hatching?hatchingId=',
+        POST_REJECTION_THREE = '/api/v1/rejection/three',
+        DELETE_REJECTION_THREE = '/api/v1/rejection/three?rejectionId=',
     }
 
     export enum NestingLoadedDeliveries {
