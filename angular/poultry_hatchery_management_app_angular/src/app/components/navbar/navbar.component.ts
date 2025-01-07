@@ -5,10 +5,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card'
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { UserDetails } from '../../models/user-details.model';
 import { UserDetailsService } from '../../services/users/user-details.service';
-import { Observable } from 'rxjs';
+import { catchError, Observable, of, tap, throwError } from 'rxjs';
+import { TokenService } from '../../services/token/token.service';
+import { AuthService } from '../../services/authorization/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -30,12 +32,15 @@ export class NavbarComponent {
   public userLastName: string = 'Nazwisko';
   public userRole: string = 'Rola';
 
-  private userDetailsService: UserDetailsService;
+  //private userDetailsService: UserDetailsService;
 
-  public constructor(userDetailsService: UserDetailsService) 
-  {
-    this.userDetailsService = userDetailsService;
-  }
+  public constructor(
+    private userDetailsService: UserDetailsService,
+    private tokenService: TokenService,
+    private router: Router,
+    private authService: AuthService
+  ) 
+  {}
 
   ngOnInit() {
     let userDetails$: Observable<UserDetails> = this.userDetailsService.getUserDetails(); 
@@ -46,6 +51,28 @@ export class NavbarComponent {
         this.userRole = userDetails.role;
       }
     });
+  }
+
+  logout() {
+    const authToken = this.tokenService.getAuthToken();
+    if (!authToken) {
+      this.router.navigate(['login']);
+      window.location.reload();
+      return of();
+    }
+    return this.authService.logout(authToken).pipe(
+      tap(() => {
+        this.tokenService.clearAll();
+        this.router.navigate(['login']);
+        window.location.reload();
+      }),
+      catchError(err => {
+        this.tokenService.clearAll();
+        this.router.navigate(['login']);
+        window.location.reload();
+        return throwError(() => err);
+      })
+    ).subscribe();
   }
 
 
