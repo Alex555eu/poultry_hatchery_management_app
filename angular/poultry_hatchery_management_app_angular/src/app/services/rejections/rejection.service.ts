@@ -11,6 +11,7 @@ import { Rejection3 } from '../../models/rejection3.model';
 import { PostRejection3Request } from '../../dto/post-rejection3-request';
 import { Rejection4 } from '../../models/rejection4.model';
 import { PostRejection4Request } from '../../dto/post-rejection4-request';
+import { PostRejectionUnexpectedRequest } from '../../dto/post-rejection-unexpected-request';
 
 @Injectable({
   providedIn: 'root'
@@ -175,4 +176,13 @@ export class RejectionService {
     return this.http.delete<any>(`${apiUrl + ApiPaths.RejectionPaths.DELETE_REJECTION_FOUR + rejectionId}`);
   }
 
+  public postRejectionUnexpected(body: PostRejectionUnexpectedRequest): Observable<any> {
+    return this.http.post<any>(`${apiUrl + ApiPaths.RejectionPaths.POST_REJECTION_UNEXPECTED}`, body).pipe(
+      catchError(error => {
+        console.error(error);
+        return of();
+      })
+    );
+  }
+  
 }

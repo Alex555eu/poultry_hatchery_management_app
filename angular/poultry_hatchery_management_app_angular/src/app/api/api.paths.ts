@@ -171,6 +171,8 @@ export namespace ApiPaths {
         POST_REJECTION_FOUR = '/api/v1/rejection/four', 
         DELETE_REJECTION_FOUR = '/api/v1/rejection/four?rejectionId=', 
 
+        POST_REJECTION_UNEXPECTED = '/api/v1/rejection/unexpected'
+
     }
 
     export enum NestingLoadedDeliveries {
