@@ -49,8 +49,10 @@ public interface TaskRepository extends JpaRepository<Task, UUID> {
     where t.taskStatus in :allowedStatuses
     and
     t.taskType.name = :taskTypeName
+    and
+    t.organisation.id = :orgId
 """)
-    List<Task> findAllByTaskTypeName(@Param("taskTypeName") String taskTypeName, @Param("allowedStatuses") List<TaskStatus> allowedStatuses);
+    List<Task> findAllByTaskTypeName(@Param("taskTypeName") String taskTypeName, @Param("allowedStatuses") List<TaskStatus> allowedStatuses, @Param("orgId") UUID orgId);
 
     List<Task> findAllByOrganisationId(UUID id);
 }
