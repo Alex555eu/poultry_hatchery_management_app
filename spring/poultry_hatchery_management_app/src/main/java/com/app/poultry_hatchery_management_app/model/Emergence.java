@@ -1,6 +1,5 @@
 package com.app.poultry_hatchery_management_app.model;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +15,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Hatching {
+public class Emergence {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -27,8 +26,9 @@ public class Hatching {
     private LocalDateTime dateTime;
 
     @OneToOne
-    private Nesting nesting;
+    Hatching hatching;
 
     @OneToOne
-    private Task task;
+    Task task;
+
 }
