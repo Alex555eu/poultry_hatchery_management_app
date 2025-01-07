@@ -1,3 +1,48 @@
-<div class="dialog-cntr">
-    
-</div>
+<mat-dialog-content>
+    <form (ngSubmit)="onSubmit()">
+      
+      <!-- Pole wyboru Nesting ID -->
+      <mat-form-field appearance="fill">
+        <mat-label>Nesting ID</mat-label>
+        <mat-select [(ngModel)]="nestingId" name="nestingId" required>
+          <mat-option *ngFor="let nesting of nestings" [value]="nesting.id">
+            {{ nesting.title }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+  
+      <!-- Pole wyboru Task Type ID -->
+      <mat-form-field appearance="fill">
+        <mat-label>Task Type ID</mat-label>
+        <mat-select [(ngModel)]="taskTypeId" name="taskTypeId" required>
+          <mat-option *ngFor="let taskType of taskTypes" [value]="taskType.id">
+            {{ taskType.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+  
+
+      <mat-form-field appearance="fill">
+        <mat-label>Data i czas wykonania</mat-label>
+        <input matInput [(ngModel)]="executionDateTime" name="executionDateTime" [matDatepicker]="picker" type="datetime-local" required placeholder="Wybierz datę" />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error *ngIf="!executionDateTime">To pole jest wymagane.</mat-error>
+      </mat-form-field>
+  
+      <!-- Pole tekstowe na komentarz -->
+      <mat-form-field appearance="fill">
+        <mat-label>Komentarz</mat-label>
+        <textarea matInput [(ngModel)]="comment" name="comment"></textarea>
+      </mat-form-field>
+  
+      <!-- Przyciski akcji -->
+      <mat-dialog-actions >
+        <button mat-button type="button" (click)="closeDialog()">Anuluj</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="!nestingId || !taskTypeId || !executionDateTime">
+          Wyślij
+        </button>
+      </mat-dialog-actions>
+    </form>
+  </mat-dialog-content>
+  
