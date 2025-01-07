@@ -66,19 +66,26 @@ export class NewCandlingComponent implements OnInit {
     }
   }
 
-
   onSubmit() {
     if (this.selectedNesting) {
-      this.getTaskType().subscribe(response => {
-        if (response) {
-          this.router.navigate(['candling/open'], { queryParams: { id: response.id } });
-        } 
-        this.dialogRefParent.close(null);
-      })
+      if (!this.data){
+        this.getTaskType().subscribe(response => {
+          if (response) {
+            this.router.navigate(['candling/open'], { queryParams: { id: response.id } });
+          } 
+          this.dialogRefParent.close(null);
+        })
+      } else {
+        this.postCandling(this.data.task).subscribe(response => {
+          if (response) {
+            this.router.navigate(['candling/open'], { queryParams: { id: response.id } });
+          } 
+          this.dialogRefParent.close(null);
+        })
+      }
     }
   }
 
-  
   getTaskType(): Observable<Candling> {
     return this.taskService.getAllTaskTypes().pipe(
       switchMap(response => {

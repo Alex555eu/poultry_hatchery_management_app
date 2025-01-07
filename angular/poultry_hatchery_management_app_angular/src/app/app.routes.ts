@@ -14,6 +14,8 @@ import { NestingComponent } from './components/nesting/nesting.component';
 import { OpenNestingComponent } from './components/nesting/open-nesting/open-nesting.component';
 import { HatchingComponent } from './components/hatching/hatching.component';
 import { OpenHatchingComponent } from './components/hatching/open-hatching/open-hatching.component';
+import { EmergenceComponent } from './components/emergence/emergence.component';
+import { OpenEmergenceComponent } from './components/emergence/open-emergence/open-emergence.component';
 
 export const routes: Routes = [
     { path: '', component: NavbarComponent,
@@ -34,6 +36,9 @@ export const routes: Routes = [
 
             { path: 'hatching', component: HatchingComponent},
             { path: 'hatching/open', component: OpenHatchingComponent},
+
+            { path: 'emergence', component: EmergenceComponent},
+            { path: 'emergence/open', component: OpenEmergenceComponent},
         ],
     },
     { path: 'login', component: LoginComponent},

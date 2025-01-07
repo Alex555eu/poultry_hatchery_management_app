@@ -1,17 +1,17 @@
-import { CommonModule } from '@angular/common';
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
+import { HatchingResult } from '../../../models/hatching-result.model';
+import { BehaviorSubject } from 'rxjs';
+import { Rejection4 } from '../../../models/rejection4.model';
+import { RejectionService } from '../../../services/rejections/rejection.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatInputModule } from '@angular/material/input';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { HatchingLoadedDeliveries } from '../../../../models/hatching-loaded-deliveries.model';
-import { BehaviorSubject } from 'rxjs';
-import { Rejection3 } from '../../../../models/rejection3.model';
-import { RejectionService } from '../../../../services/rejections/rejection.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'app-rejection3-panel',
+  selector: 'app-rejection4-panel',
   standalone: true,
   imports: [
     MatIconModule,
@@ -19,20 +19,20 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatButtonModule,
     ReactiveFormsModule,
     FormsModule,
-    MatInputModule
+    MatInputModule    
   ],
-  templateUrl: './rejection3-panel.component.html',
-  styleUrl: './rejection3-panel.component.css'
+  templateUrl: './rejection4-panel.component.html',
+  styleUrl: './rejection4-panel.component.css'
 })
-export class Rejection3PanelComponent implements OnChanges, OnInit {
+export class Rejection4PanelComponent implements OnInit, OnChanges {
 
   @ViewChild('scrollMe') scrollMe!: ElementRef;
 
-  @Input() hld: HatchingLoadedDeliveries | null = null;
+  @Input() hatchingResult: HatchingResult | null = null;
   @Input() rejectionCause: string = 'default';
   @Output() refresh = new EventEmitter<boolean>();
 
-  private rejectionsSubject = new BehaviorSubject<Rejection3[]>([]);
+  private rejectionsSubject = new BehaviorSubject<Rejection4[]>([]);
   rejections$ = this.rejectionsSubject.asObservable();
 
   private totalSubject = new BehaviorSubject<number>(0);
@@ -47,12 +47,12 @@ export class Rejection3PanelComponent implements OnChanges, OnInit {
   ) {}
   
   ngOnInit(): void {
-    if (this.hld && this.rejectionCause) {
-      this.rejectionService.getAllRejection3(this.hld.hatching.id)
+    if (this.hatchingResult && this.rejectionCause) {
+      this.rejectionService.getAllRejection4(this.hatchingResult.hatchingLoadedDeliveries.hatching.nesting.id)
         .subscribe(response => {
           if (response){
             let filteredRejections = response.filter(it => { 
-              return it.hatchingLoadedDeliveries.id === this.hld?.id && 
+              return it.hatchingResult.id === this.hatchingResult?.id && 
                       it.cause === this.rejectionCause
                     });
             let total = filteredRejections.reduce((sum, item) => sum + item.quantity, 0);
@@ -71,13 +71,18 @@ export class Rejection3PanelComponent implements OnChanges, OnInit {
   }
 
   reject() {
+    console.log('called 1')
     const body = this.getRequestBody();
     if (body) {
-      this.rejectionService.postRejection3(body)
+      console.log('called 2')
+      this.rejectionService.postRejection4(body)
         .subscribe( response => {
+          console.log('called 3')
           if (response) {
+            console.log('called 4')
             this.inputValue = '';
             this.ngOnInit();
+            console.log('called 5')
             this.emit();
           }
         });
@@ -85,7 +90,7 @@ export class Rejection3PanelComponent implements OnChanges, OnInit {
   }
 
   cancelRejection(rejectionId: string) {
-    this.rejectionService.deleteRejection3(rejectionId)
+    this.rejectionService.deleteRejection4(rejectionId)
       .subscribe({
         next: () => {
           this.ngOnInit();
@@ -98,7 +103,6 @@ export class Rejection3PanelComponent implements OnChanges, OnInit {
     this.refresh.emit(true);
   }
 
-
   highlight(rejectionId: string) {
     this.selectedRejectionId = this.selectedRejectionId === rejectionId ? '' : rejectionId;
   }
@@ -106,7 +110,7 @@ export class Rejection3PanelComponent implements OnChanges, OnInit {
   private getRequestBody() {
     if (this.inputValue && !isNaN(+this.inputValue)) {
       return {
-        hatchingLoadedDeliveryId: this.hld!.id,
+        hatchingResultId: this.hatchingResult!.id,
         cause: this.rejectionCause,
         quantity: +this.inputValue,
       };
@@ -121,3 +125,4 @@ export class Rejection3PanelComponent implements OnChanges, OnInit {
   }
 
 }
+

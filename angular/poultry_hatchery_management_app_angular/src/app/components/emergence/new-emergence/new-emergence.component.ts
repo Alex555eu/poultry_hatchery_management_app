@@ -1,25 +1,25 @@
 import { Component, Inject, OnInit } from '@angular/core';
+import { Nesting } from '../../../models/nesting.model';
+import { BehaviorSubject, Observable, of, switchMap } from 'rxjs';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { HatchingService } from '../../../services/hatching/hatching.service';
 import { Task } from '../../../models/task.model';
+import { NestingService } from '../../../services/nesting/nesting.service';
+import { EmergenceService } from '../../../services/emergence/emergence.service';
 import { TasksService } from '../../../services/tasks/tasks.service';
 import { Router } from '@angular/router';
 import { CustomDateFormatterPipe } from '../../../utils/date-format/custom-date-formatter.pipe';
+import { Hatching } from '../../../models/hatching.model';
+import { TaskTypeEntityNameValueForEmergence } from '../../../app.config';
+import { PostTaskRequest } from '../../../dto/post-task-request';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { BehaviorSubject, Observable, of, switchMap } from 'rxjs';
-import { Nesting } from '../../../models/nesting.model';
-import { NestingService } from '../../../services/nesting/nesting.service';
-import { Hatching } from '../../../models/hatching.model';
-import { TaskTypeEntityNameValueForHatching } from '../../../app.config';
-import { PostTaskRequest } from '../../../dto/post-task-request';
-import { PostHatchingRequest } from '../../../dto/post-hatching-request';
+import { PostEmergenceRequest } from '../../../dto/post-emergence-request';
 
 @Component({
-  selector: 'app-new-hatching',
+  selector: 'app-new-emergence',
   standalone: true,
   imports: [
     MatDialogModule,
@@ -28,23 +28,23 @@ import { PostHatchingRequest } from '../../../dto/post-hatching-request';
     MatFormFieldModule,
     MatSelectModule,
     MatButtonModule,
-    CustomDateFormatterPipe
+    CustomDateFormatterPipe    
   ],
-  templateUrl: './new-hatching.component.html',
-  styleUrl: './new-hatching.component.css'
+  templateUrl: './new-emergence.component.html',
+  styleUrl: './new-emergence.component.css'
 })
-export class NewHatchingComponent implements OnInit {
+export class NewEmergenceComponent implements OnInit {
 
   nestings = new BehaviorSubject<Nesting[]|null>(null);
 
   selectedNesting: Nesting | null = null;
 
   constructor(
-    private dialogRefParent: MatDialogRef<NewHatchingComponent>,
+    private dialogRefParent: MatDialogRef<NewEmergenceComponent>,
     @Inject(MAT_DIALOG_DATA) public data: {
       task: Task
     },
-    private hatchingService: HatchingService,
+    private emergenceService: EmergenceService,
     private nestingService: NestingService,
     private taskService: TasksService,
     private router: Router,
@@ -64,31 +64,32 @@ export class NewHatchingComponent implements OnInit {
     }
   }
 
-  onSubmit() {
+ onSubmit() {
     if (this.selectedNesting) {
       if (!this.data){
         this.getTaskType().subscribe(response => {
           if (response) {
-            this.router.navigate(['hatching/open'], { queryParams: { id: response.id } });
+            this.router.navigate(['emergence/open'], { queryParams: { id: response.id } });
           } 
           this.dialogRefParent.close(null);
         })
       } else {
-        this.postHatching(this.data.task).subscribe(response => {
+        this.postEmergence(this.data.task).subscribe(response => {
           if (response) {
-            this.router.navigate(['hatching/open'], { queryParams: { id: response.id } });
+            this.router.navigate(['emergence/open'], { queryParams: { id: response.id } });
           } 
           this.dialogRefParent.close(null);
         })
       }
     }
   }
-
-  getTaskType(): Observable<Hatching> {
+  
+  
+  private getTaskType(): Observable<Hatching> {
     return this.taskService.getAllTaskTypes().pipe(
       switchMap(response => {
         if (response) {
-          const taskType = response.find(it => it.name === TaskTypeEntityNameValueForHatching) || null;
+          const taskType = response.find(it => it.name === TaskTypeEntityNameValueForEmergence) || null;
           if (taskType) {
             return this.postTask(taskType.id);
           }
@@ -98,14 +99,14 @@ export class NewHatchingComponent implements OnInit {
     )
   }
 
-  postTask(taskTypeId: string): Observable<Hatching> {
+  private postTask(taskTypeId: string): Observable<Hatching> {
     const body = this.getTaskBody(taskTypeId);
     return this.taskService.postTask(body).pipe(
-      switchMap(response => this.postHatching(response))
+      switchMap(response => this.postEmergence(response))
     );
   }
 
-  getTaskBody(taskTypeId: string): PostTaskRequest {
+  private getTaskBody(taskTypeId: string): PostTaskRequest {
     let newDate = new Date();
     return {
       nestingId: this.selectedNesting?.id || '', 
@@ -114,15 +115,17 @@ export class NewHatchingComponent implements OnInit {
       comment: this.selectedNesting?.title || 'error' + ' ' + this.datePipe.transform(newDate)
     }
   }
-  
-  postHatching(task: Task): Observable<any> {
-    const body: PostHatchingRequest = {
+
+
+  private postEmergence(task: Task): Observable<any> {
+    const body: PostEmergenceRequest = {
       nestingId: this.selectedNesting?.id || '', 
       taskId: task.id
     };
-    return this.hatchingService.postHatching(body);
+    return this.emergenceService.postEmergence(body);
+
   }
-  
+
   onClose() {
     this.dialogRefParent.close(null);
   }

@@ -33,6 +33,7 @@ public class RejectionService {
     private final NestingTrolleyContentRepository nestingTrolleyContentRepository;
     private final NestingLoadedDeliveriesRepository nestingLoadedDeliveriesRepository;
     private final CandlingNestingTrolleyAssignmentRepository candlingNestingTrolleyAssignmentRepository;
+    private final HatchingResultRepository hatchingResultRepository;
 
 
     public List<RejectionCause> getAllPossibleRejectionCauses() {
@@ -256,37 +257,42 @@ public class RejectionService {
         return RejectionCause.getAvailableCauses(RejectionGroup.REJECTION_4);
     }
 
+    @Transactional
     public Optional<Rejection4> postRejection4(PostRejection4Request request) {
-        Optional<HatchingResult> result =
+        Optional<HatchingResult> resultOpt =
                 hatchingService.getHatchingResultsById(request.hatchingResultId());
-        if(result.isPresent()) {
+        if(resultOpt.isPresent()) {
+            HatchingResult result = resultOpt.get();
+
             Rejection4 rejection4 = Rejection4.builder()
-                    .hatchingResult(result.get())
+                    .hatchingResult(result)
                     .quantity(request.quantity())
                     .cause(RejectionCause.valueOf(request.cause()).verify(RejectionGroup.REJECTION_4))
                     .build();
             rejection4Repository.save(rejection4);
+
+            result.setQuantity(result.getQuantity() - request.quantity());
+            hatchingResultRepository.save(result);
 
             return Optional.of(rejection4);
         }
         return Optional.empty();
     }
 
-    public Optional<Rejection4> putRejection4(PutRejectionRequest request) {
-        Optional<Rejection4> rejection4 = rejection4Repository.findById(request.rejectionId());
-        if (rejection4.isPresent()) {
-            rejection4.get().setQuantity(request.quantity());
-            rejection4.get().setCause(RejectionCause.valueOf(request.cause()).verify(RejectionGroup.REJECTION_4));
-            rejection4Repository.save(rejection4.get());
-
-            return rejection4;
-        }
-        return Optional.empty();
-    }
-
-
+    @Transactional
     public void deleteRejection4ById(UUID rejectionId) {
-        rejection4Repository.deleteById(rejectionId);
+        Optional<Rejection4> rejectionOpt = rejection4Repository.findById(rejectionId);
+        Optional<HatchingResult> resultOpt =
+                hatchingService.getHatchingResultsById(rejectionOpt.get().getHatchingResult().getId());
+        if (resultOpt.isPresent()) {
+            Rejection4 rejection = rejectionOpt.get();
+            HatchingResult result = resultOpt.get();
+
+            result.setQuantity(result.getQuantity() + rejection.getQuantity());
+            hatchingResultRepository.save(result);
+
+            rejection4Repository.deleteById(rejectionId);
+        }
     }
 
 

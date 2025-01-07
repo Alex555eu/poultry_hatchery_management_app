@@ -350,6 +350,16 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
             taskNestingTrolleyAssignmentRepository.save(assignment);
         }
 
+        Task toBeAssignedToEmergence = Task.builder()
+                .taskStatus(TaskStatus.NOT_STARTED)
+                .executionScheduledAt(LocalDateTime.now())
+                .organisation(organisation)
+                .taskType(taskType5)
+                .nesting(nesting)
+                .comment(nesting.getTitle() + " " + LocalDateTime.now())
+                .build();
+        taskRepository.save(toBeAssignedToEmergence);
+
         Candling candling = Candling.builder()
                 .candlingNumber(1)
                 .createdAt(LocalDateTime.now())

@@ -1,0 +1,72 @@
+<div class="bg-container">
+
+    <div>
+        <div class="button-container" *ngIf="emergence">
+            <button mat-flat-button color="primary" (click)="finishEmergence()" [disabled]="emergence.hatching.nesting.isFinished">
+                Zakończ wylęg
+                <mat-icon>arrow_right_alt</mat-icon>
+            </button>
+        </div>
+
+        <div class="trolley-container" *ngIf="hatchingTrolleys">
+            <div class="dialog-header">
+                <mat-icon>select_all</mat-icon>
+                <label>Wózki klujnikowe</label>
+            </div>
+            <ng-container *ngFor="let trolley of hatchingTrolleys">
+                <div class="card-content">
+                    <span>{{ trolley.humanReadableId }}</span>
+                    <span>{{ countHatchingTrolleyCapacity(trolley) }} szt.</span>
+                    <span>ilość początkowa</span>
+                    <button mat-icon-button [matMenuTriggerFor]="menu">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="findTrolleyLocation(trolley)">
+                            <mat-icon>search</mat-icon>
+                            <span>Szukaj wózka</span>
+                        </button>
+                    </mat-menu>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+
+    <div class="trolley-container" *ngIf="hatchingResults">
+        <div class="dialog-header">
+            <mat-icon>select_all</mat-icon>
+            <label>Wylęgnięto</label>
+        </div>
+        <mat-selection-list [hideSingleSelectionIndicator]="true" [(ngModel)]="selectedHatchingResult" [multiple]="false">
+            <ng-container *ngFor="let result of hatchingResults">
+                <mat-list-option [value]="result">
+                    <div class="card-content">
+                        <span>
+                            {{ result.hatchingLoadedDeliveries.delivery.supplier.name }}
+                            {{ result.hatchingLoadedDeliveries.delivery.supplier.surname }}
+                        </span>
+                        <span>| {{ result.quantity }} szt.</span>
+                    </div>
+                </mat-list-option>
+            </ng-container>
+        </mat-selection-list>
+    </div>
+
+    
+    <div class="rejection-container">
+        <div class="dialog-header">
+            <mat-icon>delete_forever</mat-icon>
+            <label>Odrzuty</label>
+        </div>
+
+        <ng-container *ngIf="selectedHatchingResult">
+            <app-rejection4-panel 
+                *ngFor="let cause of rejectionCauses;"
+                [hatchingResult]="selectedHatchingResult[0]"
+                [rejectionCause]="cause" 
+                (refresh)="updateAfterRejection($event)"
+            >
+        </app-rejection4-panel>
+        </ng-container>
+    </div>
+</div>
