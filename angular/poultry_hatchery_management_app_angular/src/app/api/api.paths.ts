@@ -56,9 +56,20 @@ export namespace ApiPaths {
 
     export enum HatchingIncubatorPaths {
         GET_HATCHING_INCUBATOR = '/api/v1/hatching-incubator/',
+        GET_HATCHING_INCUBATOR_BY_ID = '/api/v1/hatching-incubator/by-id?incubatorId=',
         POST_HATCHING_INCUBATOR = '/api/v1/hatching-incubator/',
         PUT_HATCHING_INCUBATOR = '/api/v1/hatching-incubator/',
         DELETE_HATCHING_INCUBATOR = '/api/v1/hatching-incubator/',
+
+
+        GET_HATCHING_INCUBATOR_SPACES = '/api/v1/hatching-incubator/space?hatchingIncubatorId=',
+
+        GET_HATCHING_TROLLEY_INCUBATOR_SPACE_ASSIGNMENT = '/api/v1/hatching-incubator/occupation?hatchingIncubatorId=',
+
+        DELETE_HATCHING_TROLLEY_FROM_INCUBATOR_SPACE = '/api/v1/hatching-incubator/occupation?hatchingTrolleyIncubatorSpaceAssignmentId=',
+
+        POST_HATCHING_TROLLEY_TO_INCUBATOR_SPACE = '/api/v1/hatching-incubator/occupation'
+
     }
 
     export enum NestingTrolleyPaths {
@@ -88,6 +99,11 @@ export namespace ApiPaths {
         POST_HATCHING_TROLLEY_CONTENT = '/api/v1/hatching-trolley/content',
         PUT_HATCHING_TROLLEY_CONTENT = '/api/v1/hatching-trolley/content',
         DELETE_HATCHING_TROLLEY_CONTENT = '/api/v1/hatching-trolley/content',
+
+        GET_HATCHING_TROLLEY_CONTENT_BY_TROLLEY_ID = '/api/v1/hatching-trolley/content?hatchingTrolleyId=',
+
+
+        GET_ALL_HATCHING_TROLLEYS_FROM_OUTSIDE_OF_INCUBATORS = '/api/v1/hatching-trolley/outside'
     }
 
     export enum DeliveryPaths {

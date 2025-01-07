@@ -13,7 +13,7 @@ export class IncubatorPrinterService {
     return this.prepareDataForPrinting(this.populateArray(capacity), columns);
   }
 
-  getIncubatorLayout2(columns: number, spaces: NestingIncubatorSpace[]): NestingIncubatorSpace[] {
+  getIncubatorLayout2(columns: number, spaces: any[]): any[] {
     let sortedArray = this.sortByHumanReadableId(spaces);
     return this.prepareDataForPrinting2(sortedArray, columns);
   }
@@ -34,7 +34,7 @@ export class IncubatorPrinterService {
     return result;
   }
 
-  private prepareDataForPrinting2(array: NestingIncubatorSpace[], cols: number): NestingIncubatorSpace[] {
+  private prepareDataForPrinting2(array: any[], cols: number): any[] {
     let result = Array();
     for(let i = 0, x = 0; i < array.length; i++, x++) {
       if (i === x && x === cols/2) {
@@ -50,7 +50,7 @@ export class IncubatorPrinterService {
     return result;
   }
 
-  private sortByHumanReadableId(assignments: NestingIncubatorSpace[]): NestingIncubatorSpace[]{
+  private sortByHumanReadableId(assignments: any[]): any[]{
     let arr = new Array(assignments.length);
     assignments.forEach(it => {
       let idx: number = +it.humanReadableId.slice(1);

@@ -52,6 +52,21 @@ public class HatchingTrolleyController {
         String response = objectMapper.writeValueAsString(trolleys);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/outside")
+    public ResponseEntity<String> getAllTrolleysOutsideOfIncubators() throws JsonProcessingException {
+        List<HatchingTrolley> trolleys = hatchingTrolleyService.getAllTrolleysOutsideOfIncubators();
+        if (trolleys == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if (trolleys.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        String response = objectMapper.writeValueAsString(trolleys);
+        return ResponseEntity.ok(response);
+    }
+
+
     @PostMapping("")
     public ResponseEntity<String> postHatchingTrolley(@RequestBody PostHatchingTrolleyRequest request) {
         Optional<HatchingTrolley> trolley = hatchingTrolleyService.postHatchingTrolley(request);

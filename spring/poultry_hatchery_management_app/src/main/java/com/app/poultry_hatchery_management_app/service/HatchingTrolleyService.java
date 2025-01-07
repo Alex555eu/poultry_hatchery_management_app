@@ -4,10 +4,7 @@ import com.app.poultry_hatchery_management_app.dto.PostHatchingTrolleyContentReq
 import com.app.poultry_hatchery_management_app.dto.PostHatchingTrolleyRequest;
 import com.app.poultry_hatchery_management_app.dto.PutHatchingTrolleyContentRequest;
 import com.app.poultry_hatchery_management_app.dto.PutHatchingTrolleyRequest;
-import com.app.poultry_hatchery_management_app.model.HatchingLoadedDeliveries;
-import com.app.poultry_hatchery_management_app.model.HatchingTrolley;
-import com.app.poultry_hatchery_management_app.model.HatchingTrolleyContent;
-import com.app.poultry_hatchery_management_app.model.User;
+import com.app.poultry_hatchery_management_app.model.*;
 import com.app.poultry_hatchery_management_app.repository.HatchingTrolleyContentRepository;
 import com.app.poultry_hatchery_management_app.repository.HatchingTrolleyRepository;
 import lombok.AllArgsConstructor;
@@ -43,6 +40,17 @@ public class HatchingTrolleyService {
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             User user = (User) authentication.getPrincipal();
             return hatchingTrolleyRepository.findAllUnusedHatchingTrolleys(user.getOrganisation().getId());
+        }
+        return null;
+    }
+
+    public List<HatchingTrolley> getAllTrolleysOutsideOfIncubators() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if ((authentication != null && authentication.getPrincipal() instanceof UserDetails)) {
+            User user = (User) authentication.getPrincipal();
+            Organisation organisation = user.getOrganisation();
+
+            return hatchingTrolleyRepository.findAllTrolleysOutsideOfIncubators(organisation.getId());
         }
         return null;
     }
