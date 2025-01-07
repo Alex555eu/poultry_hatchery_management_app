@@ -42,6 +42,7 @@ export class HatchingTrolleyService {
       })
     );
   }
+
   public postHatchingTrolley(body: PostTrolleyRequest): Observable<any> {
     return this.http.post<any>(`${apiUrl}${ApiPaths.HatchingTrolleyPaths.POST_HATCHING_TROLLEY}`, body);
   }
@@ -70,5 +71,24 @@ export class HatchingTrolleyService {
       })
     );
   }
+
+  public getHatchingTrolleyContent(hatchingTrolleyId: string): Observable<HatchingTrolleyContent[]> {
+    return this.http.get<HatchingTrolleyContent[]>(`${apiUrl + ApiPaths.HatchingTrolleyPaths.GET_HATCHING_TROLLEY_CONTENT_BY_TROLLEY_ID + hatchingTrolleyId}`).pipe(
+      catchError(error => {
+        return of([]);
+      })
+    );
+  }
+
+
+  public getAllNestingTrolleysFromOutsideOfIncubators(): Observable<HatchingTrolley[]> {
+    return this.http.get<HatchingTrolley[]>(`${apiUrl + ApiPaths.HatchingTrolleyPaths.GET_ALL_HATCHING_TROLLEYS_FROM_OUTSIDE_OF_INCUBATORS}`).pipe(
+      catchError(error => {
+        return of([]);
+      })
+    );
+  }
+
+
 
 }

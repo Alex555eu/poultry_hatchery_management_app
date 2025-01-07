@@ -1,0 +1,40 @@
+<mat-dialog-content>
+    <div class="dialog-bg">
+
+        <div class="dialog-header">
+            <mat-icon>swap_horiz</mat-icon>
+            <label>Wózek {{ trolley?.humanReadableId || 'Brak ID' }}</label>
+        </div>
+
+        <div class="trolley-content">
+            <ng-container *ngFor="let content of trolleyContent">
+                <div class="content-item">
+                    <span class="item-title">{{ content?.hatchingLoadedDeliveries?.hatching?.nesting?.title || 'Brak tytułu' }}</span>
+                    <div class="supplier-info">
+                        <label class="supplier-name">
+                            {{ content?.hatchingLoadedDeliveries?.delivery?.supplier?.name || 'Brak nazwy dostawcy' }} 
+                            {{ content?.hatchingLoadedDeliveries?.delivery?.supplier?.surname || 'Brak nazwiska dostawcy' }}
+                        </label>
+                        <label class="quantity">: {{ content?.quantity || 0 }} szt.</label>
+                    </div>
+                    <label>  </label>
+                </div>
+            </ng-container>
+
+            <div class="total-quantity">
+                <strong>Łączna ilość: </strong>
+                <span>{{ totalQuantity || 0 }}</span>
+            </div>
+        </div>
+
+        
+        <div class="buttons-container">
+            <button mat-raised-button color="warn" (click)="onPermanentLeave()">
+                <mat-icon>logout</mat-icon>
+                Wyjazd permanentny</button>
+            <!-- <button mat-raised-button (click)="onTemporaryLeave()">
+                <mat-icon>logout</mat-icon>
+                Wyjazd tymczasowy</button> -->
+        </div>
+    </div>
+</mat-dialog-content>

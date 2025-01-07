@@ -25,7 +25,8 @@ public interface NestingTrolleyRepository extends JpaRepository<NestingTrolley, 
 
     @Query(value = """
     select nt from NestingTrolley nt
-    where nt not in (
+    where nt.organisation.id = :organisationId
+    and nt not in (
     select ntisa.nestingTrolley from NestingTrolleyIncubatorSpaceAssignment ntisa
     where ntisa.nestingIncubatorSpace.isCurrentlyOccupied = true)
 """)
