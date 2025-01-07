@@ -1,13 +1,12 @@
 package com.app.poultry_hatchery_management_app.controller;
 
 
-import com.app.poultry_hatchery_management_app.dto.PostHatchingLoadedDeliveryRequest;
-import com.app.poultry_hatchery_management_app.dto.PostHatchingRequest;
-import com.app.poultry_hatchery_management_app.dto.PostHatchingResultRequest;
-import com.app.poultry_hatchery_management_app.dto.PutHatchingResultRequest;
+import com.app.poultry_hatchery_management_app.dto.*;
+import com.app.poultry_hatchery_management_app.model.Emergence;
 import com.app.poultry_hatchery_management_app.model.Hatching;
 import com.app.poultry_hatchery_management_app.model.HatchingLoadedDeliveries;
 import com.app.poultry_hatchery_management_app.model.HatchingResult;
+import com.app.poultry_hatchery_management_app.service.EmergenceService;
 import com.app.poultry_hatchery_management_app.service.HatchingService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,6 +26,7 @@ public class HatchingController {
 
     private final ObjectMapper objectMapper;
     private final HatchingService hatchingService;
+    private final EmergenceService emergenceService;
 
     @GetMapping("")
     public ResponseEntity<String> getHatchingByNestingId(@RequestParam UUID nestingId) throws JsonProcessingException {
@@ -104,7 +104,7 @@ public class HatchingController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/results")
+    @GetMapping("/result")
     public ResponseEntity<String> getAllHatchingResultsByHatchingId(@RequestParam UUID hatchingId) throws JsonProcessingException {
         List<HatchingResult> hatching = hatchingService.getAllHatchingResultsByHatchingId(hatchingId);
         if(hatching.isEmpty()) {
@@ -114,7 +114,7 @@ public class HatchingController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/results")
+    @PostMapping("/result")
     public ResponseEntity<String> postHatchingResult(@RequestBody PostHatchingResultRequest request) {
         Optional<HatchingResult> result = hatchingService.postHatchingResult(request);
         if(result.isPresent()) {
@@ -123,7 +123,7 @@ public class HatchingController {
         return ResponseEntity.notFound().build();
     }
 
-    @PutMapping("/results")
+    @PutMapping("/result")
     public ResponseEntity<String> putHatchingResult(@RequestBody PutHatchingResultRequest request) {
         Optional<HatchingResult> result = hatchingService.putHatchingResult(request);
         if(result.isPresent()) {
@@ -133,11 +133,50 @@ public class HatchingController {
     }
 
 
-    @DeleteMapping("/results")
+    @DeleteMapping("/result")
     public ResponseEntity<String> deleteHatchingResult(@RequestParam UUID hatchingResultId) {
         hatchingService.deleteHatchingResult(hatchingResultId);
         return ResponseEntity.ok().build();
     }
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    @GetMapping("/emergence")
+    public ResponseEntity<String> getAllEmergences() throws JsonProcessingException {
+        List<Emergence> emergence = emergenceService.getAllEmergences();
+        if(emergence.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        String response = objectMapper.writeValueAsString(emergence);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/emergence/by-id")
+    public ResponseEntity<String> getEmergenceById(@RequestParam UUID emergenceId) throws JsonProcessingException {
+        Optional<Emergence> emergence = emergenceService.getEmergenceById(emergenceId);
+        if(emergence.isPresent()) {
+            String response = objectMapper.writeValueAsString(emergence.get());
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/emergence")
+    public ResponseEntity<String> postEmergence(@RequestBody PostEmergenceRequest request) throws JsonProcessingException {
+        Optional<Emergence> emergence = emergenceService.postEmergence(request);
+        if(emergence.isPresent()) {
+            String response = objectMapper.writeValueAsString(emergence.get());
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/emergence")
+    public ResponseEntity<String> deleteEmergence(@RequestParam UUID emergenceId) {
+        emergenceService.deleteEmergence(emergenceId);
+        return ResponseEntity.ok().build();
+    }
 
 }

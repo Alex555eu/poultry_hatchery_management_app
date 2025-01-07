@@ -12,7 +12,7 @@ import java.util.UUID;
 public interface HatchingTrolleyIncubatorSpaceAssignmentRepository extends JpaRepository<HatchingTrolleyIncubatorSpaceAssignment, UUID> {
 
     @Query(value = """
-    select htisa.* from hatching_trolley_incubator_space_assignment
+    select htisa.* from hatching_trolley_incubator_space_assignment htisa
     join hatching_incubator_space his on his.id = htisa.hatching_incubator_space_id
     join hatching_incubator hi on hi.id = his.hatching_incubator_id
     where hi.id = :hatchingIncubatorId

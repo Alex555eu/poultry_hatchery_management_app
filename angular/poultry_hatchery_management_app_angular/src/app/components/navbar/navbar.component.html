@@ -45,11 +45,11 @@
                 <mat-icon matListItemIcon>keyboard_double_arrow_right</mat-icon>
                 <span>Przekłady</span>
             </a>
-            <a mat-list-item routerLink=".">
+            <a mat-list-item routerLink="/emergence">
                 <mat-icon matListItemIcon>flag</mat-icon>
                 <span>Wylęgi</span>
             </a>      
-            <a id="logout" mat-list-item routerLink=".">
+            <a id="logout" mat-list-item (click)="logout()">
                 <mat-icon id="logout-icon" matListItemIcon>logout</mat-icon>
                 <span>Wyloguj</span>
             </a>

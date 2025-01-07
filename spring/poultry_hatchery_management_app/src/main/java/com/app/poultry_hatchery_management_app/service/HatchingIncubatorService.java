@@ -37,6 +37,10 @@ public class HatchingIncubatorService {
         return null;
     }
 
+    public Optional<HatchingIncubator> getHatchingIncubatorById(UUID incubatorId) {
+        return hatchingIncubatorRepository.findById(incubatorId);
+    }
+
     @Transactional(rollbackFor = Exception.class)
     public Optional<HatchingIncubator> postHatchingIncubator(PostHatchingIncubatorRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -124,6 +128,7 @@ public class HatchingIncubatorService {
         return List.of();
     }
 
+    @Transactional
     public Optional<HatchingTrolleyIncubatorSpaceAssignment> postHatchingTrolleyToIncubatorSpace(PostHatchingTrolleyIncubatorSpaceAssignmentRequest request) {
         Optional<HatchingTrolley> trolley = hatchingTrolleyService.getHatchingTrolleyById(request.hatchingTrolleyId());
         Optional<HatchingIncubatorSpace> space = hatchingIncubatorSpaceRepository.findById(request.hatchingIncubatorSpaceId());
@@ -136,6 +141,10 @@ public class HatchingIncubatorService {
                     .trolleyEntryStamp(LocalDateTime.now())
                     .build();
             hatchingTrolleyIncubatorSpaceAssignmentRepository.save(htisa);
+
+            HatchingIncubatorSpace space2 = space.get();
+            space2.setCurrentlyOccupied(true);
+            hatchingIncubatorSpaceRepository.save(space2);
 
             return Optional.of(htisa);
         }
@@ -158,7 +167,16 @@ public class HatchingIncubatorService {
         return Optional.empty();
     }
 
+    @Transactional
     public void deleteHatchingTrolleyFromIncubatorSpace(UUID assignmentId) {
         hatchingTrolleyIncubatorSpaceAssignmentRepository.deleteById(assignmentId);
+        Optional<HatchingTrolleyIncubatorSpaceAssignment> htisa =
+                hatchingTrolleyIncubatorSpaceAssignmentRepository.findById(assignmentId);
+        if (htisa.isPresent()) {
+            HatchingIncubatorSpace space = htisa.get().getHatchingIncubatorSpace();
+            space.setCurrentlyOccupied(false);
+            hatchingIncubatorSpaceRepository.save(space);
+            hatchingTrolleyIncubatorSpaceAssignmentRepository.delete(htisa.get());
+        }
     }
 }

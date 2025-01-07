@@ -1,3 +1,4 @@
+import { Emergence } from "../models/emergence.model";
 
 export namespace ApiPaths {
     export enum AuthenticatePaths {
@@ -19,7 +20,8 @@ export namespace ApiPaths {
         GET_ALL_UNFINISHED_NESTINGS = '/api/v1/nesting/unfinished',
         GET_ALL_NESTINGS = '/api/v1/nesting',
         GET_NESTING_BY_ID = '/api/v1/nesting/by-id?nestingId=',
-        POST_NEW_NESTING = '/api/v1/nesting'
+        POST_NEW_NESTING = '/api/v1/nesting',
+        PUT_NESTING = '/api/v1/nesting',
     }
 
     export enum NestingIncubatorPaths {
@@ -44,13 +46,30 @@ export namespace ApiPaths {
 
         GET_HATCHING_LOADED_DELIVERY = '/api/v1/hatching/loaded-deliveries',
         GET_HATCHING_LOADED_DELIVERIES_BY_HATCHING_ID = '/api/v1/hatching/loaded-deliveries?hatchingId=',
+
+        GET_ALL_HATCHING_RESULTS = '/api/v1/hatching/result?hatchingId=',
+
+        GET_ALL_EMERGENCES = '/api/v1/hatching/emergence',
+        GET_EMERGENCE_BY_ID = '/api/v1/hatching/emergence/by-id?emergenceId=',
+        POST_EMERGENCE = '/api/v1/hatching/emergence',
     }
 
     export enum HatchingIncubatorPaths {
         GET_HATCHING_INCUBATOR = '/api/v1/hatching-incubator/',
+        GET_HATCHING_INCUBATOR_BY_ID = '/api/v1/hatching-incubator/by-id?incubatorId=',
         POST_HATCHING_INCUBATOR = '/api/v1/hatching-incubator/',
         PUT_HATCHING_INCUBATOR = '/api/v1/hatching-incubator/',
         DELETE_HATCHING_INCUBATOR = '/api/v1/hatching-incubator/',
+
+
+        GET_HATCHING_INCUBATOR_SPACES = '/api/v1/hatching-incubator/space?hatchingIncubatorId=',
+
+        GET_HATCHING_TROLLEY_INCUBATOR_SPACE_ASSIGNMENT = '/api/v1/hatching-incubator/occupation?hatchingIncubatorId=',
+
+        DELETE_HATCHING_TROLLEY_FROM_INCUBATOR_SPACE = '/api/v1/hatching-incubator/occupation?hatchingTrolleyIncubatorSpaceAssignmentId=',
+
+        POST_HATCHING_TROLLEY_TO_INCUBATOR_SPACE = '/api/v1/hatching-incubator/occupation'
+
     }
 
     export enum NestingTrolleyPaths {
@@ -80,6 +99,11 @@ export namespace ApiPaths {
         POST_HATCHING_TROLLEY_CONTENT = '/api/v1/hatching-trolley/content',
         PUT_HATCHING_TROLLEY_CONTENT = '/api/v1/hatching-trolley/content',
         DELETE_HATCHING_TROLLEY_CONTENT = '/api/v1/hatching-trolley/content',
+
+        GET_HATCHING_TROLLEY_CONTENT_BY_TROLLEY_ID = '/api/v1/hatching-trolley/content?hatchingTrolleyId=',
+
+
+        GET_ALL_HATCHING_TROLLEYS_FROM_OUTSIDE_OF_INCUBATORS = '/api/v1/hatching-trolley/outside'
     }
 
     export enum DeliveryPaths {
@@ -142,12 +166,23 @@ export namespace ApiPaths {
         GET_ALL_REJECTION_THREE_BY_HATCHING_ID = '/api/v1/rejection/three/by-hatching?hatchingId=',
         POST_REJECTION_THREE = '/api/v1/rejection/three',
         DELETE_REJECTION_THREE = '/api/v1/rejection/three?rejectionId=',
+
+        GET_ALL_REJECTION_FOUR_BY_NESTING_ID = '/api/v1/rejection/four?nestingId=',
+        POST_REJECTION_FOUR = '/api/v1/rejection/four', 
+        DELETE_REJECTION_FOUR = '/api/v1/rejection/four?rejectionId=', 
+
+        POST_REJECTION_UNEXPECTED = '/api/v1/rejection/unexpected'
+
     }
 
     export enum NestingLoadedDeliveries {
         GET_ALL_NESTING_LOADED_DELIVERIES = '/api/v1/nesting-loaded-deliveries',
         GET_ALL_NESTING_LOADED_DELIVERIES_BY_NESTING_ID = '/api/v1/nesting-loaded-deliveries/nesting?nestingId=',
         POST_NESTING_LOADED_DELIVERY = '/api/v1/nesting-loaded-deliveries'
+    }
+
+    export enum RaportPaths {
+        GET = '/api/v1/raport?nestingId='
     }
 
 }

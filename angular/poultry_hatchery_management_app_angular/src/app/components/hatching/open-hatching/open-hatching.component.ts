@@ -93,15 +93,10 @@ export class OpenHatchingComponent implements OnInit {
         return of();
       }),
       switchMap(hatching => this.initNestingTrolleys(hatching).pipe(map(() => hatching))),
-      // switchMap(candling => this.initCandlingTrolleyAssignments(candling)),
-      // switchMap(assignment => this.initTrolleyContent(assignment).pipe(map(() => assignment))), 
       switchMap(hatching => this.initTaskTrolleyAssignment(hatching.task.id).pipe(map(() => hatching))),
       switchMap(hatching => this.initHatchingTrolleys(hatching).pipe(map(() => hatching))),
       switchMap(hatching => this.initHLD(hatching).pipe(map(() => hatching))),
       switchMap(hatching => this.initRejectionCauses())
-      // switchMap(assignment => this.initNestingLoadedDeliveries(assignment).pipe(map(() => assignment))),
-      // switchMap(assignment => this.initRejections(assignment)),
-      // switchMap(() => this.initRejectionCauses())
 
     ).subscribe();
   }

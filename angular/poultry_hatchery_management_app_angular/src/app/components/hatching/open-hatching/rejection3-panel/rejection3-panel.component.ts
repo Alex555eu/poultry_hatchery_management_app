@@ -47,7 +47,6 @@ export class Rejection3PanelComponent implements OnChanges, OnInit {
   ) {}
   
   ngOnInit(): void {
-    console.log(this.hld);
     if (this.hld && this.rejectionCause) {
       this.rejectionService.getAllRejection3(this.hld.hatching.id)
         .subscribe(response => {

@@ -58,7 +58,13 @@ public class TaskService {
     }
 
     public List<Task> getAllActiveTasksByTaskTypeName(String taskTypeName) {
-        return taskRepository.findAllByTaskTypeName(taskTypeName, List.of(TaskStatus.IN_PROGRESS, TaskStatus.NOT_STARTED));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            User user = (User) authentication.getPrincipal();
+
+            return taskRepository.findAllByTaskTypeName(taskTypeName, List.of(TaskStatus.IN_PROGRESS, TaskStatus.NOT_STARTED), user.getOrganisation().getId());
+        }
+        return List.of();
     }
 
     Optional<Task> getTaskById(UUID taskId) {

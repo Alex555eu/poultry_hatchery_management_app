@@ -4,6 +4,7 @@ import { Nesting } from '../../models/nesting.model';
 import { catchError, Observable, of } from 'rxjs';
 import { apiUrl } from '../../app.config';
 import { ApiPaths } from '../../api/api.paths';
+import { PutNestingRequest } from '../../dto/put-nesting-request';
 
 @Injectable({
   providedIn: 'root'
@@ -44,6 +45,15 @@ export class NestingService {
   public postNewNesting(title: string, description: string): Observable<Nesting> {
     const body = {title: title, description: description};
     return this.http.post<Nesting>(`${apiUrl + ApiPaths.NestingPaths.POST_NEW_NESTING}`, body).pipe(
+      catchError(error => {
+        console.error(error);
+        return of();
+      })
+    )
+  }
+
+  public putNesting(body: PutNestingRequest): Observable<Nesting> {
+    return this.http.put<Nesting>(`${apiUrl + ApiPaths.NestingPaths.PUT_NESTING}`, body).pipe(
       catchError(error => {
         console.error(error);
         return of();

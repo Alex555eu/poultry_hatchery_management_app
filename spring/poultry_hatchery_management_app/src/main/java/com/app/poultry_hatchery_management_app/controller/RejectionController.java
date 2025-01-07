@@ -224,22 +224,23 @@ public class RejectionController {
     }
 
     @PostMapping("/four")
-    public ResponseEntity<String> postRejection4(@RequestBody PostRejection4Request request) {
+    public ResponseEntity<String> postRejection4(@RequestBody PostRejection4Request request) throws JsonProcessingException {
         Optional<Rejection4> rejection = rejectionService.postRejection4(request);
         if (rejection.isPresent()) {
-            return ResponseEntity.ok().build();
+            String body = objectMapper.writeValueAsString(rejection.get());
+            return ResponseEntity.ok(body);
         }
         return ResponseEntity.notFound().build();
     }
 
-    @PutMapping("/four")
-    public ResponseEntity<String> putRejection4(@RequestBody PutRejectionRequest request) {
-        Optional<Rejection4> rejection = rejectionService.putRejection4(request);
-        if (rejection.isPresent()) {
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.notFound().build();
-    }
+//    @PutMapping("/four")
+//    public ResponseEntity<String> putRejection4(@RequestBody PutRejectionRequest request) {
+//        Optional<Rejection4> rejection = rejectionService.putRejection4(request);
+//        if (rejection.isPresent()) {
+//            return ResponseEntity.ok().build();
+//        }
+//        return ResponseEntity.notFound().build();
+//    }
 
     @DeleteMapping("/four")
     public ResponseEntity<String> deleteRejection4ById(@RequestParam UUID rejectionId) {

@@ -64,18 +64,26 @@ export class NewHatchingComponent implements OnInit {
     }
   }
 
- onSubmit() {
+  onSubmit() {
     if (this.selectedNesting) {
-      this.getTaskType().subscribe(response => {
-        if (response) {
-          this.router.navigate(['hatching/open'], { queryParams: { id: response.id } });
-        } 
-        this.dialogRefParent.close(null);
-      })
+      if (!this.data){
+        this.getTaskType().subscribe(response => {
+          if (response) {
+            this.router.navigate(['hatching/open'], { queryParams: { id: response.id } });
+          } 
+          this.dialogRefParent.close(null);
+        })
+      } else {
+        this.postHatching(this.data.task).subscribe(response => {
+          if (response) {
+            this.router.navigate(['hatching/open'], { queryParams: { id: response.id } });
+          } 
+          this.dialogRefParent.close(null);
+        })
+      }
     }
   }
 
-  
   getTaskType(): Observable<Hatching> {
     return this.taskService.getAllTaskTypes().pipe(
       switchMap(response => {
@@ -90,14 +98,12 @@ export class NewHatchingComponent implements OnInit {
     )
   }
 
-
   postTask(taskTypeId: string): Observable<Hatching> {
     const body = this.getTaskBody(taskTypeId);
     return this.taskService.postTask(body).pipe(
       switchMap(response => this.postHatching(response))
     );
   }
-
 
   getTaskBody(taskTypeId: string): PostTaskRequest {
     let newDate = new Date();
@@ -108,7 +114,6 @@ export class NewHatchingComponent implements OnInit {
       comment: this.selectedNesting?.title || 'error' + ' ' + this.datePipe.transform(newDate)
     }
   }
-
   
   postHatching(task: Task): Observable<any> {
     const body: PostHatchingRequest = {
@@ -117,11 +122,9 @@ export class NewHatchingComponent implements OnInit {
     };
     return this.hatchingService.postHatching(body);
   }
-
   
   onClose() {
     this.dialogRefParent.close(null);
   }
-
 
 }

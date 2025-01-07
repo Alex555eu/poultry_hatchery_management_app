@@ -26,7 +26,7 @@ public class Hatching {
 
     private LocalDateTime dateTime;
 
-    @ManyToOne
+    @OneToOne
     private Nesting nesting;
 
     @OneToOne
