@@ -1,0 +1,6 @@
+<h2 mat-dialog-title>{{ data.title }}</h2>
+<mat-dialog-content style="white-space: pre-line;">{{ data.question }}</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="closeDialog(false)">{{ data.negativeResponse }}</button>
+  <button mat-button color="warn" (click)="closeDialog(true)">{{ data.positiveResponse }}</button>
+</mat-dialog-actions>

@@ -1,0 +1,53 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { 
+    margin: 0; 
+    font-family: Roboto, "Helvetica Neue", sans-serif; 
+    background-color: aliceblue;
+}
+
+:root {
+    /********* S T A T U S E S *************/
+    --status-color-completed: #44fd6cc5 !important;
+    --status-color-not-started: gray !important;
+    --status-color-in-progress: #bae1ff !important;
+    --status-color-cancelled: #ffb3ba !important;
+    --status-color-caution: #FDFD96 !important;
+}
+
+/********************** D I A L O G   S T Y L I N G **************************************/
+mat-dialog-content {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    overflow-y: auto !important;
+    color: black !important;
+    max-height: 80vh !important;
+}
+.dialog-bg {
+    padding: 5px;
+    width: 600px;
+    max-height: 100%;
+    overflow-y: hidden;
+}
+.dialog-header {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    width: 100%;
+    margin-bottom: 20px;
+}
+.dialog-header label {
+    font-size: large;
+    margin-left: 10px;
+}
+.dialog-header button {
+    margin-left: auto;
+}
+@media (max-width: 1300px) {
+    .dialog-bg .dialog-header{
+        width: 100%;
+    }
+}
+/*****************************************************************************************/

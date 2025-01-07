@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  db:
+    container_name: db
+    build:
+      context: .
+      dockerfile: postgresql/Dockerfile
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+    networks:
+      - my-network
+
+  # spring-boot:
+  #   build:
+  #     context: .
+  #     dockerfile: ./food-app-spring-boot/Dockerfile
+  #   depends_on:
+  #     - db
+  #   ports:
+  #     - 9090:9090
+  #   networks:
+  #     - my-network
+
+networks:
+  my-network:
+
+volumes:
+  pgdata:

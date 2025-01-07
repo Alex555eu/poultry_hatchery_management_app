@@ -1,0 +1,34 @@
+<div class="tasks-cntr">
+    <div class="tasks-header-cntr">
+        <mat-icon>calendar_today</mat-icon>
+        <span>{{ title }}</span>
+    </div>
+    <div class="tasks-body-cntr">
+        <mat-list>
+            @if (tasks && tasks.length > 0) {
+                <ng-container *ngFor="let item of tasks">
+                    <div class="task-item-comment-section" *ngIf="toggledTaskId === item.id">
+                        <mat-divider></mat-divider>
+                        <h3>Komentarz do zadania:</h3>
+                        <label> {{ item.comment }} </label>
+                    </div>
+                    <mat-divider></mat-divider>
+                    <mat-list-item (click)="selectTask(item.id)" [class]="setColorClass(item.id)">
+                        <div class="task-item-cntr">
+                            <label>{{ item.nesting.title }}</label>
+                            <label>{{ item.taskType.name }}</label>
+                            <label [ngStyle]="{'letter-spacing': '1px', 'font-weight': '550', 'color': getStatusColor(item.taskStatus)}">
+                                <span style="margin-right: 5px;">&#11044;</span>{{ translateStatusEnToPl(item.taskStatus) }}
+                            </label>
+                        </div>
+                    </mat-list-item> 
+                </ng-container>
+            } @else {
+                <mat-divider></mat-divider>
+                <mat-list-item>
+                    <label>Brak zadań</label>
+                </mat-list-item>
+            }
+        </mat-list>
+    </div>
+</div>

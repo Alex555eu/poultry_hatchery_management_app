@@ -1,0 +1,36 @@
+.first-gr {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.second-gr {
+    width: 100%;
+    max-height: 20vh;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+
+.third-gr {
+    width: 100%;
+    margin-bottom: 20px;
+    max-height: 20vh;
+    overflow-y: auto;
+}
+
+.third-gr mat-list-option {
+    display: flex;
+    flex-direction: row; /* Dostosowanie do małych ekranów */
+    height: auto;
+}
+
+.list {
+    display: flex;
+    flex-direction: row; /* Dostosowanie do małych ekranów */
+    word-wrap: break-word; /* Łamanie długich linii tekstu */
+}
+
+@media (max-width: 1300px) {
+    .list {
+        flex-direction: column;
+    }
+}

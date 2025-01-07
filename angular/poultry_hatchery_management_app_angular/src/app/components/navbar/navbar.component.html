@@ -1,0 +1,68 @@
+<div class="sidenav-global-container">
+    <mat-toolbar class="mat-toolbar">
+      <button mat-mini-fab color="primary" (click)="snav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </mat-toolbar>
+  
+    <mat-sidenav-container class="mat-sidenav-container">
+      <mat-sidenav class="mat-sidenav" #snav mode="over" [fixedInViewport]="true">
+        <div class="user-info">
+            <mat-icon class="user-icon" matBadgePosition="above after" matBadgeColor="accent">
+                account_circle
+            </mat-icon>
+            <br>
+            <span id="user-name">{{ userFirstName }} {{ userLastName }}</span>
+            <br>
+            <span id="user-role">{{ userRole }}</span>
+        </div>
+        <mat-nav-list class="mat-nav-list">
+            <a mat-list-item routerLink="/manager">
+                <mat-icon matListItemIcon>manage_accounts</mat-icon>
+                <span>Zarządzaj</span>
+            </a>
+            <a mat-list-item routerLink="./incubators">
+                <mat-icon matListItemIcon>egg</mat-icon>
+                <span>Inkubatory</span>
+            </a>
+            <a mat-list-item routerLink="/deliveries">
+                <mat-icon matListItemIcon>warehouse</mat-icon>
+                <span>Dostawy</span>
+            </a>  
+            <a mat-list-item routerLink="/nesting">
+                <mat-icon matListItemIcon>keyboard_arrow_right</mat-icon>
+                <span>Nakłady</span>
+            </a>  
+            <a mat-list-item routerLink="/tasks">
+                <mat-icon matListItemIcon>task_alt</mat-icon>
+                <span>Zadania</span>
+            </a>  
+            <a mat-list-item routerLink="/candling">
+                <mat-icon matListItemIcon>highlight</mat-icon>
+                <span>Świetlenia</span>
+            </a>  
+            <a mat-list-item routerLink="/hatching">
+                <mat-icon matListItemIcon>keyboard_double_arrow_right</mat-icon>
+                <span>Przekłady</span>
+            </a>
+            <a mat-list-item routerLink="/emergence">
+                <mat-icon matListItemIcon>flag</mat-icon>
+                <span>Wylęgi</span>
+            </a>      
+            <a id="logout" mat-list-item (click)="logout()">
+                <mat-icon id="logout-icon" matListItemIcon>logout</mat-icon>
+                <span>Wyloguj</span>
+            </a>
+        </mat-nav-list>
+      </mat-sidenav>
+  
+      <mat-sidenav-content>
+        <router-outlet></router-outlet>
+      </mat-sidenav-content>
+
+    </mat-sidenav-container>
+</div>
+  
+  
+  
+  

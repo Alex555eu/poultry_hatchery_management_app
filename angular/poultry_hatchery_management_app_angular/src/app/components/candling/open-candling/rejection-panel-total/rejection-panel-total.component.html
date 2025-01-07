@@ -1,0 +1,29 @@
+<div class="bg-container">
+    <div class="dialog-header">
+        <mat-icon>delete_forever</mat-icon>
+        <label>{{ rejectionCause || 'Łącznie' }}</label>
+    </div>
+    <label>podsumowanie świetlenia</label>
+    <div class="main-container">
+        <label>{{ eggsRejected$ | async }}/{{ eggsTotal$ | async }}</label>
+
+        <div class="spinner-cntr">
+            <div class="bg-spinner">
+                <mat-progress-spinner
+                    diameter="30"
+                    class="progress-spinner"
+                    mode="determinate"
+                    [value]="100">
+                </mat-progress-spinner>
+            </div>
+            <div class="fg-spinner">
+                <mat-progress-spinner
+                    diameter="30"
+                    class="progress-spinner second-spinner"
+                    mode="determinate"
+                    [value]="percentage$ | async">
+                </mat-progress-spinner>
+            </div>
+        </div>
+    </div>
+</div>

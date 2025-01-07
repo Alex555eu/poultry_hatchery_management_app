@@ -1,0 +1,61 @@
+.bg-container {
+    width: 100vw;
+    height: 90vh;
+    padding-top: 5vh;
+    padding-bottom: 5vh;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.trolley-container {
+    margin: 0 10px auto 10px;
+    padding: 20px;
+    width: 300px;
+    max-height: 80vh;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+    overflow-y: auto;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.trolley-container.active {
+    background-color: lightgray;
+}
+
+.card-content {
+    border-bottom: 1px solid lightgray;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card-content span {
+    margin: 0 1em 0 1em;
+}
+
+.rejection-container {
+    margin: 0 10px auto 10px;
+    padding: 20px;
+    width: 350px;
+    max-height: 80vh;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+    overflow-y: auto;
+
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    flex-direction: column;
+}

@@ -1,0 +1,64 @@
+<mat-dialog-content>
+    <div class="dialog-bg">
+        <div class="dialog-header">
+            <mat-icon>supervised_user_circle</mat-icon>
+            <label>Dodaj nowego użytkownika</label>
+            <button mat-icon-button (click)="onClose(null)">
+                <mat-icon>exit_to_app</mat-icon>
+            </button>
+        </div>
+        <div class="data-cntr">
+            <ng-template matStepLabel>Dane</ng-template>
+            <form class="data-form-cntr" [formGroup]="dataForm" (ngSubmit)="onSubmit()">
+                <mat-form-field appearance="fill">
+                    <mat-label>Imię</mat-label>
+                    <input matInput id="firstName" formControlName="firstName" type="text" placeholder="Wprowadź swoje imię">
+                    <mat-error *ngIf="dataForm.get('emailAddress')?.invalid && dataForm.get('emailAddress')?.touched">
+                        To pole jest wymagane.
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Nazwisko</mat-label>
+                    <input matInput id="lastName" formControlName="lastName" type="text" placeholder="Wprowadź swoje nazwisko">
+                    <mat-error *ngIf="dataForm.get('emailAddress')?.invalid && dataForm.get('emailAddress')?.touched">
+                        To pole jest wymagane.
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Adres email:</mat-label>
+                    <input matInput formControlName="emailAddress" name="emailAddress" id="emailAddress" type="text">
+                    <mat-error *ngIf="dataForm.get('emailAddress')?.invalid && dataForm.get('emailAddress')?.touched">
+                        To pole jest wymagane.
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Nr. kontaktowy:</mat-label>
+                    <input matInput formControlName="phoneNumber" name="phoneNumber" id="phoneNumber" type="text">
+                    <mat-error *ngIf="dataForm.get('phoneNumber')?.invalid && dataForm.get('phoneNumber')?.touched">
+                        To pole jest wymagane.
+                    </mat-error>
+                </mat-form-field>
+                
+                <mat-form-field>
+                    <mat-label>Hasło:</mat-label>
+                    <input matInput formControlName="password" name="password" id="password" type="password">
+                    <mat-error *ngIf="dataForm.get('password')?.invalid && dataForm.get('password')?.touched">
+                        To pole jest wymagane.
+                    </mat-error>
+                </mat-form-field>
+                
+                <mat-form-field>
+                    <mat-label>Powtórz hasło:</mat-label>
+                    <input matInput formControlName="repeatPassword" name="repeatPassword" id="repeatPassword" type="password">
+                    <mat-error *ngIf="dataForm.get('repeatPassword')?.invalid && dataForm.get('repeatPassword')?.touched">
+                        Hasła są niezgodne
+                    </mat-error>
+                </mat-form-field>
+                
+                  <div class="panel-footer-cntr">
+                    <button color="accent" mat-raised-button type="submit" [disabled]="dataForm.invalid">Zatwierdź</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</mat-dialog-content>

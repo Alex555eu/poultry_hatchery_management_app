@@ -1,0 +1,39 @@
+.bg-container {
+    margin: 0 10px auto 10px;
+    padding: 20px;
+    width: 300px;
+    max-height: 80vh;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.main-container {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.main-container label {
+    font-size: x-large;
+}
+
+.spinner-cntr {
+    position: relative; 
+    display: inline-block;
+
+    transform: scale(2);
+}
+
+.bg-spinner .mat-mdc-progress-spinner { 
+    position: absolute; 
+    top: 0; 
+    left: 0;
+    --mdc-circular-progress-active-indicator-color: rgb(230, 229, 229); 
+}
+
+.fg-spinner .mat-mdc-progress-spinner {
+    --mdc-circular-progress-active-indicator-color: var(--status-color-cancelled); 
+}

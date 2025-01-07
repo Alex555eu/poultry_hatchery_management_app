@@ -1,0 +1,28 @@
+<mat-dialog-content>
+    <div class="dialog-bg">
+        <div class="dialog-header">
+            <mat-icon>select_all</mat-icon>
+            <label>Wózki klujnikowe</label>
+            <button mat-icon-button (click)="onClose()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+        <mat-accordion *ngIf="trolleys && trolleys.length > 0">
+        <mat-expansion-panel *ngFor="let trolley of trolleys">
+            <mat-expansion-panel-header>
+            <mat-panel-title>
+                Wózek: {{ trolley.humanReadableId || 'Brak nazwy wózka' }}
+            </mat-panel-title>
+            </mat-expansion-panel-header>
+    
+            <!-- Szczegóły wózka - przycisk do wywołania funkcji -->
+            <div class="operation-item">
+            <button mat-raised-button color="primary" (click)="addHatchingTrolleyToNesting(trolley)">
+                Dodaj do nakładu
+            </button>
+            </div>
+        </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+  </mat-dialog-content>
+  

@@ -1,0 +1,93 @@
+<div class="bg-container">
+
+    <div class="trolley-container" *ngIf="nestingTrolleys">
+        <div class="dialog-header">
+            <mat-icon>select_all</mat-icon>
+            <label>Wózki lęgowe</label>
+        </div>
+
+        <mat-selection-list [hideSingleSelectionIndicator]="true" [(ngModel)]="selectedNestingTrolley" [multiple]="false">
+            <ng-container *ngFor="let trolley of nestingTrolleys">
+                <mat-list-option 
+                    (click)="selectTrolley(trolleyListOptionContainers)" 
+                    [value]="trolley"
+                >
+                    <div class="card-content" #trolleyListOptionContainers>
+                        <span>{{ trolley.humanReadableId }}</span>
+                        <span>| {{ countNestingTrolleyCapacity(trolley) }}/{{ trolley.maxCapacity }}</span>
+
+                        <span [style]="{'letter-spacing': '1px', 'font-weight': '550', 'color': getTrolleyTaskStatusColor(trolley)}">&#11044;</span>
+
+                        <button mat-icon-button [matMenuTriggerFor]="menu">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu">
+                            <button mat-menu-item (click)="markAsCompleted(trolley)" *ngIf="!taskNestingTrolleyAssignment.get(trolley)?.isTaskCompleted" >
+                                <mat-icon>check_circle_outline</mat-icon>
+                                <span>Oznacz jako zakończone</span>
+                            </button>
+                            <button mat-menu-item (click)="markAsUncompleted(trolley)" *ngIf="taskNestingTrolleyAssignment.get(trolley)?.isTaskCompleted">
+                                <mat-icon>trip_origin</mat-icon>
+                                <span>Oznacz jako niezakończone</span>
+                            </button>
+                            <button mat-menu-item (click)="findTrolleyLocation(trolley)">
+                                <mat-icon>search</mat-icon>
+                                <span>Szukaj wózka</span>
+                            </button>
+                        </mat-menu>
+                    </div>
+                </mat-list-option>
+            </ng-container>
+        </mat-selection-list>
+    </div>
+
+    <div class="trolley-container">
+        <div class="dialog-header">
+            <mat-icon>select_all</mat-icon>
+            <label>Wózki klujnikowe</label>
+            <button mat-icon-button (click)="addHatchingTrolleyToHatching()" [disabled]="!(selectedNestingTrolley && selectedNestingTrolley.length > 0)">
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
+        <mat-selection-list [hideSingleSelectionIndicator]="true" [(ngModel)]="selectedHatchingTrolley" [multiple]="false">
+            <ng-container *ngFor="let data of hatchingTrolleys">
+                <mat-list-option 
+                    (click)="selectHatchingTrolley(data)"
+                    [value]="data"
+                >
+                    <div class="card-trolley-content">
+                        <span>{{ data.humanReadableId }}</span>
+                        <span>| {{ countHatchingTrolleyCapacity(data) }} szt.</span>
+                    </div>
+                </mat-list-option>
+            </ng-container>
+        </mat-selection-list>
+    </div>
+
+    <div class="rejection-container">
+        <div class="dialog-header">
+            <mat-icon>delete_forever</mat-icon>
+            <label>Odrzuty</label>
+        </div>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Wybierz dostawę</mat-label>
+            <mat-select [(value)]="selectedHLD">
+                <mat-option *ngFor="let hld of hatchingLoadedDeliveries" [value]="hld">
+                    {{ hld.delivery.supplier.name }} {{ hld.delivery.supplier.surname }}
+                    <br>
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <ng-container *ngIf="selectedHLD">
+            <app-rejection3-panel 
+                *ngFor="let cause of rejectionCauses;"
+                [hld]="selectedHLD"
+                [rejectionCause]="cause" 
+                (refresh)="updateAfterRejection($event)"
+            >
+        </app-rejection3-panel>
+        </ng-container>
+    </div>
+</div>
