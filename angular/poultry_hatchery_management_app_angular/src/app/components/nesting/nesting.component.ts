@@ -26,6 +26,7 @@ import { Router } from '@angular/router';
 import { NestingLoadedDeliveries } from '../../models/nesting-loaded-deliveries.model';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { NewNestingComponent } from './new-nesting/new-nesting.component';
+import { UnexpectedRejectionComponent } from './unexpected-rejection/unexpected-rejection.component';
 
 @Component({
   selector: 'app-nesting',
@@ -115,13 +116,20 @@ export class NestingComponent implements OnInit {
   }
 
   newNesting() {
-    // add dialog
     const dialogRef = this.dialog.open(NewNestingComponent);
     dialogRef.afterClosed().subscribe(nesting => {
       if (nesting) {
         this.ngOnInit();
       }
     })
+  }
+
+  unexpectedRejection(nesting: Nesting) {
+    let config = new MatDialogConfig();
+    config.data = { 
+      nesting: nesting,
+    }
+    this.dialog.open(UnexpectedRejectionComponent, config);
   }
 
   goToNesting(nesting: Nesting) {
