@@ -25,34 +25,36 @@
                 <mat-icon matListItemIcon>egg</mat-icon>
                 <span>Inkubatory</span>
             </a>
-            <a mat-list-item routerLink="/deliveries">
-                <mat-icon matListItemIcon>warehouse</mat-icon>
-                <span>Dostawy</span>
-            </a>  
-            <a mat-list-item routerLink="/nesting">
-                <mat-icon matListItemIcon>keyboard_arrow_right</mat-icon>
-                <span>Nakłady</span>
-            </a>  
-            <a mat-list-item routerLink="/tasks">
-                <mat-icon matListItemIcon>task_alt</mat-icon>
-                <span>Zadania</span>
-            </a>  
-            <a mat-list-item routerLink="/candling">
-                <mat-icon matListItemIcon>highlight</mat-icon>
-                <span>Świetlenia</span>
-            </a>  
-            <a mat-list-item routerLink="/hatching">
-                <mat-icon matListItemIcon>keyboard_double_arrow_right</mat-icon>
-                <span>Przekłady</span>
-            </a>
-            <a mat-list-item routerLink="/emergence">
-                <mat-icon matListItemIcon>flag</mat-icon>
-                <span>Wylęgi</span>
-            </a>   
-            <a mat-list-item routerLink="/manager">
-                <mat-icon matListItemIcon>manage_accounts</mat-icon>
-                <span>Zarządzaj</span>
-            </a>   
+            <ng-container *ngIf="userRole == 'ADMIN'">
+                <a mat-list-item routerLink="/deliveries">
+                    <mat-icon matListItemIcon>warehouse</mat-icon>
+                    <span>Dostawy</span>
+                </a>  
+                <a mat-list-item routerLink="/nesting">
+                    <mat-icon matListItemIcon>keyboard_arrow_right</mat-icon>
+                    <span>Nakłady</span>
+                </a>  
+                <a mat-list-item routerLink="/tasks">
+                    <mat-icon matListItemIcon>task_alt</mat-icon>
+                    <span>Zadania</span>
+                </a>  
+                <a mat-list-item routerLink="/candling">
+                    <mat-icon matListItemIcon>highlight</mat-icon>
+                    <span>Świetlenia</span>
+                </a>  
+                <a mat-list-item routerLink="/hatching">
+                    <mat-icon matListItemIcon>keyboard_double_arrow_right</mat-icon>
+                    <span>Przekłady</span>
+                </a>
+                <a mat-list-item routerLink="/emergence">
+                    <mat-icon matListItemIcon>flag</mat-icon>
+                    <span>Wylęgi</span>
+                </a>   
+                <a mat-list-item routerLink="/manager">
+                    <mat-icon matListItemIcon>manage_accounts</mat-icon>
+                    <span>Zarządzaj</span>
+                </a>   
+            </ng-container>
             <a id="logout" mat-list-item (click)="logout()">
                 <mat-icon id="logout-icon" matListItemIcon>logout</mat-icon>
                 <span>Wyloguj</span>

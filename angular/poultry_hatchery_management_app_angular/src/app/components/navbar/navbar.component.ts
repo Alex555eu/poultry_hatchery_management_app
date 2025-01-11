@@ -11,6 +11,7 @@ import { UserDetailsService } from '../../services/users/user-details.service';
 import { catchError, Observable, of, tap, throwError } from 'rxjs';
 import { TokenService } from '../../services/token/token.service';
 import { AuthService } from '../../services/authorization/auth.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
@@ -22,7 +23,8 @@ import { AuthService } from '../../services/authorization/auth.service';
     MatButtonModule,
     MatListModule,
     RouterModule,
-    MatCardModule
+    MatCardModule,
+    CommonModule
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
@@ -32,7 +34,6 @@ export class NavbarComponent {
   public userLastName: string = 'Nazwisko';
   public userRole: string = 'Rola';
 
-  //private userDetailsService: UserDetailsService;
 
   public constructor(
     private userDetailsService: UserDetailsService,
