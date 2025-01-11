@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("api/v1/raport")
+@RequestMapping("api/v1/raport/admin")
 public class RaportController {
 
     private final RaportService excelService;
