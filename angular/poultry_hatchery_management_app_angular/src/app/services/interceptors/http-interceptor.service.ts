@@ -48,6 +48,9 @@ export class HttpInterceptorService implements HttpInterceptor {
         if (error.status === 401) { // Unauthorized
           return this.handleRefreshToken(req, next);
         }
+        if (error.status === 403) {
+          return this.handleForbidden();
+        }
         return throwError(() => error);
       })
     );
@@ -123,6 +126,10 @@ export class HttpInterceptorService implements HttpInterceptor {
     );
   }
   
+  private handleForbidden(): Observable<HttpEvent<any>> {
+    this.router.navigate(['forbidden']);
+    return of();
+  }
 
 }
 
