@@ -38,6 +38,9 @@ public class CandlingService {
     private final RejectionService rejectionService;
     private final NestingLoadedDeliveriesService nestingLoadedDeliveriesService;
 
+    public Optional<Candling> getCandlingByTaskId(UUID taskId) {
+        return this.candlingRepository.findByTaskId(taskId);
+    }
     public List<Candling> getAllCandlings() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if ((authentication != null && authentication.getPrincipal() instanceof UserDetails)) {

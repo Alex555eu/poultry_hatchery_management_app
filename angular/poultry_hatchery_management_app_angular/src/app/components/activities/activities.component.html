@@ -1,1 +1,14 @@
-<p>activities works!</p>
+<div class="bg-container">
+    <app-tasks-section [isToggleable]="false" [tasks]="candlingTasks" [title]="'Świetlenia'"
+    (selectTaskEvent)="selectedCandlingTask($event)"
+    ></app-tasks-section>
+
+    <app-tasks-section [isToggleable]="false" [tasks]="hatchingTasks" [title]="'Przekłady'"
+    (selectTaskEvent)="selectedHathchingTask($event)"
+    ></app-tasks-section>
+
+    <app-tasks-section [isToggleable]="false" [tasks]="emergenceTasks" [title]="'Wylęgi'"
+    (selectTaskEvent)="selectedEmergenceTask($event)"
+    ></app-tasks-section>
+    
+</div>

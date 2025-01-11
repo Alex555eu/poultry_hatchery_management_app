@@ -57,7 +57,8 @@ public class SecurityConfig {
                 )
                 .exceptionHandling(eh ->
                         eh.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-                                .accessDeniedHandler(customAccessDeniedHandler()))
+                                .accessDeniedHandler(customAccessDeniedHandler())
+                )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
