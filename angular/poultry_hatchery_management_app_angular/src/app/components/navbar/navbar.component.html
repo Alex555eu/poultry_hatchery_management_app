@@ -17,9 +17,9 @@
             <span id="user-role">{{ userRole }}</span>
         </div>
         <mat-nav-list class="mat-nav-list">
-            <a mat-list-item routerLink="/manager">
-                <mat-icon matListItemIcon>manage_accounts</mat-icon>
-                <span>Zarządzaj</span>
+            <a mat-list-item routerLink="/activities">
+                <mat-icon matListItemIcon>task</mat-icon>
+                <span>Aktywności</span>
             </a>
             <a mat-list-item routerLink="./incubators">
                 <mat-icon matListItemIcon>egg</mat-icon>
@@ -48,7 +48,11 @@
             <a mat-list-item routerLink="/emergence">
                 <mat-icon matListItemIcon>flag</mat-icon>
                 <span>Wylęgi</span>
-            </a>      
+            </a>   
+            <a mat-list-item routerLink="/manager">
+                <mat-icon matListItemIcon>manage_accounts</mat-icon>
+                <span>Zarządzaj</span>
+            </a>   
             <a id="logout" mat-list-item (click)="logout()">
                 <mat-icon id="logout-icon" matListItemIcon>logout</mat-icon>
                 <span>Wyloguj</span>
