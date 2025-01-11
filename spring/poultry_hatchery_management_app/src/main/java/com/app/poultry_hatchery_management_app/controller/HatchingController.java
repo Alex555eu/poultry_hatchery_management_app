@@ -2,10 +2,7 @@ package com.app.poultry_hatchery_management_app.controller;
 
 
 import com.app.poultry_hatchery_management_app.dto.*;
-import com.app.poultry_hatchery_management_app.model.Emergence;
-import com.app.poultry_hatchery_management_app.model.Hatching;
-import com.app.poultry_hatchery_management_app.model.HatchingLoadedDeliveries;
-import com.app.poultry_hatchery_management_app.model.HatchingResult;
+import com.app.poultry_hatchery_management_app.model.*;
 import com.app.poultry_hatchery_management_app.service.EmergenceService;
 import com.app.poultry_hatchery_management_app.service.HatchingService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -27,6 +24,18 @@ public class HatchingController {
     private final ObjectMapper objectMapper;
     private final HatchingService hatchingService;
     private final EmergenceService emergenceService;
+
+    @GetMapping("/by-task")
+    public ResponseEntity<String> getHatchingByTaskId(@RequestParam UUID taskId) throws JsonProcessingException {
+        Optional<Hatching> hatching = hatchingService.getHatchingByTaskId(taskId);
+        if (hatching.isPresent()) {
+            String response = objectMapper.writeValueAsString(hatching.get());
+            return ResponseEntity.ok(response);
+
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     @GetMapping("")
     public ResponseEntity<String> getHatchingByNestingId(@RequestParam UUID nestingId) throws JsonProcessingException {
@@ -142,6 +151,17 @@ public class HatchingController {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    @GetMapping("/emergence/by-task")
+    public ResponseEntity<String> getEmergenceByTaskId(@RequestParam UUID taskId) throws JsonProcessingException {
+        Optional<Emergence> emergence = emergenceService.getEmergenceByTaskId(taskId);
+        if (emergence.isPresent()) {
+            String response = objectMapper.writeValueAsString(emergence.get());
+            return ResponseEntity.ok(response);
+
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     @GetMapping("/emergence")
     public ResponseEntity<String> getAllEmergences() throws JsonProcessingException {

@@ -40,6 +40,7 @@ export namespace ApiPaths {
     }
 
     export enum HatchingPaths {
+        GET_HATCHING_BY_TASK_ID = '/api/v1/hatching/by-task?taskId=',
         GET_ALL_HATCHINGS = '/api/v1/hatching/all',
         GET_HATCHING_BY_ID = '/api/v1/hatching/by-id?hatchingId=',
         POST_HATCHING = '/api/v1/hatching',
@@ -50,6 +51,7 @@ export namespace ApiPaths {
         GET_ALL_HATCHING_RESULTS = '/api/v1/hatching/result?hatchingId=',
 
         GET_ALL_EMERGENCES = '/api/v1/hatching/emergence',
+        GET_EMERGENCE_BY_TASK_ID = '/api/v1/hatching/emergence/by-task?taskId=',
         GET_EMERGENCE_BY_ID = '/api/v1/hatching/emergence/by-id?emergenceId=',
         POST_EMERGENCE = '/api/v1/hatching/emergence',
     }
@@ -136,6 +138,7 @@ export namespace ApiPaths {
     }
 
     export enum CandlingPaths {
+        GET_CANDLING_BY_TASK_ID = '/api/v1/candling/by-task?taskId=',
         GET_ALL_CANDLINGS = '/api/v1/candling/all',
         GET_CANDLING_BY_ID = '/api/v1/candling?candlingId=',
         POST_CANDLING = '/api/v1/candling',

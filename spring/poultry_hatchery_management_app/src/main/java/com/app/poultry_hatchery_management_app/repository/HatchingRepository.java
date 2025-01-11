@@ -13,6 +13,7 @@ import java.util.UUID;
 @Repository
 public interface HatchingRepository extends JpaRepository<Hatching, UUID> {
 
+    Optional<Hatching> findByTaskId(UUID taskId);
     Optional<Hatching> findByNestingId(UUID id);
 
     @Query(value = """

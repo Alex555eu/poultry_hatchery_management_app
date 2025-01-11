@@ -17,6 +17,14 @@ export class HatchingService {
     private http: HttpClient
   ) { }
 
+  getHatchingByTaskId(taskId: string): Observable<Hatching|null> {
+    return this.http.get<Hatching>(`${apiUrl + ApiPaths.HatchingPaths.GET_HATCHING_BY_TASK_ID + taskId}`).pipe(
+      catchError(error => {
+        console.error(error);
+        return of(null);
+      })
+    );
+  }
 
   getAllHatchings(): Observable<Hatching[]> {
     return this.http.get<Hatching[]>(`${apiUrl + ApiPaths.HatchingPaths.GET_ALL_HATCHINGS}`).pipe(

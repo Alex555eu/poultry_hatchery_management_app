@@ -24,6 +24,18 @@ public class CandlingController {
     private final ObjectMapper objectMapper;
     private final CandlingService candlingService;
 
+    @GetMapping("/by-task")
+    public ResponseEntity<String> getCandlingByTaskId(@RequestParam UUID taskId) throws JsonProcessingException {
+        Optional<Candling> candling = candlingService.getCandlingByTaskId(taskId);
+        if (candling.isPresent()) {
+            String response = objectMapper.writeValueAsString(candling.get());
+            return ResponseEntity.ok(response);
+
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping("/all")
     public ResponseEntity<String> getAllCandlings() throws JsonProcessingException {
         List<Candling> candlingList = candlingService.getAllCandlings();
