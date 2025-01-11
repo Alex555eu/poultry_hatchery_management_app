@@ -1,0 +1,70 @@
+.bg-container {
+    width: 100vw;
+    height: 95vh;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-top: 5vh;
+    
+}
+
+
+.error-box {
+    font-family: 'Roboto', sans-serif;
+    margin: 0 10px auto 10px;
+    padding: 20px;
+    width: 900px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    gap: 1em;
+}
+
+
+.error-icon {
+    font-size: 80px;
+    color: var(--status-color-cancelled);
+    margin-bottom: 20px;
+}
+
+/* Kod błędu */
+.error-code {
+    font-size: 80px;
+    color: var(--status-color-cancelled);
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Wiadomość o błędzie */
+.error-message {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+/* Przycisk powrotu */
+.back-button {
+    background-color: #6200ea;
+    color: #fff;
+    padding: 12px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+    background-color: #3700b3;
+}
+
+.back-button:focus {
+    outline: none;
+}

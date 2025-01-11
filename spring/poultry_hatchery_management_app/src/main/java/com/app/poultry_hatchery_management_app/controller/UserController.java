@@ -16,14 +16,14 @@ import java.util.Optional;
 import java.util.UUID;
 
 @AllArgsConstructor
-@RequestMapping("/api/v1/user/")
+@RequestMapping("/api/v1/user")
 @RestController
 public class UserController {
 
     private final UserService userService;
     private final ObjectMapper objectMapper;
 
-    @GetMapping(value = "/")
+    @GetMapping(value = "")
     public ResponseEntity<String> getUserSelf() throws JsonProcessingException {
         User user = userService.getSelf();
         if (user != null) {

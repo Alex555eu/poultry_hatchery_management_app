@@ -49,7 +49,7 @@ public class HatchingIncubatorController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/")
+    @PostMapping("/admin")
     public ResponseEntity<String> postHatchingIncubator(@RequestBody PostHatchingIncubatorRequest request) {
         Optional<HatchingIncubator> incubator = hatchingIncubatorService.postHatchingIncubator(request);
         if (incubator.isPresent()) {
@@ -58,7 +58,7 @@ public class HatchingIncubatorController {
         return ResponseEntity.notFound().build();
     }
 
-    @PutMapping("/")
+    @PutMapping("/admin")
     public ResponseEntity<String> putHatchingIncubator(@RequestBody PutHatchingIncubatorRequest request) {
         Optional<HatchingIncubator> incubator = hatchingIncubatorService.putHatchingIncubator(request);
         if (incubator.isPresent()) {
@@ -67,7 +67,7 @@ public class HatchingIncubatorController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping("/admin")
     public ResponseEntity<String> deleteHatchingIncubator(@RequestParam UUID hatchingIncubatorId) {
         hatchingIncubatorService.deleteHatchingIncubator(hatchingIncubatorId);
         return ResponseEntity.ok().build();
@@ -84,7 +84,7 @@ public class HatchingIncubatorController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/space")
+    @PostMapping("/admin/space")
     public ResponseEntity<String> postHatchingIncubatorSpace(@RequestBody PostHatchingIncubatorSpaceRequest request) {
         Optional<HatchingIncubatorSpace> incubator = hatchingIncubatorService.postHatchingIncubatorSpace(request);
         if (incubator.isPresent()) {
@@ -93,7 +93,7 @@ public class HatchingIncubatorController {
         return ResponseEntity.notFound().build();
     }
 
-    @PutMapping("/space")
+    @PutMapping("/admin/space")
     public ResponseEntity<String> putHatchingIncubatorSpace(@RequestBody PutHatchingIncubatorSpaceRequest request) {
         Optional<HatchingIncubatorSpace> incubator = hatchingIncubatorService.putHatchingIncubatorSpace(request);
         if (incubator.isPresent()) {
@@ -102,7 +102,7 @@ public class HatchingIncubatorController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/space")
+    @DeleteMapping("/admin/space")
     public ResponseEntity<String> deleteHatchingIncubatorSpace(@RequestParam UUID hatchingIncubatorSpaceId) {
         hatchingIncubatorService.deleteHatchingIncubatorSpace(hatchingIncubatorSpaceId);
         return ResponseEntity.ok().build();

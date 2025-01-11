@@ -42,7 +42,7 @@ public class NestingLoadedDeliveriesController {
         return ResponseEntity.ok(body);
     }
 
-    @PostMapping("")
+    @PostMapping("/admin")
     public ResponseEntity<String> postNestingLoadedDelivery(@RequestBody PostNestingLoadedDeliveryRequest request) throws JsonProcessingException {
         Optional<NestingLoadedDeliveries> nld = nestingLoadedDeliveriesService.postNestingLoadedDelivery(request);
         if (nld.isPresent()) {
@@ -52,7 +52,7 @@ public class NestingLoadedDeliveriesController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("")
+    @DeleteMapping("/admin")
     public ResponseEntity<String> deleteNestingLoadedDelivery(@RequestParam UUID nestingLoadedDeliveryId) {
         nestingLoadedDeliveriesService.deleteNestingLoadedDelivery(nestingLoadedDeliveryId);
         return ResponseEntity.ok().build();

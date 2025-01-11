@@ -26,7 +26,7 @@ public class TaskController {
     private final ObjectMapper objectMapper;
     private final TaskService taskService;
 
-    @GetMapping("/all")
+    @GetMapping("/admin/all")
     public ResponseEntity<String> getAllTasks() throws JsonProcessingException {
         List<Task> tasks = taskService.getAllTasks();
         if (tasks.isEmpty()) {
@@ -86,7 +86,7 @@ public class TaskController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("")
+    @PostMapping("/admin")
     public ResponseEntity<String> postTask(@RequestBody PostTaskRequest request) throws JsonProcessingException {
         Optional<Task> tasks = taskService.postTask(request);
         if (tasks.isPresent()) {
@@ -96,7 +96,7 @@ public class TaskController {
         return ResponseEntity.notFound().build();
     }
 
-    @PutMapping("")
+    @PutMapping("/trolley-progress")
     public ResponseEntity<String> putTask(@RequestBody PutTaskRequest request) throws JsonProcessingException {
         Optional<Task> tasks = taskService.putTask(request);
         if (tasks.isPresent()) {
@@ -106,7 +106,7 @@ public class TaskController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("")
+    @DeleteMapping("/admin")
     public ResponseEntity<String> deleteTask(@RequestParam UUID scheduledTaskId) {
         taskService.deleteTask(scheduledTaskId);
         return ResponseEntity.ok().build();
