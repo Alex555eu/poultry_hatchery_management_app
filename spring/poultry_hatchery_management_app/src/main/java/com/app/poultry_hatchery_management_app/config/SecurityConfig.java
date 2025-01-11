@@ -13,6 +13,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
@@ -49,11 +51,13 @@ public class SecurityConfig {
                                         )
                                 .permitAll()
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("**/admin/**")).hasAnyAuthority(Role.ADMIN.name())
+                                .requestMatchers(new AntPathRequestMatcher("/api/v1/**/admin/**")).hasAuthority(Role.ADMIN.name())
                                 .anyRequest()
                                 .authenticated()
                 )
-                .exceptionHandling(eh -> eh.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+                .exceptionHandling(eh ->
+                        eh.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+                                .accessDeniedHandler(customAccessDeniedHandler()))
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
@@ -79,5 +83,9 @@ public class SecurityConfig {
         return source;
     }
 
+    @Bean
+    AccessDeniedHandler customAccessDeniedHandler() {
+        return (request, response, accessDeniedException) -> response.setStatus(HttpStatus.FORBIDDEN.value());
+    }
 
 }
