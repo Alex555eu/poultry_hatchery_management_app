@@ -1,26 +1,24 @@
 <div class="bg-container">
 
     <div class="admin-info">
-        <div class="admin-info-header">
+        <div class="dialog-header">
+            <mat-icon>account_circle</mat-icon>
             <div class="admin-details">
-                <mat-icon>account_circle</mat-icon>
                 <label id="admin-name">{{ adminFirstName }} {{ adminLastName }}</label>
                 <label id="admin-role">| {{ adminRole }}</label>
             </div>
+            <button mat-icon-button color="none" (click)="editOrganisationDetails()">
+                <mat-icon>edit</mat-icon>
+            </button>
         </div>
         <div class="admin-organisation">
-            <span>Email:</span>
-            <label>{{ adminEmail }}</label>
-            <span>Organizacja:</span>
+            <span>Organizacja</span>
             <label>{{ adminOrganisationName }}</label> 
-            <span>Regon:</span>
+            <span>Regon</span>
             <label>{{ adminOrganisationRegon }}</label> 
-            <span>Adres:</span>
+            <span>Adres</span>
             <label [innerHTML]="adminOrganisationAddress"></label> 
         </div>
-        <button class="admin-update" mat-mini-fab color="primary">
-            <mat-icon>update</mat-icon>
-        </button>
     </div>
 
     <div class="users-info">

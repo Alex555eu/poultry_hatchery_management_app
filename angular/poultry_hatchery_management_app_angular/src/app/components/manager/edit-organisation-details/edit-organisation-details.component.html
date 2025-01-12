@@ -1,0 +1,40 @@
+<mat-dialog-content>
+<div class="dialog-bg">
+    <div class="container" *ngIf="orgDetails">
+        <h2>Edytuj dane</h2>
+    
+        <mat-form-field appearance="fill">
+        <mat-label>Nazwa</mat-label>
+        <input matInput [(ngModel)]="orgDetails.name" />
+        </mat-form-field>
+    
+        <mat-form-field appearance="fill">
+        <mat-label>Regon</mat-label>
+        <input matInput [(ngModel)]="orgDetails.regon" />
+        </mat-form-field>
+    
+        <h3>Adres</h3>
+        <mat-form-field appearance="fill">
+        <mat-label>Ulica</mat-label>
+        <input matInput [(ngModel)]="orgDetails.address.street" />
+        </mat-form-field>
+    
+        <mat-form-field appearance="fill">
+        <mat-label>Miasto</mat-label>
+        <input matInput [(ngModel)]="orgDetails.address.city" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+        <mat-label>Nr. budynku</mat-label>
+        <input matInput [(ngModel)]="orgDetails.address.number" />
+        </mat-form-field>
+    
+        <mat-form-field appearance="fill">
+        <mat-label>Kod pocztowy</mat-label>
+        <input matInput [(ngModel)]="orgDetails.address.postalCode" />
+        </mat-form-field>
+    
+        <button mat-raised-button color="primary" (click)="saveData()">Zapisz</button>
+    </div>
+</div>
+</mat-dialog-content>

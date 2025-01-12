@@ -8,6 +8,7 @@ import { OrganisationDetails } from '../../models/organisation-details.model';
 import { catchError, map, Observable, of, shareReplay } from 'rxjs';
 import { ApiPaths } from '../../api/api.paths';
 import { RegisterSubUserRequest } from '../../dto/register-sub-user-request';
+import { PutOrganistionDetailsRequest } from '../../dto/put-organisation-details-request';
 
 
 @Injectable({
@@ -49,6 +50,14 @@ export class UserDetailsService {
 
   public postSubUser(body: RegisterSubUserRequest): Observable<any> {
     return this.http.post<any>(`${apiUrl}${ApiPaths.UserDataPaths.POST_USER}`, body);
+  }
+
+  public putOrganisationDetails(body: PutOrganistionDetailsRequest): Observable<OrganisationDetails> {
+    return this.http.put<OrganisationDetails>(`${apiUrl + ApiPaths.UserDataPaths.PUT_ORGANISATION }`, body).pipe(
+      catchError(error => {
+        return of();
+      })
+    );
   }
 
 }

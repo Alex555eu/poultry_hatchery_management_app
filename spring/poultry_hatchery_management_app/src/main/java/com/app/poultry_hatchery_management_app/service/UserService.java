@@ -1,19 +1,24 @@
 package com.app.poultry_hatchery_management_app.service;
 
 import com.app.poultry_hatchery_management_app.dto.PostUserRequest;
+import com.app.poultry_hatchery_management_app.dto.PutOrganisationDetailsRequest;
 import com.app.poultry_hatchery_management_app.dto.PutUserRequest;
+import com.app.poultry_hatchery_management_app.model.Address;
 import com.app.poultry_hatchery_management_app.model.Organisation;
 import com.app.poultry_hatchery_management_app.model.Role;
 import com.app.poultry_hatchery_management_app.model.User;
+import com.app.poultry_hatchery_management_app.repository.AddressRepository;
 import com.app.poultry_hatchery_management_app.repository.OrganisationRepository;
 import com.app.poultry_hatchery_management_app.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.apache.commons.math3.analysis.function.Add;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +31,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final OrganisationRepository organisationRepository;
+    private final AddressRepository addressRepository;
     private final PasswordEncoder passwordEncoder;
 
     public User getSelf() {
@@ -61,6 +67,30 @@ public class UserService {
             userRepository.save(newUser);
             return Optional.of(newUser);
         }
+        return Optional.empty();
+    }
+
+    @Transactional
+    public Optional<Organisation> putOrganisation(PutOrganisationDetailsRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if ((authentication != null && authentication.getPrincipal() instanceof UserDetails)) {
+            User user = (User) authentication.getPrincipal();
+            Organisation organisation = user.getOrganisation();
+            Address address = organisation.getAddress();
+
+            address.setCity(request.city());
+            address.setNumber(request.number());
+            address.setStreet(request.street());
+            address.setPostalCode(request.postalCode());
+
+            organisation.setName(request.name());
+
+            addressRepository.save(address);
+            organisationRepository.save(organisation);
+
+            return Optional.of(organisation);
+        }
+
         return Optional.empty();
     }
 

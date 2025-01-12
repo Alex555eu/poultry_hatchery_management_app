@@ -26,6 +26,8 @@ import { NewNestingIncubatorComponent } from './new-nesting-incubator/new-nestin
 import { NewHatchingIncubatorComponent } from './new-hatching-incubator/new-hatching-incubator.component';
 import { NewHatchingTrolleyComponent } from './new-hatching-trolley/new-hatching-trolley.component';
 import { MatSelectModule } from '@angular/material/select';
+import { OrganisationDetails } from '../../models/organisation-details.model';
+import { EditOrganisationDetailsComponent } from './edit-organisation-details/edit-organisation-details.component';
 
 @Component({
   selector: 'app-manager',
@@ -56,6 +58,8 @@ export class ManagerComponent {
   public adminOrganisationName: string = "Organizacja";
   public adminOrganisationRegon: string = "";
   public adminOrganisationAddress: string = "";
+
+  private organisationDetails: OrganisationDetails | null = null;
 
   public userDetailsAll: UserDetails[] | null = null;
   public filteredUserDetailsAll: UserDetails[] | null = null;
@@ -93,6 +97,7 @@ export class ManagerComponent {
                                         ${adminDetails.organisation.address.city}<br>
                                         ul. ${adminDetails.organisation.address.street} 
                                         ${adminDetails.organisation.address.number}`; 
+        this.organisationDetails = adminDetails.organisation;
       }
     });
     let userDetailsAll$ = this.userDetailsService.getUserDetailsAll();
@@ -131,6 +136,19 @@ export class ManagerComponent {
         return userDetails;
       });
     }
+  }
+
+  editOrganisationDetails() {
+    let config = new MatDialogConfig();
+    config.data = {
+      organisationDetails: this.organisationDetails
+    }
+    const ref = this.dialog.open(EditOrganisationDetailsComponent, config);
+    ref.afterClosed().subscribe(response => {
+      if (response) {
+        this.ngOnInit();
+      }
+    })
   }
 
   onCategoryChange(category: string) {
