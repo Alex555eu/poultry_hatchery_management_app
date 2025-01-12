@@ -1,9 +1,6 @@
 package com.app.poultry_hatchery_management_app.service;
 
-import com.app.poultry_hatchery_management_app.dto.PatchEmployeeRequest;
-import com.app.poultry_hatchery_management_app.dto.PostUserRequest;
-import com.app.poultry_hatchery_management_app.dto.PutOrganisationDetailsRequest;
-import com.app.poultry_hatchery_management_app.dto.PutUserRequest;
+import com.app.poultry_hatchery_management_app.dto.*;
 import com.app.poultry_hatchery_management_app.model.Address;
 import com.app.poultry_hatchery_management_app.model.Organisation;
 import com.app.poultry_hatchery_management_app.model.Role;
@@ -14,6 +11,8 @@ import com.app.poultry_hatchery_management_app.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.apache.commons.math3.analysis.function.Add;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,6 +33,8 @@ public class UserService {
     private final OrganisationRepository organisationRepository;
     private final AddressRepository addressRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private final AuthenticationManager authenticationManager;
 
     public User getSelf() {
         return getUserFromSecurityContext();
@@ -67,6 +68,27 @@ public class UserService {
                     .build();
             userRepository.save(newUser);
             return Optional.of(newUser);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<User> postNewPassword(PostNewPasswordRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if ((authentication != null && authentication.getPrincipal() instanceof UserDetails)) {
+            User user = (User) authentication.getPrincipal();
+
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            user.getEmailAddress(),
+                            request.oldPassword()
+                    )
+            );
+
+            user.setPassword(passwordEncoder.encode(request.newPassword()));
+
+            userRepository.save(user);
+
+            return Optional.of(user);
         }
         return Optional.empty();
     }

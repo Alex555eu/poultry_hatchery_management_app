@@ -1,9 +1,6 @@
 package com.app.poultry_hatchery_management_app.controller;
 
-import com.app.poultry_hatchery_management_app.dto.PatchEmployeeRequest;
-import com.app.poultry_hatchery_management_app.dto.PostUserRequest;
-import com.app.poultry_hatchery_management_app.dto.PutOrganisationDetailsRequest;
-import com.app.poultry_hatchery_management_app.dto.PutUserRequest;
+import com.app.poultry_hatchery_management_app.dto.*;
 import com.app.poultry_hatchery_management_app.model.Organisation;
 import com.app.poultry_hatchery_management_app.model.User;
 import com.app.poultry_hatchery_management_app.service.UserService;
@@ -52,6 +49,16 @@ public class UserController {
         Optional<User> user = userService.postUser(request);
         if (user.isPresent()) {
             return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    @PostMapping(value = "/password")
+    public ResponseEntity<String> postNewPassword(@RequestBody PostNewPasswordRequest request) throws JsonProcessingException {
+        Optional<User> user = userService.postNewPassword(request);
+        if (user.isPresent()) {
+            String body = objectMapper.writeValueAsString(user.get());
+            return ResponseEntity.ok(body);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }

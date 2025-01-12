@@ -69,6 +69,14 @@ export class UserDetailsService {
     );
   }
 
+  public postNewPassword(body: {oldPassword: string, newPassword: string}): Observable<UserDetails> {
+    return this.http.post<UserDetails>(`${apiUrl + ApiPaths.UserDataPaths.POST_NEW_PASSWORD}`, body).pipe(
+      catchError(error => {
+        return of();
+      })
+    );
+  }
+
   public putOrganisationDetails(body: PutOrganistionDetailsRequest): Observable<OrganisationDetails> {
     return this.http.put<OrganisationDetails>(`${apiUrl + ApiPaths.UserDataPaths.PUT_ORGANISATION }`, body).pipe(
       catchError(error => {

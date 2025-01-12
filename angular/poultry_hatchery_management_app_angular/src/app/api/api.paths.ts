@@ -15,6 +15,8 @@ export namespace ApiPaths {
         PUT_USER = '/api/v1/user',
         PATCH_USER = '/api/v1/user/admin',
 
+        POST_NEW_PASSWORD = '/api/v1/user/password',
+
         PUT_ORGANISATION = '/api/v1/user/admin/organisation'
     }
 

@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { UserDetails } from '../../../models/user-details.model';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { UserDetailsService } from '../../../services/users/user-details.service';
+import { EditUserPasswordComponent } from './edit-user-password/edit-user-password.component';
 
 @Component({
   selector: 'app-edit-user-details',
@@ -32,7 +33,8 @@ export class EditUserDetailsComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) private data: {
       userDetails: UserDetails
     },
-    private userDetailsService: UserDetailsService
+    private userDetailsService: UserDetailsService,
+    private dialog: MatDialog
   ){}
 
 ngOnInit(): void {
@@ -57,7 +59,12 @@ saveData() {
 }
 
 changePassword() {
-  // open new dialog
+  const ref = this.dialog.open(EditUserPasswordComponent);
+  ref.afterClosed().subscribe(response => {
+    if (response) {
+      this.ngOnInit();
+    }
+  })
 }
 
 }
