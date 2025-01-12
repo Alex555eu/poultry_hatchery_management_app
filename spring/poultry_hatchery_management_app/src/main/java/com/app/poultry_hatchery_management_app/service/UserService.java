@@ -1,19 +1,24 @@
 package com.app.poultry_hatchery_management_app.service;
 
-import com.app.poultry_hatchery_management_app.dto.PostUserRequest;
-import com.app.poultry_hatchery_management_app.dto.PutUserRequest;
+import com.app.poultry_hatchery_management_app.dto.*;
+import com.app.poultry_hatchery_management_app.model.Address;
 import com.app.poultry_hatchery_management_app.model.Organisation;
 import com.app.poultry_hatchery_management_app.model.Role;
 import com.app.poultry_hatchery_management_app.model.User;
+import com.app.poultry_hatchery_management_app.repository.AddressRepository;
 import com.app.poultry_hatchery_management_app.repository.OrganisationRepository;
 import com.app.poultry_hatchery_management_app.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.apache.commons.math3.analysis.function.Add;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +31,10 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final OrganisationRepository organisationRepository;
+    private final AddressRepository addressRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private final AuthenticationManager authenticationManager;
 
     public User getSelf() {
         return getUserFromSecurityContext();
@@ -64,6 +72,51 @@ public class UserService {
         return Optional.empty();
     }
 
+    public Optional<User> postNewPassword(PostNewPasswordRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if ((authentication != null && authentication.getPrincipal() instanceof UserDetails)) {
+            User user = (User) authentication.getPrincipal();
+
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            user.getEmailAddress(),
+                            request.oldPassword()
+                    )
+            );
+
+            user.setPassword(passwordEncoder.encode(request.newPassword()));
+
+            userRepository.save(user);
+
+            return Optional.of(user);
+        }
+        return Optional.empty();
+    }
+
+    @Transactional
+    public Optional<Organisation> putOrganisation(PutOrganisationDetailsRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if ((authentication != null && authentication.getPrincipal() instanceof UserDetails)) {
+            User user = (User) authentication.getPrincipal();
+            Organisation organisation = user.getOrganisation();
+            Address address = organisation.getAddress();
+
+            address.setCity(request.city());
+            address.setNumber(request.number());
+            address.setStreet(request.street());
+            address.setPostalCode(request.postalCode());
+
+            organisation.setName(request.name());
+
+            addressRepository.save(address);
+            organisationRepository.save(organisation);
+
+            return Optional.of(organisation);
+        }
+
+        return Optional.empty();
+    }
+
     public Optional<User> putUser(PutUserRequest request) {
         Optional<User> user = userRepository.findById(request.userId());
         if (user.isPresent()) {
@@ -76,14 +129,16 @@ public class UserService {
         return Optional.empty();
     }
 
-    public Optional<User> deleteUser(UUID id) {
+    public Optional<User> patchUser(PatchEmployeeRequest request) {
         User user = getUserFromSecurityContext();
-        if (user != null && user.getId() != id) {
-            Optional<User> userToBeDeleted = userRepository.findById(id);
-            if (userToBeDeleted.isPresent()) {
-                userToBeDeleted.get().setIsEnabled(false);
-                userRepository.save(userToBeDeleted.get());
-                return userToBeDeleted;
+        if (user != null && user.getId() != request.userId()) {
+            Optional<User> userToBePatchedOpt = userRepository.findById(request.userId());
+            if (userToBePatchedOpt.isPresent()) {
+                User userToBePatched = userToBePatchedOpt.get();
+                userToBePatched.setIsEnabled(request.isEnabled());
+                userRepository.save(userToBePatched);
+
+                return Optional.of(userToBePatched);
             }
         }
         return Optional.empty();

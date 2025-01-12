@@ -11,6 +11,11 @@
             <mat-icon class="user-icon" matBadgePosition="above after" matBadgeColor="accent">
                 account_circle
             </mat-icon>
+            <div class="full-width-button">
+                <button mat-icon-button (click)="editPersonalInfo()">
+                    <mat-icon>edit</mat-icon>
+                </button>
+            </div>
             <br>
             <span id="user-name">{{ userFirstName }} {{ userLastName }}</span>
             <br>

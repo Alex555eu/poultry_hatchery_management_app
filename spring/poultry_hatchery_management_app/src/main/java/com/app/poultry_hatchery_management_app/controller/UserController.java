@@ -1,7 +1,7 @@
 package com.app.poultry_hatchery_management_app.controller;
 
-import com.app.poultry_hatchery_management_app.dto.PostUserRequest;
-import com.app.poultry_hatchery_management_app.dto.PutUserRequest;
+import com.app.poultry_hatchery_management_app.dto.*;
+import com.app.poultry_hatchery_management_app.model.Organisation;
 import com.app.poultry_hatchery_management_app.model.User;
 import com.app.poultry_hatchery_management_app.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -53,22 +53,44 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @PutMapping(value = "/admin")
-    public ResponseEntity<String> putUser(@RequestBody PutUserRequest request) {
-        Optional<User> user = userService.putUser(request);
+    @PostMapping(value = "/password")
+    public ResponseEntity<String> postNewPassword(@RequestBody PostNewPasswordRequest request) throws JsonProcessingException {
+        Optional<User> user = userService.postNewPassword(request);
         if (user.isPresent()) {
-            return ResponseEntity.ok().build();
+            String body = objectMapper.writeValueAsString(user.get());
+            return ResponseEntity.ok(body);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @DeleteMapping(value = "/admin")
-    public ResponseEntity<String> deleteUser(@RequestParam UUID userId) {
-        Optional<User> user = userService.deleteUser(userId);
+    @PutMapping(value = "")
+    public ResponseEntity<String> putUser(@RequestBody PutUserRequest request) throws JsonProcessingException {
+        Optional<User> user = userService.putUser(request);
         if (user.isPresent()) {
-            return ResponseEntity.ok().build();
+            String body = objectMapper.writeValueAsString(user.get());
+            return ResponseEntity.ok(body);
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    @PatchMapping(value = "/admin")
+    public ResponseEntity<String> patchUser(@RequestBody PatchEmployeeRequest request) throws JsonProcessingException {
+        Optional<User> user = userService.patchUser(request);
+        if (user.isPresent()) {
+            String body = objectMapper.writeValueAsString(user.get());
+            return ResponseEntity.ok(body);
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @PutMapping(value = "/admin/organisation")
+    public ResponseEntity<String> putUser(@RequestBody PutOrganisationDetailsRequest request) throws JsonProcessingException {
+        Optional<Organisation> org = userService.putOrganisation(request);
+        if (org.isPresent()) {
+            String body = objectMapper.writeValueAsString(org.get());
+            return ResponseEntity.ok(body);
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
 }
