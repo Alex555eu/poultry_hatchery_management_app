@@ -9,7 +9,7 @@ import { NestingIncubatorService } from '../../../../services/nesting-incubator/
 import { TasksService } from '../../../../services/tasks/tasks.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NestingTrolleyService } from '../../../../services/nesting-trolley/nesting-trolley.service';
-import { BehaviorSubject, catchError, from, mergeMap, Observable, of, startWith, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, catchError, from, map, mergeMap, Observable, of, startWith, switchMap, tap } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioGroup, MatRadioModule } from '@angular/material/radio';
 import { MatIconModule } from '@angular/material/icon';
@@ -19,6 +19,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PutTaskRequest } from '../../../../dto/put-task-request';
 import { CustomDateFormatterPipe } from '../../../../utils/date-format/custom-date-formatter.pipe';
+import { TaskTypeEntityNameValueForCandling, TaskTypeEntityNameValueForEmergence, TaskTypeEntityNameValueForHatching } from '../../../../app.config';
 
 @Component({
   selector: 'app-inspect-unoccupied-incubator-space',
@@ -69,10 +70,20 @@ export class InspectUnoccupiedIncubatorSpaceComponent implements OnInit {
           ? this.fetchedTasks$.get(trolley) || this.taskService.getAllActiveTasksByTrolleyId(trolley.id)
           : of([])
       ),
-      tap(tasks => {
+      map(tasks => {
+        return tasks.filter(item => 
+          ![
+            TaskTypeEntityNameValueForCandling,
+            TaskTypeEntityNameValueForHatching,
+            TaskTypeEntityNameValueForEmergence
+          ].includes(item.taskType.name)
+        );
+      }),
+      tap(filteredTasks => {
         const selectedTrolley = this.selectedTrolley$.getValue();
+
         if (selectedTrolley && !this.fetchedTasks$.has(selectedTrolley)) {
-          this.fetchedTasks$.set(selectedTrolley, of(tasks));
+          this.fetchedTasks$.set(selectedTrolley, of(filteredTasks));
         }
       })
     );
