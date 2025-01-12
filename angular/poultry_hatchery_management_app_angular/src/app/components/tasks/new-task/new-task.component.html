@@ -22,14 +22,16 @@
       </mat-form-field>
   
 
-      <mat-form-field appearance="fill">
-        <mat-label>Data i czas wykonania</mat-label>
-        <input matInput [(ngModel)]="executionDateTime" name="executionDateTime" [matDatepicker]="picker" type="datetime-local" required placeholder="Wybierz datę" />
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-        <mat-error *ngIf="!executionDateTime">To pole jest wymagane.</mat-error>
-      </mat-form-field>
-  
+      <div class="date-cntr">
+        <mat-form-field>
+          <mat-label>Choose a date</mat-label>
+          <input matInput [matDatepicker]="picker" [(ngModel)]="executionDateTime" name="executionDateTime">
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        
+      </div>
+
       <!-- Pole tekstowe na komentarz -->
       <mat-form-field appearance="fill">
         <mat-label>Komentarz</mat-label>

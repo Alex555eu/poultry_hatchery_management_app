@@ -133,7 +133,7 @@ export namespace ApiPaths {
         GET_ALL_TASKS_BY_NESTING_ID = '/api/v1/task?nestingId=',
         POST_TASK = '/api/v1/task/admin',
         PUT_TASK = '/api/v1/task/trolley-progress',
-        DELETE_TASK = '/api/v1/task/admin',
+        DELETE_TASK = '/api/v1/task/admin?scheduledTaskId=',
         PATCH_TASK_STATUS = '/api/v1/task',
 
         GET_ALL_TASK_TYPES = '/api/v1/task/task-type'

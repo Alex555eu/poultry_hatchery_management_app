@@ -39,7 +39,7 @@ export class NewTaskComponent implements OnInit {
   
   nestingId: string = '';
   taskTypeId: string = '';
-  executionDateTime = new Date();
+  executionDateTime: Date | null = null;
   comment: string = '';
 
   nestings: Nesting[] = [];
@@ -74,10 +74,13 @@ export class NewTaskComponent implements OnInit {
 
   onSubmit(): void {
     if (this.nestingId && this.taskTypeId && this.executionDateTime) {
+      const localDate = new Date(this.executionDateTime);
+      localDate.setMinutes(localDate.getMinutes() - localDate.getTimezoneOffset());
+      
       this.taskService.postTask({
         nestingId: this.nestingId,
         taskTypeId: this.taskTypeId,
-        executionDateTime: this.executionDateTime,
+        executionDateTime: localDate,
         comment: this.comment
       }).subscribe(response => {
         if (response) {
