@@ -1,5 +1,6 @@
 package com.app.poultry_hatchery_management_app.controller;
 
+import com.app.poultry_hatchery_management_app.dto.PatchEmployeeRequest;
 import com.app.poultry_hatchery_management_app.dto.PostUserRequest;
 import com.app.poultry_hatchery_management_app.dto.PutOrganisationDetailsRequest;
 import com.app.poultry_hatchery_management_app.dto.PutUserRequest;
@@ -64,11 +65,12 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @DeleteMapping(value = "/admin")
-    public ResponseEntity<String> deleteUser(@RequestParam UUID userId) {
-        Optional<User> user = userService.deleteUser(userId);
+    @PatchMapping(value = "/admin")
+    public ResponseEntity<String> patchUser(@RequestBody PatchEmployeeRequest request) throws JsonProcessingException {
+        Optional<User> user = userService.patchUser(request);
         if (user.isPresent()) {
-            return ResponseEntity.ok().build();
+            String body = objectMapper.writeValueAsString(user.get());
+            return ResponseEntity.ok(body);
         }
         return ResponseEntity.notFound().build();
     }

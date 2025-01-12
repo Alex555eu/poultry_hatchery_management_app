@@ -138,6 +138,21 @@ export class ManagerComponent {
     }
   }
 
+  deactivateEmployeeAccount(item: UserDetails) {
+    this.userDetailsService.patchUser(item.id, false).subscribe(response => {
+      if (response)
+        this.ngOnInit();
+    });
+  }
+
+  
+  reactivateEmployeeAccount(item: UserDetails) {
+    this.userDetailsService.patchUser(item.id, true).subscribe(response => {
+      if (response)
+        this.ngOnInit();
+    });
+  }
+
   editOrganisationDetails() {
     let config = new MatDialogConfig();
     config.data = {

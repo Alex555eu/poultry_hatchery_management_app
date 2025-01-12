@@ -52,6 +52,15 @@ export class UserDetailsService {
     return this.http.post<any>(`${apiUrl}${ApiPaths.UserDataPaths.POST_USER}`, body);
   }
 
+  public patchUser(userId: string, isEnabled: boolean): Observable<any> {
+    const body = {userId: userId, isEnabled: isEnabled};
+    return this.http.patch<any>(`${apiUrl + ApiPaths.UserDataPaths.PATCH_USER}`, body).pipe(
+      catchError(error => {
+        return of();
+      })
+    );
+  }
+
   public putOrganisationDetails(body: PutOrganistionDetailsRequest): Observable<OrganisationDetails> {
     return this.http.put<OrganisationDetails>(`${apiUrl + ApiPaths.UserDataPaths.PUT_ORGANISATION }`, body).pipe(
       catchError(error => {

@@ -13,7 +13,7 @@ export namespace ApiPaths {
         GET_OTHER_USERS = '/api/v1/user/admin/others',
         POST_USER = '/api/v1/user/admin',
         PUT_USER = '/api/v1/user',
-        DELETE_USER = '/api/v1/user/admin',
+        PATCH_USER = '/api/v1/user/admin',
 
         PUT_ORGANISATION = '/api/v1/user/admin/organisation'
     }

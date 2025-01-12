@@ -1,5 +1,6 @@
 package com.app.poultry_hatchery_management_app.service;
 
+import com.app.poultry_hatchery_management_app.dto.PatchEmployeeRequest;
 import com.app.poultry_hatchery_management_app.dto.PostUserRequest;
 import com.app.poultry_hatchery_management_app.dto.PutOrganisationDetailsRequest;
 import com.app.poultry_hatchery_management_app.dto.PutUserRequest;
@@ -106,14 +107,16 @@ public class UserService {
         return Optional.empty();
     }
 
-    public Optional<User> deleteUser(UUID id) {
+    public Optional<User> patchUser(PatchEmployeeRequest request) {
         User user = getUserFromSecurityContext();
-        if (user != null && user.getId() != id) {
-            Optional<User> userToBeDeleted = userRepository.findById(id);
-            if (userToBeDeleted.isPresent()) {
-                userToBeDeleted.get().setIsEnabled(false);
-                userRepository.save(userToBeDeleted.get());
-                return userToBeDeleted;
+        if (user != null && user.getId() != request.userId()) {
+            Optional<User> userToBePatchedOpt = userRepository.findById(request.userId());
+            if (userToBePatchedOpt.isPresent()) {
+                User userToBePatched = userToBePatchedOpt.get();
+                userToBePatched.setIsEnabled(request.isEnabled());
+                userRepository.save(userToBePatched);
+
+                return Optional.of(userToBePatched);
             }
         }
         return Optional.empty();
