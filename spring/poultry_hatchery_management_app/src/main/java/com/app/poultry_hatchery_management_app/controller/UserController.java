@@ -57,10 +57,11 @@ public class UserController {
     }
 
     @PutMapping(value = "")
-    public ResponseEntity<String> putUser(@RequestBody PutUserRequest request) {
+    public ResponseEntity<String> putUser(@RequestBody PutUserRequest request) throws JsonProcessingException {
         Optional<User> user = userService.putUser(request);
         if (user.isPresent()) {
-            return ResponseEntity.ok().build();
+            String body = objectMapper.writeValueAsString(user.get());
+            return ResponseEntity.ok(body);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }

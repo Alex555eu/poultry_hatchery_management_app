@@ -3,6 +3,7 @@
     background-color: transparent;
 }
 
+
 .mat-toolbar {
     background-color: transparent;
     width: auto;
@@ -41,6 +42,15 @@
     justify-content: center;
     flex-direction: column;
     gap: -5px;
+}
+
+.full-width-button {
+    position: relative;
+    width: 60%;
+    display: flex;
+    justify-content: flex-end; 
+    padding: 0;
+    margin: -3em 0 0 0;
 }
 
 .user-info #user-name {

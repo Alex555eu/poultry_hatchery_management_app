@@ -61,6 +61,14 @@ export class UserDetailsService {
     );
   }
 
+  public putUser(body: {userId: string, firstName: string, lastName: string, phoneNumber: string}): Observable<UserDetails> {
+    return this.http.put<UserDetails>(`${apiUrl + ApiPaths.UserDataPaths.PUT_USER}`, body).pipe(
+      catchError(error => {
+        return of();
+      })
+    );
+  }
+
   public putOrganisationDetails(body: PutOrganistionDetailsRequest): Observable<OrganisationDetails> {
     return this.http.put<OrganisationDetails>(`${apiUrl + ApiPaths.UserDataPaths.PUT_ORGANISATION }`, body).pipe(
       catchError(error => {

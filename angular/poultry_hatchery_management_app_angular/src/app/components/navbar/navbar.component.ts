@@ -1,3 +1,4 @@
+import { config } from './../../app.config.server';
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -12,6 +13,8 @@ import { catchError, Observable, of, tap, throwError } from 'rxjs';
 import { TokenService } from '../../services/token/token.service';
 import { AuthService } from '../../services/authorization/auth.service';
 import { CommonModule } from '@angular/common';
+import { MatDialog, MatDialogConfig, MatDialogModule } from '@angular/material/dialog';
+import { EditUserDetailsComponent } from './edit-user-details/edit-user-details.component';
 
 @Component({
   selector: 'app-navbar',
@@ -24,7 +27,8 @@ import { CommonModule } from '@angular/common';
     MatListModule,
     RouterModule,
     MatCardModule,
-    CommonModule
+    CommonModule,
+    MatDialogModule
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
@@ -34,12 +38,15 @@ export class NavbarComponent {
   public userLastName: string = 'Nazwisko';
   public userRole: string = 'Rola';
 
+  private userDetails: UserDetails | null = null;
+
 
   public constructor(
     private userDetailsService: UserDetailsService,
     private tokenService: TokenService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private dialog: MatDialog
   ) 
   {}
 
@@ -50,8 +57,23 @@ export class NavbarComponent {
         this.userFirstName = userDetails.firstName;
         this.userLastName = userDetails.lastName;
         this.userRole = userDetails.role;
+
+        this.userDetails = userDetails;
       }
     });
+  }
+
+  editPersonalInfo() {
+    let config = new MatDialogConfig();
+    config.data = {
+      userDetails: this.userDetails
+    }
+    const ref = this.dialog.open(EditUserDetailsComponent, config);
+    ref.afterClosed().subscribe(response => {
+      if (response) {
+        this.ngOnInit();
+      }
+    })
   }
 
   logout() {
