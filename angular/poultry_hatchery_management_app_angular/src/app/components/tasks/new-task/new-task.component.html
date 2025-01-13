@@ -1,50 +1,79 @@
 <mat-dialog-content>
-    <form (ngSubmit)="onSubmit()">
+  <div class="bg-cntr">
+    
+    <div class="dialog-header">
+      <mat-icon>task_alt</mat-icon>
+      <label>Nowe zadanie</label>
+      <button mat-icon-button (click)="closeDialog()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <mat-tab-group>
+      <mat-tab label="Pojedyńcze zadanie">
+        <form (ngSubmit)="onSubmit()">
+
+          <mat-form-field appearance="fill">
+            <mat-label>Nesting ID</mat-label>
+            <mat-select [(ngModel)]="nestingId" name="nestingId" required>
+              <mat-option *ngFor="let nesting of nestings" [value]="nesting.id">
+                {{ nesting.title }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
       
-      <!-- Pole wyboru Nesting ID -->
-      <mat-form-field appearance="fill">
-        <mat-label>Nesting ID</mat-label>
-        <mat-select [(ngModel)]="nestingId" name="nestingId" required>
-          <mat-option *ngFor="let nesting of nestings" [value]="nesting.id">
-            {{ nesting.title }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-  
-      <!-- Pole wyboru Task Type ID -->
-      <mat-form-field appearance="fill">
-        <mat-label>Task Type ID</mat-label>
-        <mat-select [(ngModel)]="taskTypeId" name="taskTypeId" required>
-          <mat-option *ngFor="let taskType of taskTypes" [value]="taskType.id">
-            {{ taskType.name }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-  
+          <mat-form-field appearance="fill">
+            <mat-label>Task Type ID</mat-label>
+            <mat-select [(ngModel)]="taskTypeId" name="taskTypeId" required>
+              <mat-option *ngFor="let taskType of taskTypes" [value]="taskType.id">
+                {{ taskType.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+      
+          <mat-form-field>
+            <mat-label>Choose a date</mat-label>
+            <input matInput [matDatepicker]="picker" [(ngModel)]="executionDateTime" name="executionDateTime">
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
 
-      <div class="date-cntr">
-        <mat-form-field>
-          <mat-label>Choose a date</mat-label>
-          <input matInput [matDatepicker]="picker" [(ngModel)]="executionDateTime" name="executionDateTime">
-          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
-        
-      </div>
+          <mat-form-field appearance="fill">
+            <mat-label>Komentarz</mat-label>
+            <textarea matInput [(ngModel)]="comment" name="comment"></textarea>
+          </mat-form-field>
+      
+          <mat-dialog-actions >
+            <button mat-raised-button color="primary" type="submit" [disabled]="!nestingId || !taskTypeId || !executionDateTime">
+              Dodaj
+            </button>
+          </mat-dialog-actions>
 
-      <!-- Pole tekstowe na komentarz -->
-      <mat-form-field appearance="fill">
-        <mat-label>Komentarz</mat-label>
-        <textarea matInput [(ngModel)]="comment" name="comment"></textarea>
-      </mat-form-field>
-  
-      <!-- Przyciski akcji -->
-      <mat-dialog-actions >
-        <button mat-button type="button" (click)="closeDialog()">Anuluj</button>
-        <button mat-raised-button color="primary" type="submit" [disabled]="!nestingId || !taskTypeId || !executionDateTime">
-          Wyślij
-        </button>
-      </mat-dialog-actions>
-    </form>
+        </form>
+      </mat-tab>
+
+      <mat-tab label="Harmonogramy">
+        <div class="upper-container">
+          <div class="schedule-container">
+            <ng-container *ngFor="let item of taskSchedule">
+              <div class="schedule-object">
+                <label>{{ item.title }}</label>
+              </div>
+            </ng-container>
+          </div>
+
+          <div class="schedule-details-container">
+
+          </div>
+        </div>
+        <div class="lower-container">
+
+        </div>
+      </mat-tab>
+
+    </mat-tab-group>
+
+
+  </div>
   </mat-dialog-content>
   

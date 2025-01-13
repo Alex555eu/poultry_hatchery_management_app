@@ -9,6 +9,8 @@ import { TaskStatus } from '../../models/task-status-enum';
 import { PutTaskRequest } from '../../dto/put-task-request';
 import { TaskType } from '../../models/task-type.model';
 import { PostTaskRequest } from '../../dto/post-task-request';
+import { TaskSchedule } from '../../models/task-schedule.model';
+import { TaskScheduleDetails } from '../../models/task-schedule-details.model';
 
 @Injectable({
   providedIn: 'root'
@@ -124,6 +126,65 @@ export class TasksService {
       })
     );
   }
+
+
+  getAllTaskSchedules(): Observable<TaskSchedule[]> {
+    return this.http.get<TaskSchedule[]>(`${apiUrl}${ApiPaths.TaskPaths.GET_ALL_TASK_SCHEDULES}`).pipe(
+      catchError(error => {
+        console.error(error);
+        return of([]); 
+      })
+    );
+  }
+
+  postTaskSchedule(title: string): Observable<TaskSchedule> {
+    const body = {title: title};
+    return this.http.post<TaskSchedule>(`${apiUrl}${ApiPaths.TaskPaths.GET_ALL_TASK_SCHEDULES}`, body).pipe(
+      catchError(error => {
+        console.error(error);
+        return of(); 
+      })
+    );
+  }
+
+  deleteTaskSchedule(taskScheduleId: string): Observable<any> {
+    return this.http.delete<any>(`${apiUrl}${ApiPaths.TaskPaths.DELETE_TASK_SCHEDULE}`).pipe(
+      catchError(error => {
+        console.error(error);
+        return of(); 
+      })
+    );
+  }
+
+  getAllTaskScheduleDetails(taskScheduleId: string): Observable<TaskScheduleDetails[]> {
+    return this.http.get<TaskScheduleDetails[]>(`${apiUrl}${ApiPaths.TaskPaths.GET_TASK_SCHEDULE_DETAILS + taskScheduleId}`).pipe(
+      catchError(error => {
+        console.error(error);
+        return of([]); 
+      })
+    );
+  }
+
+  postTaskScheduleDetail(taskScheduleId: string, taskTypeId: string, taskExecutionOrderNumber: number, daysOffsetFromPrevTask: number): Observable<TaskScheduleDetails> {
+    const body = {taskScheduleId: taskScheduleId, taskTypeId: taskTypeId, taskExecutionOrderNumber: taskExecutionOrderNumber, daysOffsetFromPrevTask: daysOffsetFromPrevTask};
+    return this.http.post<TaskScheduleDetails>(`${apiUrl}${ApiPaths.TaskPaths.POST_TASK_SCHEDULE_DETAIL}`, body).pipe(
+      catchError(error => {
+        console.error(error);
+        return of(); 
+      })
+    );
+  }
+
+  postTaskBySchedule(nestingId: string, taskScheduleId: string, beginFrom: Date): Observable<any> {
+    const body = {nestingId: nestingId, taskScheduleId: taskScheduleId, beginFrom: beginFrom};
+    return this.http.post<any>(`${apiUrl}${ApiPaths.TaskPaths.POST_TASK_BY_SCHEDULE}`, body).pipe(
+      catchError(error => {
+        console.error(error);
+        return of(); 
+      })
+    );
+  }
+
 
   /////////////////////////////////////////////////////////////////////////////////////////////////
   filterTodaysTasks(tasks: Task[]): Task[] {
