@@ -54,6 +54,8 @@ export class NewTaskComponent implements OnInit {
 
   taskSchedule: TaskSchedule[] = [];
   selectedTaskSchedule: TaskSchedule | null = null;
+  dateOfScheduleFirstTask: Date | null = null;
+  scheduleNestingId: string = '';
   taskScheduleDetails = new Map<TaskSchedule, TaskScheduleDetails[]>();
 
   constructor(
@@ -87,10 +89,25 @@ export class NewTaskComponent implements OnInit {
     }
   }
 
+  newSchedule() {
+
+  }
+
+  onScheduleSubmit() {
+    if (this.scheduleNestingId && this.selectedTaskSchedule && this.dateOfScheduleFirstTask){
+      this.taskService.postTaskBySchedule(this.scheduleNestingId, this.selectedTaskSchedule.id, this.dateOfScheduleFirstTask).subscribe(response => {
+        this.dialogRefParent.close(true);
+      })
+    }
+  }
+
   closeDialog(): void {
     this.dialogRefParent.close();
   }
 
+  selectTaskSchedule(element: TaskSchedule) {
+    this.selectedTaskSchedule = element;
+  }
 
   private loadNestings(): void {
     this.nestingService.getAllUnfinishedNestings().subscribe(response => {

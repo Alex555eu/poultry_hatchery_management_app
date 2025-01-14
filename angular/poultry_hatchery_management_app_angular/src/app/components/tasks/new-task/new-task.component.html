@@ -14,7 +14,7 @@
         <form (ngSubmit)="onSubmit()">
 
           <mat-form-field appearance="fill">
-            <mat-label>Nesting ID</mat-label>
+            <mat-label>Nakład</mat-label>
             <mat-select [(ngModel)]="nestingId" name="nestingId" required>
               <mat-option *ngFor="let nesting of nestings" [value]="nesting.id">
                 {{ nesting.title }}
@@ -23,7 +23,7 @@
           </mat-form-field>
       
           <mat-form-field appearance="fill">
-            <mat-label>Task Type ID</mat-label>
+            <mat-label>Typ zadania</mat-label>
             <mat-select [(ngModel)]="taskTypeId" name="taskTypeId" required>
               <mat-option *ngFor="let taskType of taskTypes" [value]="taskType.id">
                 {{ taskType.name }}
@@ -32,7 +32,7 @@
           </mat-form-field>
       
           <mat-form-field>
-            <mat-label>Choose a date</mat-label>
+            <mat-label>Wybierz datę</mat-label>
             <input matInput [matDatepicker]="picker" [(ngModel)]="executionDateTime" name="executionDateTime">
             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
@@ -55,20 +55,55 @@
       <mat-tab label="Harmonogramy">
         <div class="upper-container">
           <div class="schedule-container">
+            <div class="schedule-object" style="display: flex; align-items: center; justify-content: center;" (click)="newSchedule()">
+              <mat-icon>add</mat-icon>
+            </div>
             <ng-container *ngFor="let item of taskSchedule">
-              <div class="schedule-object">
+              <div 
+                class="schedule-object" 
+                [class.selected]="selectedTaskSchedule === item"
+                (click)="selectTaskSchedule(item)">
                 <label>{{ item.title }}</label>
               </div>
             </ng-container>
           </div>
-
-          <div class="schedule-details-container">
-
+      
+          <div class="schedule-container" *ngIf="selectedTaskSchedule">
+            <ng-container *ngFor="let item of taskScheduleDetails.get(selectedTaskSchedule)">
+              <div class="schedule-detail-object">
+                <label>+{{ item.daysOffsetFromPrevTask }} dni</label>
+                <label> {{ item.taskType.name }}</label>
+              </div>
+            </ng-container>
           </div>
         </div>
+      
         <div class="lower-container">
+          <mat-form-field appearance="fill">
+            <mat-label>Nakład</mat-label>
+            <mat-select [(ngModel)]="scheduleNestingId" name="scheduleNestingId" required>
+              <mat-option *ngFor="let nesting of nestings" [value]="nesting.id">
+                {{ nesting.title }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+      
+          <mat-form-field>
+            <mat-label>Data rozpoczęcia</mat-label>
+            <input matInput [matDatepicker]="picker2" [(ngModel)]="dateOfScheduleFirstTask" name="dateOfScheduleFirstTask">
+            <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
 
+          <mat-dialog-actions >
+            <button mat-raised-button color="primary" (click)="onScheduleSubmit()" [disabled]="!selectedTaskSchedule || !dateOfScheduleFirstTask || !scheduleNestingId">
+              Dodaj
+            </button>
+          </mat-dialog-actions>
         </div>
+
+
+
       </mat-tab>
 
     </mat-tab-group>
