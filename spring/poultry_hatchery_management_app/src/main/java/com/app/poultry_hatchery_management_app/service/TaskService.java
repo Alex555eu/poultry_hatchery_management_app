@@ -1,13 +1,9 @@
 package com.app.poultry_hatchery_management_app.service;
 
 
-import com.app.poultry_hatchery_management_app.dto.PatchTaskStatusRequest;
-import com.app.poultry_hatchery_management_app.dto.PostTaskRequest;
-import com.app.poultry_hatchery_management_app.dto.PutTaskRequest;
+import com.app.poultry_hatchery_management_app.dto.*;
 import com.app.poultry_hatchery_management_app.model.*;
-import com.app.poultry_hatchery_management_app.repository.TaskNestingTrolleyAssignmentRepository;
-import com.app.poultry_hatchery_management_app.repository.TaskRepository;
-import com.app.poultry_hatchery_management_app.repository.TaskTypeRepository;
+import com.app.poultry_hatchery_management_app.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,9 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @AllArgsConstructor
 @Service
@@ -27,8 +21,13 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final TaskTypeRepository taskTypeRepository;
     private final TaskNestingTrolleyAssignmentRepository taskNestingTrolleyAssignmentRepository;
+    private final TaskScheduleRepository taskScheduleRepository;
+    private final TaskScheduleDetailsRepository taskScheduleDetailsRepository;
+    private final NestingRepository nestingRepository;
 
-    private final NestingTrolleyService nestingTrolleyService;
+    private final NestingTrolleyRepository nestingTrolleyRepository;
+    private final NestingTrolleyContentRepository nestingTrolleyContentRepository;
+
     private final NestingService nestingService;
 
     public List<Task> getAllTasks() {
@@ -94,7 +93,7 @@ public class TaskService {
                     task.setNesting(nesting.get());
                     taskRepository.save(task);
 
-                    List<NestingTrolley> trolleys = nestingTrolleyService.getAllTrolleysByNestingId(nesting.get().getId());
+                    List<NestingTrolley> trolleys = nestingTrolleyRepository.findAllTrolleysByNestingId(nesting.get().getId());
                     for (NestingTrolley trolley : trolleys) {
                         TaskNestingTrolleyAssignment assignment = TaskNestingTrolleyAssignment.builder()
                                 .task(task)
@@ -188,6 +187,121 @@ public class TaskService {
             return taskTypeRepository.findAllByOrganisationId(user.getOrganisation().getId());
         }
         return List.of();
+    }
+
+
+    public List<TaskSchedule> getAllTaskSchedules() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            User user = (User) authentication.getPrincipal();
+
+            return taskScheduleRepository.findAllByOrganisationId(user.getOrganisation().getId());
+        }
+        return List.of();
+    }
+
+    public Optional<TaskSchedule> postTaskSchedule(PostTaskScheduleRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            User user = (User) authentication.getPrincipal();
+
+            TaskSchedule taskSchedule = TaskSchedule.builder()
+                    .title(request.title())
+                    .organisation(user.getOrganisation())
+                    .build();
+            taskScheduleRepository.save(taskSchedule);
+
+            return Optional.of(taskSchedule);
+        }
+        return Optional.empty();
+    }
+
+    @Transactional
+    public void postTasksBySchedule(PostTasksByScheduleRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            User user = (User) authentication.getPrincipal();
+
+            Optional<Nesting> nestingOpt = nestingRepository.findById(request.nestingId());
+            Optional<TaskSchedule> taskScheduleOpt = taskScheduleRepository.findById(request.taskScheduleId());
+
+            if (nestingOpt.isPresent() && taskScheduleOpt.isPresent()) {
+                Nesting nesting = nestingOpt.get();
+                TaskSchedule taskSchedule = taskScheduleOpt.get();
+                List<TaskScheduleDetails> details = taskScheduleDetailsRepository.findAllByTaskScheduleId(taskSchedule.getId()).stream()
+                        .sorted(Comparator.comparingInt(TaskScheduleDetails::getTaskExecutionOrderNumber))
+                        .toList();
+
+                LocalDateTime current = request.beginFrom();
+                for (TaskScheduleDetails detail : details) {
+                    current = current.plusDays(detail.getDaysOffsetFromPrevTask());
+                    this.postTask(new PostTaskRequest(nesting.getId(), detail.getTaskType().getId(), current, ""));
+                }
+            }
+        }
+    }
+
+    @Transactional
+    public void deleteTaskSchedule(UUID taskScheduleId) {
+        taskScheduleDetailsRepository.deleteAllByTaskScheduleId(taskScheduleId);
+        taskScheduleRepository.deleteById(taskScheduleId);
+    }
+
+    public Optional<TaskScheduleDetails> postTaskScheduleDetails(PostTaskScheduleDetailsRequest request) {
+        Optional<TaskSchedule> schedule = taskScheduleRepository.findById(request.taskScheduleId());
+        Optional<TaskType> taskType = taskTypeRepository.findById(request.taskTypeId());
+
+        if (schedule.isPresent() && taskType.isPresent()) {
+
+            TaskScheduleDetails taskScheduleDetails = TaskScheduleDetails.builder()
+                    .taskExecutionOrderNumber(request.taskExecutionOrderNumber())
+                    .daysOffsetFromPrevTask(request.daysOffsetFromPrevTask())
+                    .taskSchedule(schedule.get())
+                    .taskType(taskType.get())
+                    .build();
+            taskScheduleDetailsRepository.save(taskScheduleDetails);
+
+            return Optional.of(taskScheduleDetails);
+        }
+        return Optional.empty();
+    }
+
+    public List<TaskScheduleDetails> getAllTaskScheduleDetailsByScheduleId(UUID taskScheduleId) {
+        return taskScheduleDetailsRepository.findAllByTaskScheduleId(taskScheduleId);
+    }
+
+
+    public void updateTaskNestingTrolleyAssignmentAfterContentChange(UUID nestingTrolleyId) {
+        Optional<NestingTrolley> trolleyOpt = nestingTrolleyRepository.findById(nestingTrolleyId);
+
+        if (trolleyOpt.isPresent()) {
+            NestingTrolley trolley = trolleyOpt.get();
+            List<NestingTrolleyContent> contentList = nestingTrolleyContentRepository.findAllByNestingTrolleyId(nestingTrolleyId);
+
+            if (contentList.isEmpty()) {
+                List<Task> list = taskRepository.findAllTasksByNestingTrolleyIdAndStatus(nestingTrolleyId, List.of(TaskStatus.IN_PROGRESS, TaskStatus.NOT_STARTED));
+                for(Task task : list) {
+                    taskNestingTrolleyAssignmentRepository.deleteByTaskIdAndNestingTrolleyId(task.getId(), nestingTrolleyId);
+                }
+            } else {
+                List<Task> list = taskRepository.findAllByNestingId(contentList.getFirst().getNestingLoadedDeliveries().getNesting().getId()).stream()
+                        .filter(item -> item.getTaskStatus().equals(TaskStatus.IN_PROGRESS) || item.getTaskStatus().equals(TaskStatus.NOT_STARTED))
+                        .toList();
+                for(Task task : list) {
+                    Optional<TaskNestingTrolleyAssignment> assignment =
+                            taskNestingTrolleyAssignmentRepository.findByTaskIdAndNestingTrolleyId(task.getId(), trolley.getId());
+                    if (assignment.isEmpty()) {
+                        TaskNestingTrolleyAssignment tnta = TaskNestingTrolleyAssignment.builder()
+                                .nestingTrolley(trolley)
+                                .isTaskCompleted(false)
+                                .task(task)
+                                .executor(null)
+                                .build();
+                        taskNestingTrolleyAssignmentRepository.save(tnta);
+                    }
+                }
+            }
+        }
     }
 
 }

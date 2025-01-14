@@ -41,6 +41,8 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
     private final HatchingTrolleyRepository hatchingTrolleyRepository;
     private final HatchingTrolleyContentRepository hatchingTrolleyContentRepository;
     private final HatchingLoadedDeliveriesRepository hatchingLoadedDeliveriesRepository;
+    private final TaskScheduleRepository taskScheduleRepository;
+    private final TaskScheduleDetailsRepository taskScheduleDetailsRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -433,5 +435,46 @@ public class StartupApplicationListener implements ApplicationListener<Applicati
                 .quantity(20)
                 .build();
         hatchingTrolleyContentRepository.save(hatchingTrolleyContent);
+
+        TaskSchedule taskSchedule = TaskSchedule.builder()
+                .title("test")
+                .organisation(organisation)
+                .build();
+        taskScheduleRepository.save(taskSchedule);
+
+        TaskScheduleDetails taskScheduleDetails = TaskScheduleDetails.builder()
+                .taskSchedule(taskSchedule)
+                .taskType(taskType2)
+                .taskExecutionOrderNumber(1)
+                .daysOffsetFromPrevTask(0)
+                .build();
+        taskScheduleDetailsRepository.save(taskScheduleDetails);
+
+        TaskScheduleDetails taskScheduleDetails2 = TaskScheduleDetails.builder()
+                .taskSchedule(taskSchedule)
+                .taskType(taskType3)
+                .taskExecutionOrderNumber(2)
+                .daysOffsetFromPrevTask(1)
+                .build();
+        taskScheduleDetailsRepository.save(taskScheduleDetails2);
+
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

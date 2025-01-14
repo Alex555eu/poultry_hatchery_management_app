@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
@@ -23,6 +24,8 @@ public class NestingTrolleyService {
     private final NestingTrolleyRepository nestingTrolleyRepository;
     private final NestingTrolleyContentRepository nestingTrolleyContentRepository;
     private final NestingLoadedDeliveriesRepository nestingLoadedDeliveriesRepository;
+
+    private final TaskService taskService;
 
     public List<NestingTrolley> getAllTrolleys() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -111,6 +114,7 @@ public class NestingTrolleyService {
         return nestingTrolleyContentRepository.findAllByNestingId(nestingId);
     }
 
+    @Transactional
     public Optional<NestingTrolleyContent> postTrolleyContent(PostNestingTrolleyContentRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if ((authentication != null && authentication.getPrincipal() instanceof UserDetails)) {
@@ -130,6 +134,7 @@ public class NestingTrolleyService {
                             .build();
                     nestingTrolleyContentRepository.save(content);
 
+                    taskService.updateTaskNestingTrolleyAssignmentAfterContentChange(content.getNestingTrolley().getId());
                     return Optional.of(content);
                 }
             }
@@ -137,6 +142,7 @@ public class NestingTrolleyService {
         return Optional.empty();
     }
 
+    @Transactional
     public List<NestingTrolleyContent> postTrolleyContentTransfer(PostNestingTrolleyContentTransferRequest request) {
         Optional<NestingTrolley> targetTrolleyOpt = nestingTrolleyRepository.findById(request.targetNestingTrolleyId());
         Optional<NestingTrolleyContent> sourceContentOpt = nestingTrolleyContentRepository.findById(request.sourceNestingTrolleyContentId());
@@ -184,25 +190,33 @@ public class NestingTrolleyService {
                     nestingTrolleyContentRepository.save(sourceContent);
                 }
 
+                taskService.updateTaskNestingTrolleyAssignmentAfterContentChange(sourceContent.getNestingTrolley().getId());
                 return List.of(sourceContent, targetContent);
             }
         }
         return List.of();
     }
 
+    @Transactional
     public Optional<NestingTrolleyContent> putTrolleyContent(PutNestingTrolleyContentRequest request) {
         Optional<NestingTrolleyContent> content = nestingTrolleyContentRepository.findById(request.contentId());
             if (content.isPresent()) {
                 content.get().setQuantity(request.quantity());
                 nestingTrolleyContentRepository.save(content.get());
 
+                taskService.updateTaskNestingTrolleyAssignmentAfterContentChange(content.get().getNestingTrolley().getId());
                 return content;
             }
         return Optional.empty();
     }
 
+    @Transactional
     public void deleteTrolleyContent(UUID trolleyContentId) {
-        nestingTrolleyContentRepository.deleteById(trolleyContentId);
+        Optional<NestingTrolleyContent> nestingTrolleyContent = nestingTrolleyContentRepository.findById(trolleyContentId);
+        if (nestingTrolleyContent.isPresent()) {
+            taskService.updateTaskNestingTrolleyAssignmentAfterContentChange(nestingTrolleyContent.get().getNestingTrolley().getId());
+            nestingTrolleyContentRepository.deleteById(trolleyContentId);
+        }
     }
 
 

@@ -1,0 +1,44 @@
+.dialog-cntr mat-form-field {
+    width: 100%;
+}
+
+.new-schedule-details-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1em;
+    gap: 0.5em;
+}
+
+.schedule-container {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    padding: 20px;
+    height: 30vh;
+
+    gap: 10px;
+
+    border: 1px solid #aaaaaa;
+    border-radius: 12px;
+    padding: 5px;
+
+    overflow-y: auto;
+}
+
+.schedule-detail-object {
+    background-color: #f5f5f5;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+@media (max-width: 1300px) {
+    .new-schedule-details-container {
+        width: 80vw;
+    }
+    .schedule-container {
+        width: 80vw;
+    }
+}

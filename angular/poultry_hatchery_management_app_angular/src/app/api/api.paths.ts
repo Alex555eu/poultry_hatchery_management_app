@@ -133,10 +133,19 @@ export namespace ApiPaths {
         GET_ALL_TASKS_BY_NESTING_ID = '/api/v1/task?nestingId=',
         POST_TASK = '/api/v1/task/admin',
         PUT_TASK = '/api/v1/task/trolley-progress',
-        DELETE_TASK = '/api/v1/task/admin',
+        DELETE_TASK = '/api/v1/task/admin?scheduledTaskId=',
         PATCH_TASK_STATUS = '/api/v1/task',
 
-        GET_ALL_TASK_TYPES = '/api/v1/task/task-type'
+        GET_ALL_TASK_TYPES = '/api/v1/task/task-type',
+
+        POST_TASK_BY_SCHEDULE = '/api/v1/task/admin/by-schedule',
+        
+        GET_ALL_TASK_SCHEDULES = '/api/v1/task/admin/schedule',
+        POST_TASK_SCHEDULE = '/api/v1/task/admin/schedule',
+        DELETE_TASK_SCHEDULE = '/api/v1/task/admin/schedule?taskScheduleId=',
+
+        GET_TASK_SCHEDULE_DETAILS = '/api/v1/task/admin/schedule-details?taskScheduleId=',
+        POST_TASK_SCHEDULE_DETAIL = '/api/v1/task/admin/schedule-details',
     }
 
     export enum CandlingPaths {

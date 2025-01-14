@@ -27,4 +27,6 @@ public interface TaskNestingTrolleyAssignmentRepository extends JpaRepository<Ta
 
     void deleteAllByTaskId(UUID id);
 
+    void deleteByTaskIdAndNestingTrolleyId(UUID taskId, UUID nestingTrolleyId);
+
 }
