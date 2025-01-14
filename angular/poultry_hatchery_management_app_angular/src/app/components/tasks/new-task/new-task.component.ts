@@ -3,7 +3,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { TasksService } from '../../../services/tasks/tasks.service';
 import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -22,6 +22,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { TaskSchedule } from '../../../models/task-schedule.model';
 import { TaskScheduleDetails } from '../../../models/task-schedule-details.model';
 import { forkJoin, from, mergeMap, tap } from 'rxjs';
+import { NewScheduleComponent } from './new-schedule/new-schedule.component';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-new-task',
@@ -37,7 +39,8 @@ import { forkJoin, from, mergeMap, tap } from 'rxjs';
     FormsModule,
     CommonModule,
     MatIconModule,
-    MatTabsModule
+    MatTabsModule,
+    MatMenuModule
   ],
   templateUrl: './new-task.component.html',
   styleUrl: './new-task.component.css'
@@ -61,7 +64,8 @@ export class NewTaskComponent implements OnInit {
   constructor(
     private dialogRefParent: MatDialogRef<NewTaskComponent>,
     private taskService: TasksService,
-    private nestingService: NestingService
+    private nestingService: NestingService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -90,12 +94,30 @@ export class NewTaskComponent implements OnInit {
   }
 
   newSchedule() {
-
+    let config = new MatDialogConfig();
+    config.data = {
+      taskTypes: this.taskTypes
+    }
+    const dialogRef = this.dialog.open(NewScheduleComponent, config);
+    dialogRef.afterClosed().subscribe(response => {
+      if(response) {
+        this.ngOnInit();
+      }
+    });
   }
+
+  deleteTaskSchedule(item: TaskSchedule) {
+    this.taskService.deleteTaskSchedule(item.id).subscribe(response => {
+     this.ngOnInit();
+    });
+  } 
 
   onScheduleSubmit() {
     if (this.scheduleNestingId && this.selectedTaskSchedule && this.dateOfScheduleFirstTask){
-      this.taskService.postTaskBySchedule(this.scheduleNestingId, this.selectedTaskSchedule.id, this.dateOfScheduleFirstTask).subscribe(response => {
+      const localDate = new Date(this.dateOfScheduleFirstTask);
+      localDate.setMinutes(localDate.getMinutes() - localDate.getTimezoneOffset());
+
+      this.taskService.postTaskBySchedule(this.scheduleNestingId, this.selectedTaskSchedule.id, localDate).subscribe(response => {
         this.dialogRefParent.close(true);
       })
     }

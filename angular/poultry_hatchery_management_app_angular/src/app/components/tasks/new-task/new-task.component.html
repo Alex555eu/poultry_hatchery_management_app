@@ -64,7 +64,17 @@
                 [class.selected]="selectedTaskSchedule === item"
                 (click)="selectTaskSchedule(item)">
                 <label>{{ item.title }}</label>
-              </div>
+              
+              <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="deleteTaskSchedule(item)">
+                  <mat-icon>delete</mat-icon>
+                  <span>Usuń</span>
+                </button>
+              </mat-menu>
+            </div>
             </ng-container>
           </div>
       

@@ -46,6 +46,9 @@
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
     align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
   }
 
   .schedule-detail-object {
@@ -60,7 +63,7 @@
     font-weight: bold;
   }
   
-  .schedule-object.selected:hover {
+  .schedule-object:hover {
     background-color: #303f9f;
   }
   
@@ -72,4 +75,13 @@
   }
   
 
-  
+  @media (max-width: 1300px) {
+    .bg-cntr {
+        width: 80vw;
+    }
+    .schedule-container {
+        width: 80vw;
+        flex-direction: column;
+        flex-wrap: wrap;
+    }
+}

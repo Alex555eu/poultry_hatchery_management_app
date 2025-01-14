@@ -148,7 +148,7 @@ export class TasksService {
   }
 
   deleteTaskSchedule(taskScheduleId: string): Observable<any> {
-    return this.http.delete<any>(`${apiUrl}${ApiPaths.TaskPaths.DELETE_TASK_SCHEDULE}`).pipe(
+    return this.http.delete<any>(`${apiUrl}${ApiPaths.TaskPaths.DELETE_TASK_SCHEDULE + taskScheduleId}`).pipe(
       catchError(error => {
         console.error(error);
         return of(); 
