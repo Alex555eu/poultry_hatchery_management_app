@@ -24,7 +24,19 @@ public class CandlingController {
     private final ObjectMapper objectMapper;
     private final CandlingService candlingService;
 
-    @GetMapping("/all")
+    @GetMapping("/by-task")
+    public ResponseEntity<String> getCandlingByTaskId(@RequestParam UUID taskId) throws JsonProcessingException {
+        Optional<Candling> candling = candlingService.getCandlingByTaskId(taskId);
+        if (candling.isPresent()) {
+            String response = objectMapper.writeValueAsString(candling.get());
+            return ResponseEntity.ok(response);
+
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/admin/all")
     public ResponseEntity<String> getAllCandlings() throws JsonProcessingException {
         List<Candling> candlingList = candlingService.getAllCandlings();
         if (candlingList.isEmpty()) {
@@ -57,7 +69,7 @@ public class CandlingController {
         }
     }
 
-    @PostMapping("")
+    @PostMapping("/admin")
     public ResponseEntity<String> postCandling(@RequestBody PostCandlingRequest request) throws JsonProcessingException {
         Optional<Candling> candling = candlingService.postCandling(request);
         if (candling.isPresent()) {
@@ -67,7 +79,7 @@ public class CandlingController {
         return ResponseEntity.notFound().build();
     }
 
-//    @PutMapping("")
+//    @PutMapping("/admin")
 //    public ResponseEntity<String> putCandling(@RequestBody PutCandlingRequest request) throws JsonProcessingException {
 //        Optional<Candling> candling = candlingService.putCandling(request);
 //        if (candling.isPresent()) {
@@ -77,7 +89,7 @@ public class CandlingController {
 //        return ResponseEntity.notFound().build();
 //    }
 
-    @DeleteMapping("")
+    @DeleteMapping("/admin")
     public ResponseEntity<String> deleteCandling(@RequestParam UUID candlingId) {
         candlingService.deleteCandling(candlingId);
         return ResponseEntity.ok().build();

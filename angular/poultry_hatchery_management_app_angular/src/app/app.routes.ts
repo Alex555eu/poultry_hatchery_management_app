@@ -16,6 +16,8 @@ import { HatchingComponent } from './components/hatching/hatching.component';
 import { OpenHatchingComponent } from './components/hatching/open-hatching/open-hatching.component';
 import { EmergenceComponent } from './components/emergence/emergence.component';
 import { OpenEmergenceComponent } from './components/emergence/open-emergence/open-emergence.component';
+import { ActivitiesComponent } from './components/activities/activities.component';
+import { ForbiddenComponent } from './components/forbidden/forbidden.component';
 
 export const routes: Routes = [
     { path: '', component: NavbarComponent,
@@ -39,10 +41,13 @@ export const routes: Routes = [
 
             { path: 'emergence', component: EmergenceComponent},
             { path: 'emergence/open', component: OpenEmergenceComponent},
+
+            { path: 'activities', component: ActivitiesComponent},
         ],
     },
     { path: 'login', component: LoginComponent},
     { path: 'register', component: RegisterComponent},
+    { path: 'forbidden', component: ForbiddenComponent},
     { path: '**', redirectTo: 'home'}
 
 ];

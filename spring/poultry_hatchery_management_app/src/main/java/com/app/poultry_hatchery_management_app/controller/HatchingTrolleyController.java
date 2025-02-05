@@ -67,7 +67,7 @@ public class HatchingTrolleyController {
     }
 
 
-    @PostMapping("")
+    @PostMapping("/admin")
     public ResponseEntity<String> postHatchingTrolley(@RequestBody PostHatchingTrolleyRequest request) {
         Optional<HatchingTrolley> trolley = hatchingTrolleyService.postHatchingTrolley(request);
         if (trolley.isPresent()) {
@@ -76,7 +76,7 @@ public class HatchingTrolleyController {
         return ResponseEntity.notFound().build();
     }
 
-    @PutMapping("")
+    @PutMapping("/admin")
     public ResponseEntity<String> putHatchingTrolley(@RequestBody PutHatchingTrolleyRequest request) {
         Optional<HatchingTrolley> trolley = hatchingTrolleyService.putHatchingTrolley(request);
         if (trolley.isPresent()) {
@@ -85,7 +85,7 @@ public class HatchingTrolleyController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("")
+    @DeleteMapping("/admin")
     public ResponseEntity<String> deleteHatchingTrolley(@RequestParam UUID hatchingTrolleyId) {
         hatchingTrolleyService.deleteHatchingTrolley(hatchingTrolleyId);
         return ResponseEntity.ok().build();

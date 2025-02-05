@@ -26,6 +26,9 @@ public class EmergenceService {
     private final TaskService taskService;
     private final HatchingTrolleyService hatchingTrolleyService;
 
+    public Optional<Emergence> getEmergenceByTaskId(UUID taskId) {
+        return emergenceRepository.findByTaskId(taskId);
+    }
     public List<Emergence> getAllEmergences() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if ((authentication != null && authentication.getPrincipal() instanceof UserDetails)) {

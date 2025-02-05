@@ -1,0 +1,59 @@
+/* Kontener formularza */
+.container {
+    margin: 10px 10px 0 10px;
+    padding: 20px;
+  }
+  
+  /* Nagłówek formularza */
+  h2 {
+    font-size: 24px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  /* Podnagłówek dla sekcji adresu */
+  h3 {
+    font-size: 20px;
+    font-weight: 400;
+    color: #555;
+    margin-top: 30px;
+    margin-bottom: 10px;
+  }
+  
+  /* Mat-form-field dostosowany */
+  mat-form-field {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+  
+  /* Stylizacja przycisku */
+  button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 500;
+    background-color: #3f51b5;
+    color: white;
+    border-radius: 4px;
+    border: none;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #303f9f;
+  }
+  
+
+  @media (max-width: 600px) {
+    h2 {
+      font-size: 20px;
+    }
+    button {
+      font-size: 14px;
+      padding: 10px;
+    }
+  }
+  

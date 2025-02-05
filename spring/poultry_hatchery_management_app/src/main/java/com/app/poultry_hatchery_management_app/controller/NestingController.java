@@ -24,7 +24,7 @@ public class NestingController {
     private final NestingService nestingService;
     private final ObjectMapper objectMapper;
 
-    @GetMapping("")
+    @GetMapping("/admin")
     public ResponseEntity<String> getAllNestings() throws JsonProcessingException {
         List<Nesting> nesting = nestingService.getAllNestings();
         if (nesting == null) {
@@ -39,7 +39,7 @@ public class NestingController {
         }
     }
 
-    @GetMapping("/unfinished")
+    @GetMapping("/admin/unfinished")
     public ResponseEntity<String> getAllUnfinishedNestings() throws JsonProcessingException {
         List<Nesting> nesting = nestingService.getAllUnfinishedNestings();
         if (nesting == null) {
@@ -64,7 +64,7 @@ public class NestingController {
         return ResponseEntity.internalServerError().build();
     }
 
-    @PostMapping("")
+    @PostMapping("/admin")
     public ResponseEntity<String> postNesting(@RequestBody PostNestingRequest request) throws JsonProcessingException {
         Optional<Nesting> nesting = nestingService.postNesting(request);
         if (nesting.isPresent()) {
@@ -74,7 +74,7 @@ public class NestingController {
         return ResponseEntity.internalServerError().build();
     }
 
-    @PutMapping("")
+    @PutMapping("/admin")
     public ResponseEntity<String> putNesting(@RequestBody PutNestingRequest request) throws JsonProcessingException {
         Optional<Nesting> nesting = nestingService.putNesting(request);
         if (nesting.isPresent()) {
@@ -84,7 +84,7 @@ public class NestingController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("")
+    @DeleteMapping("/admin")
     public ResponseEntity<String> deleteNesting(@RequestParam UUID nestingId) {
         nestingService.deleteNesting(nestingId);
         return ResponseEntity.ok().build();

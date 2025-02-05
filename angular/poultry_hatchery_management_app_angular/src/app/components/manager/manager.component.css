@@ -154,3 +154,26 @@
     float: right;
     margin: 10px 10px 10px 10px;
 }
+
+.equipment-info {
+    margin: 0 10px auto 10px;
+    padding: 20px;
+    width: 700px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 1300px) {
+    .equipment-info {
+        margin-top: 1em;
+        margin-bottom: 1em;
+        width: 90vw;
+    }
+    .users-info {
+        margin-top: 1em;
+        width: 90vw;
+    }
+
+
+}

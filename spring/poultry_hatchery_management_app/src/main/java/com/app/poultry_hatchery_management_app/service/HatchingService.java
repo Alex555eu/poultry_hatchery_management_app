@@ -32,6 +32,10 @@ public class HatchingService {
     private final DeliveryService deliveryService;
     private final TaskService taskService;
 
+    public Optional<Hatching> getHatchingByTaskId(UUID taskId) {
+        return this.hatchingRepository.findByTaskId(taskId);
+    }
+
     public Optional<Hatching> getHatchingByNestingId(UUID nestingId) {
         return hatchingRepository.findByNestingId(nestingId);
     }

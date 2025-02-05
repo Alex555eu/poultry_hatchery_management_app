@@ -1,11 +1,7 @@
 package com.app.poultry_hatchery_management_app.controller;
 
-import com.app.poultry_hatchery_management_app.dto.PatchTaskStatusRequest;
-import com.app.poultry_hatchery_management_app.dto.PostTaskRequest;
-import com.app.poultry_hatchery_management_app.dto.PutTaskRequest;
-import com.app.poultry_hatchery_management_app.model.Task;
-import com.app.poultry_hatchery_management_app.model.TaskNestingTrolleyAssignment;
-import com.app.poultry_hatchery_management_app.model.TaskType;
+import com.app.poultry_hatchery_management_app.dto.*;
+import com.app.poultry_hatchery_management_app.model.*;
 import com.app.poultry_hatchery_management_app.service.TaskService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,7 +22,7 @@ public class TaskController {
     private final ObjectMapper objectMapper;
     private final TaskService taskService;
 
-    @GetMapping("/all")
+    @GetMapping("/admin/all")
     public ResponseEntity<String> getAllTasks() throws JsonProcessingException {
         List<Task> tasks = taskService.getAllTasks();
         if (tasks.isEmpty()) {
@@ -86,7 +82,7 @@ public class TaskController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("")
+    @PostMapping("/admin")
     public ResponseEntity<String> postTask(@RequestBody PostTaskRequest request) throws JsonProcessingException {
         Optional<Task> tasks = taskService.postTask(request);
         if (tasks.isPresent()) {
@@ -96,7 +92,13 @@ public class TaskController {
         return ResponseEntity.notFound().build();
     }
 
-    @PutMapping("")
+    @PostMapping("/admin/by-schedule")
+    public ResponseEntity<String> postTaskBySchedule(@RequestBody PostTasksByScheduleRequest request){
+        taskService.postTasksBySchedule(request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/trolley-progress")
     public ResponseEntity<String> putTask(@RequestBody PutTaskRequest request) throws JsonProcessingException {
         Optional<Task> tasks = taskService.putTask(request);
         if (tasks.isPresent()) {
@@ -106,7 +108,7 @@ public class TaskController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("")
+    @DeleteMapping("/admin")
     public ResponseEntity<String> deleteTask(@RequestParam UUID scheduledTaskId) {
         taskService.deleteTask(scheduledTaskId);
         return ResponseEntity.ok().build();
@@ -133,5 +135,52 @@ public class TaskController {
         return ResponseEntity.ok(response);
     }
 
+    ///////////////////////////////////////////////
+
+    @GetMapping("/admin/schedule")
+    public ResponseEntity<String> getAllTaskSchedules() throws JsonProcessingException {
+        List<TaskSchedule> assignments = taskService.getAllTaskSchedules();
+        if (assignments.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        String response = objectMapper.writeValueAsString(assignments);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/admin/schedule")
+    public ResponseEntity<String> postTaskSchedule(@RequestBody PostTaskScheduleRequest request) throws JsonProcessingException {
+        Optional<TaskSchedule> assignments = taskService.postTaskSchedule(request);
+        if (assignments.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        String response = objectMapper.writeValueAsString(assignments.get());
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/admin/schedule")
+    public ResponseEntity<String> deleteTaskSchedule(@RequestParam UUID taskScheduleId){
+        taskService.deleteTaskSchedule(taskScheduleId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/admin/schedule-details")
+    public ResponseEntity<String> getAllTaskScheduleDetails(@RequestParam UUID taskScheduleId) throws JsonProcessingException {
+        List<TaskScheduleDetails> assignments = taskService.getAllTaskScheduleDetailsByScheduleId(taskScheduleId);
+        if (assignments.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        String response = objectMapper.writeValueAsString(assignments);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/admin/schedule-details")
+    public ResponseEntity<String> postTaskScheduleDetail(@RequestBody PostTaskScheduleDetailsRequest request) throws JsonProcessingException {
+        Optional<TaskScheduleDetails> assignments = taskService.postTaskScheduleDetails(request);
+        if (assignments.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        String response = objectMapper.writeValueAsString(assignments.get());
+        return ResponseEntity.ok(response);
+    }
 
 }

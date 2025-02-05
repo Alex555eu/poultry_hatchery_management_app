@@ -27,4 +27,8 @@ public interface EmergenceRepository extends JpaRepository<Emergence, UUID> {
     limit 1
 """, nativeQuery = true)
     Optional<Emergence> findEmergenceByNestingId(@Param("nestingId") UUID nestingId);
+
+
+    Optional<Emergence> findByTaskId(UUID taskId);
+
 }

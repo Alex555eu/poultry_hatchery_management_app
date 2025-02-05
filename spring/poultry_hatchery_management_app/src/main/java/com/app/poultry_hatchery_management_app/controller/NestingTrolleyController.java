@@ -84,7 +84,7 @@ public class NestingTrolleyController {
         }
     }
 
-    @PostMapping("/")
+    @PostMapping("/admin")
     public ResponseEntity<String> postTrolley(@RequestBody PostNestingTrolleyRequest request) {
         Optional<NestingTrolley> trolley = nestingTrolleyService.postTrolley(request);
         if (trolley.isPresent()) {
@@ -93,7 +93,7 @@ public class NestingTrolleyController {
         return ResponseEntity.notFound().build();
     }
 
-    @PutMapping("/")
+    @PutMapping("/admin")
     public ResponseEntity<String> putTrolley(@RequestBody PutNestingTrolleyRequest request) {
         Optional<NestingTrolley> trolley = nestingTrolleyService.putTrolley(request);
         if (trolley.isPresent()) {
@@ -102,7 +102,7 @@ public class NestingTrolleyController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping("/admin")
     public ResponseEntity<String> deleteTrolley(@RequestParam UUID trolleyId) {
         nestingTrolleyService.deleteTrolley(trolleyId);
         return ResponseEntity.ok().build();

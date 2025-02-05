@@ -46,7 +46,6 @@ import { MatSelectModule } from '@angular/material/select';
     FormsModule,
     MatDividerModule,
     MatDialogModule,
-    RejectionPanelComponent,
     Rejection3PanelComponent,
     MatFormFieldModule,
     MatSelectModule

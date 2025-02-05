@@ -17,6 +17,15 @@ export class CandlingService {
     private http: HttpClient
   ) { }
 
+  getCandlingByTaskId(taskId: string): Observable<Candling|null> {
+    return this.http.get<Candling>(`${apiUrl + ApiPaths.CandlingPaths.GET_CANDLING_BY_TASK_ID + taskId}`).pipe(
+      shareReplay(1),
+      catchError(error => {
+        return of(null);
+      })
+    );
+  }
+
   getAllCandlings(): Observable<Candling[]> {
     return this.http.get<Candling[]>(`${apiUrl + ApiPaths.CandlingPaths.GET_ALL_CANDLINGS}`).pipe(
       shareReplay(1),

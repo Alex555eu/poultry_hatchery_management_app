@@ -28,7 +28,7 @@ public class DeliveryController {
     private final DeliveryService deliveryService;
     private final ObjectMapper objectMapper;
 
-    @GetMapping("/")
+    @GetMapping("/admin")
     public ResponseEntity<String> getAllDeliveries() throws JsonProcessingException {
         List<Delivery> deliveries = deliveryService.getAllDeliveries();
         if (deliveries == null) {
@@ -89,7 +89,7 @@ public class DeliveryController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping
+    @PostMapping("/admin")
     public ResponseEntity<String> postDelivery(@RequestBody PostDeliveryRequest request) throws JsonProcessingException {
         try {
             Optional<Delivery> delivery = deliveryService.postDelivery(request);
@@ -104,7 +104,7 @@ public class DeliveryController {
     }
 
 
-    @PutMapping
+    @PutMapping("/admin")
     public ResponseEntity<String> putDelivery(@RequestBody PutDeliveryRequest request) {
         try {
             Optional<Delivery> delivery = deliveryService.putDelivery(request);
@@ -117,13 +117,13 @@ public class DeliveryController {
         }
     }
 
-    @DeleteMapping
+    @DeleteMapping("/admin")
     public ResponseEntity<String> deleteDelivery(@RequestParam("id") UUID deliveryID) {
         deliveryService.deleteDelivery(deliveryID);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/supplier")
+    @GetMapping("/admin/supplier")
     public ResponseEntity<String> getAllSuppliers() throws JsonProcessingException {
         List<Supplier> suppliers = deliveryService.getAllSuppliers();
         if (suppliers == null) {
@@ -138,7 +138,7 @@ public class DeliveryController {
         }
     }
 
-    @PostMapping("/supplier")
+    @PostMapping("/admin/supplier")
     public ResponseEntity<String> postSupplier(@RequestBody PostSupplierRequest request) throws JsonProcessingException {
         Optional<Supplier> supplier;
         try {

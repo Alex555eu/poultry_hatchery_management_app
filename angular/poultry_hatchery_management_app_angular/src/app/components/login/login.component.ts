@@ -47,7 +47,7 @@ export class LoginComponent {
       this.authService.login(email, password).subscribe({
         next: (data: AuthResponse) => {
           this.tokenService.set(data.token, data.refreshToken);
-          this.router.navigate(['manager']);
+          this.router.navigate(['activities']);
         },
         error: (error: any) => {
           this.snackBar.open('Nieprawidłowe dane logowania', 'Zamknij', {

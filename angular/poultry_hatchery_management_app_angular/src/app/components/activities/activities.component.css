@@ -1,0 +1,10 @@
+.bg-container {
+    width: 100vw;
+    height: 95vh;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-top: 5vh;
+    
+}

@@ -18,6 +18,8 @@ import { CustomDateFormatterService } from '../../../../utils/date-format/custom
 import { CustomDateFormatterPipe } from '../../../../utils/date-format/custom-date-formatter.pipe';
 import { TaskNestingTrolleyAssignment } from '../../../../models/task-nesting-trolley-assignment.model';
 import { MatProgressSpinner, MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { TaskType } from '../../../../models/task-type.model';
+import { TaskTypeEntityNameValueForCandling, TaskTypeEntityNameValueForEmergence, TaskTypeEntityNameValueForHatching } from '../../../../app.config';
 
 @Component({
   selector: 'app-inspect-temporarily-unoccupied-incubator-space',
@@ -66,6 +68,7 @@ export class InspectTemporarilyUnoccupiedIncubatorSpaceComponent implements OnIn
       switchMap(assignment => {
         const arr = Array.from(this.data.tasks)
         .filter(([key, value]) => value[0].nestingTrolley.id === assignment?.nestingTrolley.id)
+        .filter(([key, value]) => ![TaskTypeEntityNameValueForCandling, TaskTypeEntityNameValueForHatching, TaskTypeEntityNameValueForEmergence].includes(key.taskType.name))
         .map(([key]) => key);
         return of(arr);
       })

@@ -16,6 +16,16 @@ export class EmergenceService {
   ) { }
 
 
+  getEmergenceByTaskId(taskId: string): Observable<Emergence|null> {
+    return this.http.get<Emergence>(`${apiUrl + ApiPaths.HatchingPaths.GET_EMERGENCE_BY_TASK_ID + taskId}`).pipe(
+      catchError(error => {
+        console.error(error);
+        return of(null);
+      })
+    );
+  }
+
+
   getAllEmergences(): Observable<Emergence[]> {
     return this.http.get<Emergence[]>(`${apiUrl + ApiPaths.HatchingPaths.GET_ALL_EMERGENCES}`).pipe(
       catchError(error => {

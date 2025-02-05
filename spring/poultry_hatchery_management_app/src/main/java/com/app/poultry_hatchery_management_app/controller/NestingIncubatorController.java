@@ -50,7 +50,7 @@ public class NestingIncubatorController {
         return ResponseEntity.notFound().build();
     }
 
-    @PostMapping("")
+    @PostMapping("/admin")
     public ResponseEntity<String> postNestingIncubator(@RequestBody PostNestingIncubatorRequest request) {
         Optional<NestingIncubator> incubator = nestingIncubatorService.postNestingIncubator(request);
         if (incubator.isPresent()) {
@@ -59,7 +59,7 @@ public class NestingIncubatorController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @PutMapping("")
+    @PutMapping("/admin")
     public ResponseEntity<String> putNestingIncubator(@RequestBody PutNestingIncubatorRequest request){
         Optional<NestingIncubator> incubator = nestingIncubatorService.putNestingIncubator(request);
         if (incubator.isPresent()){
@@ -68,7 +68,7 @@ public class NestingIncubatorController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("")
+    @DeleteMapping("/admin")
     public ResponseEntity<String> deleteNestingIncubator(@RequestParam UUID incubatorId) {
         nestingIncubatorService.deleteNestingIncubator(incubatorId);
         return ResponseEntity.ok().build();
@@ -84,7 +84,7 @@ public class NestingIncubatorController {
         return ResponseEntity.notFound().build();
     }
 
-    @PostMapping("/space")
+    @PostMapping("/admin/space")
     public ResponseEntity<String> postNestingIncubatorSpace(@RequestBody PostNestingIncubatorSpaceRequest request) {
         Optional<NestingIncubatorSpace> space = nestingIncubatorService.postNestingIncubatorSpace(request);
         if (space.isPresent()) {
@@ -93,7 +93,7 @@ public class NestingIncubatorController {
         return ResponseEntity.notFound().build();
     }
 
-    @PutMapping("/space")
+    @PutMapping("/admin/space")
     public ResponseEntity<String> putNestingIncubatorSpace(@RequestBody PutNestingIncubatorSpaceRequest request) {
         Optional<NestingIncubatorSpace> space = nestingIncubatorService.putNestingIncubatorSpace(request);
         if (space.isPresent()) {
@@ -112,7 +112,7 @@ public class NestingIncubatorController {
     }
 
 
-    @DeleteMapping("/space")
+    @DeleteMapping("/admin/space")
     public ResponseEntity<String> deleteNestingIncubatorSpace(@RequestParam UUID incubatorSpaceId) {
         nestingIncubatorService.deleteNestingIncubatorSpace(incubatorSpaceId);
         return ResponseEntity.ok().build();

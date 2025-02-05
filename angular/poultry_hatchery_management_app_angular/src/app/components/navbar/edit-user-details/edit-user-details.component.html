@@ -1,0 +1,25 @@
+<mat-dialog-content>
+    <div class="dialog-bg">
+        <div class="container" *ngIf="userDetails">
+            <h2>Edytuj dane</h2>
+        
+            <mat-form-field appearance="fill">
+            <mat-label>Imię</mat-label>
+            <input matInput [(ngModel)]="userDetails.firstName" />
+            </mat-form-field>
+        
+            <mat-form-field appearance="fill">
+            <mat-label>Nazwisko</mat-label>
+            <input matInput [(ngModel)]="userDetails.lastName" />
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Nr. telefonu</mat-label>
+                <input matInput [(ngModel)]="userDetails.phoneNumber" />
+            </mat-form-field>
+        
+            <button mat-raised-button color="primary" (click)="saveData()">Zapisz</button>
+            <button mat-raised-button color="none" (click)="changePassword()">Zmień hasło</button>
+        </div>
+    </div>
+    </mat-dialog-content>

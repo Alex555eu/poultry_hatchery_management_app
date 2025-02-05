@@ -1,48 +1,124 @@
 <mat-dialog-content>
-    <form (ngSubmit)="onSubmit()">
-      
-      <!-- Pole wyboru Nesting ID -->
-      <mat-form-field appearance="fill">
-        <mat-label>Nesting ID</mat-label>
-        <mat-select [(ngModel)]="nestingId" name="nestingId" required>
-          <mat-option *ngFor="let nesting of nestings" [value]="nesting.id">
-            {{ nesting.title }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-  
-      <!-- Pole wyboru Task Type ID -->
-      <mat-form-field appearance="fill">
-        <mat-label>Task Type ID</mat-label>
-        <mat-select [(ngModel)]="taskTypeId" name="taskTypeId" required>
-          <mat-option *ngFor="let taskType of taskTypes" [value]="taskType.id">
-            {{ taskType.name }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-  
+  <div class="bg-cntr">
+    
+    <div class="dialog-header">
+      <mat-icon>task_alt</mat-icon>
+      <label>Nowe zadanie</label>
+      <button mat-icon-button (click)="closeDialog()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Data i czas wykonania</mat-label>
-        <input matInput [(ngModel)]="executionDateTime" name="executionDateTime" [matDatepicker]="picker" type="datetime-local" required placeholder="Wybierz datę" />
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-        <mat-error *ngIf="!executionDateTime">To pole jest wymagane.</mat-error>
-      </mat-form-field>
-  
-      <!-- Pole tekstowe na komentarz -->
-      <mat-form-field appearance="fill">
-        <mat-label>Komentarz</mat-label>
-        <textarea matInput [(ngModel)]="comment" name="comment"></textarea>
-      </mat-form-field>
-  
-      <!-- Przyciski akcji -->
-      <mat-dialog-actions >
-        <button mat-button type="button" (click)="closeDialog()">Anuluj</button>
-        <button mat-raised-button color="primary" type="submit" [disabled]="!nestingId || !taskTypeId || !executionDateTime">
-          Wyślij
-        </button>
-      </mat-dialog-actions>
-    </form>
+    <mat-tab-group>
+      <mat-tab label="Pojedyńcze zadanie">
+        <form (ngSubmit)="onSubmit()">
+
+          <mat-form-field appearance="fill">
+            <mat-label>Nakład</mat-label>
+            <mat-select [(ngModel)]="nestingId" name="nestingId" required>
+              <mat-option *ngFor="let nesting of nestings" [value]="nesting.id">
+                {{ nesting.title }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+      
+          <mat-form-field appearance="fill">
+            <mat-label>Typ zadania</mat-label>
+            <mat-select [(ngModel)]="taskTypeId" name="taskTypeId" required>
+              <mat-option *ngFor="let taskType of taskTypes" [value]="taskType.id">
+                {{ taskType.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+      
+          <mat-form-field>
+            <mat-label>Wybierz datę</mat-label>
+            <input matInput [matDatepicker]="picker" [(ngModel)]="executionDateTime" name="executionDateTime">
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Komentarz</mat-label>
+            <textarea matInput [(ngModel)]="comment" name="comment"></textarea>
+          </mat-form-field>
+      
+          <mat-dialog-actions >
+            <button mat-raised-button color="primary" type="submit" [disabled]="!nestingId || !taskTypeId || !executionDateTime">
+              Dodaj
+            </button>
+          </mat-dialog-actions>
+
+        </form>
+      </mat-tab>
+
+      <mat-tab label="Harmonogramy">
+        <div class="upper-container">
+          <div class="schedule-container">
+            <div class="schedule-object" style="display: flex; align-items: center; justify-content: center;" (click)="newSchedule()">
+              <mat-icon>add</mat-icon>
+            </div>
+            <ng-container *ngFor="let item of taskSchedule">
+              <div 
+                class="schedule-object" 
+                [class.selected]="selectedTaskSchedule === item"
+                (click)="selectTaskSchedule(item)">
+                <label>{{ item.title }}</label>
+              
+              <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="deleteTaskSchedule(item)">
+                  <mat-icon>delete</mat-icon>
+                  <span>Usuń</span>
+                </button>
+              </mat-menu>
+            </div>
+            </ng-container>
+          </div>
+      
+          <div class="schedule-container" *ngIf="selectedTaskSchedule">
+            <ng-container *ngFor="let item of taskScheduleDetails.get(selectedTaskSchedule)">
+              <div class="schedule-detail-object">
+                <label>+{{ item.daysOffsetFromPrevTask }} dni</label>
+                <label> {{ item.taskType.name }}</label>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      
+        <div class="lower-container">
+          <mat-form-field appearance="fill">
+            <mat-label>Nakład</mat-label>
+            <mat-select [(ngModel)]="scheduleNestingId" name="scheduleNestingId" required>
+              <mat-option *ngFor="let nesting of nestings" [value]="nesting.id">
+                {{ nesting.title }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+      
+          <mat-form-field>
+            <mat-label>Data rozpoczęcia</mat-label>
+            <input matInput [matDatepicker]="picker2" [(ngModel)]="dateOfScheduleFirstTask" name="dateOfScheduleFirstTask">
+            <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+
+          <mat-dialog-actions >
+            <button mat-raised-button color="primary" (click)="onScheduleSubmit()" [disabled]="!selectedTaskSchedule || !dateOfScheduleFirstTask || !scheduleNestingId">
+              Dodaj
+            </button>
+          </mat-dialog-actions>
+        </div>
+
+
+
+      </mat-tab>
+
+    </mat-tab-group>
+
+
+  </div>
   </mat-dialog-content>
   
