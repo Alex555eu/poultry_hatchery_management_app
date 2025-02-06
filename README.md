@@ -40,7 +40,7 @@ To enhance security and improve user experience, an HTTP request interceptor is 
 
 #### Functions:
 - **Attaches JWT tokens** to outgoing requests (except authentication-related ones).
-- **Handles token expiration** by intercepting `401 Unauthorized` errors and attempting a token refresh. A successful refresh results in the re-execution of the original request, ensuring a smooth user experience with the application.
+- **Handles token expiration** by intercepting `401 Unauthorized` errors and attempting a token refresh.
 - **Maintains session** when successfully refreshing the token, which results in the re-execution of the original request, ensuring a smooth user experience with the application.
 - **Logs out users** if both access and refresh tokens are invalid, redirecting them to the login page.
 
